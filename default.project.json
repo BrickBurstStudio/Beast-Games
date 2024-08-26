@@ -1,5 +1,5 @@
 {
-	"name": "flamework-game",
+	"name": "beast-games",
 	"globIgnorePaths": ["**/package.json", "**/tsconfig.json"],
 	"tree": {
 		"$className": "DataModel",
