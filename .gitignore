@@ -3,3 +3,5 @@
 /include
 *.tsbuildinfo
 flamework.build
+game.rbxl.lock
+sourcemap.json
