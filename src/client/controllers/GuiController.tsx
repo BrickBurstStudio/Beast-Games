@@ -7,21 +7,21 @@ import { usePx } from "client/ui/utils/usePx";
 
 @Controller()
 export class GuiController implements OnStart {
-  private playerGui = Players.LocalPlayer.WaitForChild("PlayerGui");
+	private playerGui = Players.LocalPlayer.WaitForChild("PlayerGui");
 
-  onStart() {
-    usePx();
+	onStart() {
+		usePx();
 
-    const root = createRoot(new Instance("Folder"));
-    root.render(
-      createPortal(
-          <screengui Enabled={true} ResetOnSpawn={false}>
-            <uiscale Scale={1} />
+		const root = createRoot(new Instance("Folder"));
+		root.render(
+			createPortal(
+				<screengui Enabled={true} ResetOnSpawn={false}>
+					<uiscale Scale={1} />
 
-            <App />
-          </screengui>,
-        this.playerGui
-      ),
-    );
-  }
+					<App />
+				</screengui>,
+				this.playerGui,
+			),
+		);
+	}
 }
