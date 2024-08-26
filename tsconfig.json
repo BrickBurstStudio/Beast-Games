@@ -5,13 +5,12 @@
 		"downlevelIteration": true,
 		"jsx": "react",
 		"jsxFactory": "React.createElement",
-		"jsxFragmentFactory": "React.createFragment",
+		"jsxFragmentFactory": "React.Fragment",
 		"module": "commonjs",
 		"moduleResolution": "Node",
+		"moduleDetection": "force",
 		"noLib": true,
 		"resolveJsonModule": true,
-		"forceConsistentCasingInFileNames": true,
-		"moduleDetection": "force",
 		"strict": true,
 		"target": "ESNext",
 		"typeRoots": ["node_modules/@rbxts", "node_modules/@flamework"],
@@ -28,6 +27,14 @@
 			{
 				"transform": "rbxts-transformer-flamework",
 				"obfuscation": false
+			},
+			{
+				"transform": "rbxts-transform-debug",
+				"enabled": true,
+				"verbose": true,
+				"environmentRequires": {
+					//"NODE_ENV": "development"
+				}
 			}
 		]
 	}
