@@ -1,11 +1,20 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "@rbxts/react";
+import React, {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useReducer,
+	useRef,
+	useState,
+} from "@rbxts/react";
 import { px } from "client/ui/utils/usePx";
 import { UserInputService } from "@rbxts/services";
 import motion from "@rbxts/react-motion";
 import { Janitor } from "@rbxts/janitor";
 
 type KeyCodes = Record<string, "active" | "inactive">;
-const KeyCodeContext = createContext<KeyCodes | undefined>(undefined);
+const KeyCodeContext = createContext<KeyCodes>({});
 
 const notes: Array<{ delay: number; keyCode: Enum.KeyCode }> = [
 	{ delay: 1.5, keyCode: Enum.KeyCode.A },
@@ -55,10 +64,15 @@ function useKeyboardState() {
 
 export default function RhthymApp() {
 	const keyCodes = useKeyboardState();
+	const [, forceRender] = useReducer((x: number) => x + 1, 0);
 	const aControlRef = useRef<Frame | undefined>();
 	const sControlRef = useRef<Frame | undefined>();
 	const kControlRef = useRef<Frame | undefined>();
 	const lControlRef = useRef<Frame | undefined>();
+
+	useEffect(() => {
+		forceRender();
+	}, []);
 
 	return (
 		<>
@@ -98,7 +112,6 @@ function KeyCircle({
 	controlRef: React.MutableRefObject<Frame | undefined>;
 }) {
 	const keyCodes = useContext(KeyCodeContext);
-	if (keyCodes === undefined) return;
 
 	return (
 		<motion.frame
@@ -112,11 +125,9 @@ function KeyCircle({
 			transition={{ duration: 0.1, easingStyle: "Cubic" }}
 			variants={{
 				active: {
-					// Size: UDim2.fromOffset(px(120), px(120)),
 					BackgroundColor3: Color3.fromRGB(255, 255, 255),
 				},
 				inactive: {
-					// Size: UDim2.fromOffset(px(100), px(100)),
 					BackgroundColor3: color,
 				},
 			}}
