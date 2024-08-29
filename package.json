@@ -11,7 +11,8 @@
 		"start": "rbxts-build start",
 		"stop": "rbxts-build stop",
 		"sync": "rbxts-build sync",
-		"pretty": "npx prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
+		"pretty": "npx prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\"",
+		"postcompile": "npx io-serve"
 	},
 	"keywords": [],
 	"author": "",
@@ -26,6 +27,7 @@
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^3.4.0",
 		"eslint-plugin-roblox-ts": "^0.0.30",
+		"io-serve": "^1.1.2",
 		"prettier": "^2.3.2",
 		"rbxts-build": "^2.4.0",
 		"rbxts-transform-debug": "^2.2.0",
@@ -45,6 +47,7 @@
 		"@rbxts/react-reflex": "^0.3.4",
 		"@rbxts/react-roblox": "^0.4.0",
 		"@rbxts/reflex": "^4.3.1",
+		"@rbxts/services": "^1.5.4",
 		"@rbxts/ui-labs": "^2.2.0-ts.1",
 		"@rbxts/vide": "^0.4.4"
 	}
