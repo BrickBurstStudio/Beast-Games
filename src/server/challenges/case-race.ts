@@ -1,7 +1,7 @@
 import { Dependency } from "@flamework/core";
 import BaseChallenge from "./base-challenge";
 import { Components } from "@flamework/components";
-import BriefCaseComponent from "server/components/briefcase";
+import BriefCaseComponent from "server/components/briefcase-component";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 
@@ -25,9 +25,9 @@ export default class CaseRace extends BaseChallenge {
 
 		this.briefCases = this.components.getAllComponents<BriefCaseComponent>();
 		this.briefCases.forEach((bc) => {
-			bc.playerTouchedCallback = (player) => {
+			bc.claimedEvent.Event.Connect((player: Player) => {
 				void this.BriefCaseTouched(player, bc);
-			};
+			});
 		});
 
 		this.RandomizeCases();
