@@ -5,14 +5,13 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "rbxts-build build",
-		"watch": "rbxts-build watch",
+		"watch": "concurrently \"rbxts-build watch\" \"npx io-serve\"",
 		"compile": "rbxts-build compile",
 		"open": "rbxts-build open",
 		"start": "rbxts-build start",
 		"stop": "rbxts-build stop",
 		"sync": "rbxts-build sync",
-		"pretty": "npx prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\"",
-		"postcompile": "npx io-serve"
+		"pretty": "npx prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
 	},
 	"keywords": [],
 	"author": "",
@@ -23,6 +22,7 @@
 		"@types/json-schema": "^7.0.15",
 		"@typescript-eslint/eslint-plugin": "^6.7.5",
 		"@typescript-eslint/parser": "^6.7.5",
+		"concurrently": "^8.2.2",
 		"eslint": "^7.31.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^3.4.0",
