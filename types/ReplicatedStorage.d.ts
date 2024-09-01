@@ -13,11 +13,18 @@ interface ReplicatedStorage extends Instance {
 	};
 	Assets: Folder & {
 		Objects: Folder & {
-			Briefcase: Part & {
-				Highlight: Highlight;
-				BillboardGui: BillboardGui & {
-					TextLabel: TextLabel;
+			Briefcase: Model & {
+				Part: Part & {
+					Highlight: Highlight;
+					BillboardGui: BillboardGui & {
+						TextLabel: TextLabel;
+					};
 				};
+			};
+		};
+		Gui: Folder & {
+			ClaimBGUI: BillboardGui & {
+				TextLabel: TextLabel;
 			};
 		};
 	};
@@ -153,7 +160,30 @@ interface ReplicatedStorage extends Instance {
 						generated: Folder;
 					};
 				};
+				["set-timeout"]: Folder & {
+					out: ModuleScript & {
+						["set-countdown"]: ModuleScript;
+						["set-interval"]: ModuleScript;
+						["debounce.spec"]: ModuleScript;
+						["set-timeout"]: ModuleScript;
+						throttle: ModuleScript;
+						["set-timeout.spec"]: ModuleScript;
+						["throttle.spec"]: ModuleScript;
+						["set-interval.spec"]: ModuleScript;
+						["set-countdown.spec"]: ModuleScript;
+						debounce: ModuleScript;
+					};
+				};
 				["cubic-bezier"]: ModuleScript;
+				make: ModuleScript & {
+					node_modules: Folder & {
+						["@rbxts"]: Folder & {
+							["compiler-types"]: Folder & {
+								types: Folder;
+							};
+						};
+					};
+				};
 				vide: Folder & {
 					src: ModuleScript & {
 						defaults: ModuleScript;
