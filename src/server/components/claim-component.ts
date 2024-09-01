@@ -1,7 +1,7 @@
 import { BaseComponent, Component } from "@flamework/components";
 import { OnStart } from "@flamework/core";
 import Make from "@rbxts/make";
-import { Players } from "@rbxts/services";
+import { Players, ReplicatedStorage } from "@rbxts/services";
 
 export interface ClaimComponentProps {
 	owner: Player["Name"] | undefined;
@@ -12,14 +12,16 @@ export interface ClaimComponentProps {
 	defaults: {
 		claimEnabled: true,
 	},
+	predicate: (instance) => instance.IsA("Model") && instance.PrimaryPart !== undefined,
 })
-export default class ClaimComponent<A extends ClaimComponentProps, I extends BasePart> extends BaseComponent<A, I> {
+export default class ClaimComponent<A extends ClaimComponentProps, I extends Model> extends BaseComponent<A, I> {
 	public readonly claimedEvent = Make("BindableEvent", {});
-	private claimBGUI = Make;
+	private claimBGUI = ReplicatedStorage.Assets.Gui.ClaimBGUI.Clone();
 
 	constructor() {
 		super();
-		this.SetupConnections();
+		this.SetupTouch();
+		this.SetupClaimBGUI();
 	}
 
 	protected Reset() {
@@ -27,8 +29,21 @@ export default class ClaimComponent<A extends ClaimComponentProps, I extends Bas
 		this.attributes.owner = undefined;
 	}
 
-	private SetupConnections() {
-		this.instance.Touched.Connect((part) => {
+	private SetupClaimBGUI() {
+		this.claimBGUI.Parent = this.instance.PrimaryPart!;
+		this.onAttributeChanged("owner", (value) => {
+			if (value === undefined) {
+				this.claimBGUI.TextLabel.Text = "";
+				this.claimBGUI.Enabled = false;
+			} else {
+				this.claimBGUI.TextLabel.Text = `<i>Claimed by: </i><b>${value}</b>`;
+				this.claimBGUI.Enabled = true;
+			}
+		});
+	}
+
+	private SetupTouch() {
+		this.instance.PrimaryPart!.Touched.Connect((part) => {
 			if (!this.attributes.touchEnabled) return;
 			if (!part.Parent?.FindFirstChildOfClass("Humanoid")) return;
 			const player = Players.GetPlayerFromCharacter(part.Parent);
@@ -36,7 +51,6 @@ export default class ClaimComponent<A extends ClaimComponentProps, I extends Bas
 			this.attributes.owner = player.Name;
 			this.attributes.touchEnabled = false;
 			this.claimedEvent.Fire(player);
-			print("touched");
 		});
 	}
 }

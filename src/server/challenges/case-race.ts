@@ -17,9 +17,9 @@ export default class CaseRace extends BaseChallenge {
 	protected Main() {
 		for (let i = 0; i < 10; i++) {
 			const clone = ReplicatedStorage.Assets.Objects.Briefcase.Clone();
-			clone.Anchored = true;
+			clone.Part.Anchored = true;
 			clone.Parent = Workspace;
-			clone.CFrame = clone.CFrame.mul(new CFrame(new Vector3(i * 5, 0, 0)));
+			clone.Part.CFrame = clone.Part.CFrame.mul(new CFrame(new Vector3(i * 5, 0, 0)));
 		}
 		task.wait(2);
 

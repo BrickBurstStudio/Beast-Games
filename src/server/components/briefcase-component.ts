@@ -27,25 +27,25 @@ export default class BriefcaseComponent
 	onStart() {
 		this.onAttributeChanged("highlightMode", (mode) => {
 			if (mode === "disabled") {
-				this.instance.Highlight.Enabled = false;
-				this.instance.BillboardGui.TextLabel.Text = "";
+				this.instance.Part.Highlight.Enabled = false;
+				this.instance.Part.BillboardGui.TextLabel.Text = "";
 				this.attributes.touchEnabled = true;
 			}
 			if (mode === "reveal") {
-				this.instance.Highlight.FillColor = this.attributes.safe ? this.safeColor : this.unsafeColor;
-				this.instance.BillboardGui.TextLabel.TextColor3 = this.attributes.safe
+				this.instance.Part.Highlight.FillColor = this.attributes.safe ? this.safeColor : this.unsafeColor;
+				this.instance.Part.BillboardGui.TextLabel.TextColor3 = this.attributes.safe
 					? this.safeColor
 					: this.unsafeColor;
-				this.instance.BillboardGui.TextLabel.Text = this.attributes.safe ? "!" : "X";
-				this.instance.Highlight.Enabled = true;
+				this.instance.Part.BillboardGui.TextLabel.Text = this.attributes.safe ? "!" : "X";
+				this.instance.Part.Highlight.Enabled = true;
 				this.attributes.touchEnabled = false;
 			}
 			if (mode === "selected") {
-				this.instance.Highlight.FillColor = this.selectedColor;
-				this.instance.Highlight.FillTransparency = 0.25;
-				this.instance.BillboardGui.TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
-				this.instance.BillboardGui.TextLabel.Text = "?";
-				this.instance.Highlight.Enabled = true;
+				this.instance.Part.Highlight.FillColor = this.selectedColor;
+				this.instance.Part.Highlight.FillTransparency = 0.25;
+				this.instance.Part.BillboardGui.TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
+				this.instance.Part.BillboardGui.TextLabel.Text = "?";
+				this.instance.Part.Highlight.Enabled = true;
 				this.attributes.touchEnabled = false;
 			}
 		});
