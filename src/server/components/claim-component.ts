@@ -2,6 +2,7 @@ import { BaseComponent, Component } from "@flamework/components";
 import { OnStart } from "@flamework/core";
 import Make from "@rbxts/make";
 import { Players, ReplicatedStorage } from "@rbxts/services";
+import { getPlayerByName } from "shared/utils/functions/getPlayerByName";
 
 export interface ClaimComponentProps {
 	owner: Player["Name"] | undefined;
@@ -18,6 +19,8 @@ export default class ClaimComponent<A extends ClaimComponentProps, I extends Mod
 	public readonly claimedEvent = Make("BindableEvent", {});
 	private claimBGUI = ReplicatedStorage.Assets.Gui.ClaimBGUI.Clone();
 
+	static playerClaims: Record<Player["UserId"], boolean> = {};
+
 	constructor() {
 		super();
 		this.SetupTouch();
@@ -25,6 +28,10 @@ export default class ClaimComponent<A extends ClaimComponentProps, I extends Mod
 	}
 
 	protected Reset() {
+		if (this.attributes.owner !== undefined) {
+			const player = getPlayerByName(this.attributes.owner);
+			if (player) ClaimComponent.playerClaims[player.UserId] = false;
+		}
 		this.attributes.touchEnabled = false;
 		this.attributes.owner = undefined;
 	}
@@ -48,8 +55,10 @@ export default class ClaimComponent<A extends ClaimComponentProps, I extends Mod
 			if (!part.Parent?.FindFirstChildOfClass("Humanoid")) return;
 			const player = Players.GetPlayerFromCharacter(part.Parent);
 			if (!player) return;
+			if (ClaimComponent.playerClaims[player.UserId] === true) return;
 			this.attributes.owner = player.Name;
 			this.attributes.touchEnabled = false;
+			ClaimComponent.playerClaims[player.UserId] = true;
 			this.claimedEvent.Fire(player);
 		});
 	}

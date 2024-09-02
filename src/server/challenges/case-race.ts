@@ -1,17 +1,17 @@
 import { Dependency } from "@flamework/core";
 import BaseChallenge from "./base-challenge";
 import { Components } from "@flamework/components";
-import BriefCaseComponent from "server/components/briefcase-component";
+import BriefcaseComponent from "server/components/briefcase-component";
 import { getCharacter } from "shared/utils/functions/getCharacter";
-import { ReplicatedStorage, Workspace } from "@rbxts/services";
+import { Players, ReplicatedStorage, Workspace } from "@rbxts/services";
 
 export default class CaseRace extends BaseChallenge {
 	readonly components = Dependency<Components>();
-	readonly badBriefCases = 4;
+	readonly badBriefcases = 4;
 	readonly revealTime = 5;
 
-	readonly playerSelections: { [key: Player["Name"]]: BriefCaseComponent } = {};
-	briefCases: Array<BriefCaseComponent> = [];
+	readonly playerSelections: { [key: Player["UserId"]]: BriefcaseComponent } = {};
+	briefcases: Array<BriefcaseComponent> = [];
 	revealing = false;
 
 	protected Main() {
@@ -23,8 +23,8 @@ export default class CaseRace extends BaseChallenge {
 		}
 		task.wait(2);
 
-		this.briefCases = this.components.getAllComponents<BriefCaseComponent>();
-		this.briefCases.forEach((bc) => {
+		this.briefcases = this.components.getAllComponents<BriefcaseComponent>();
+		this.briefcases.forEach((bc) => {
 			bc.claimedEvent.Event.Connect((player: Player) => {
 				void this.BriefCaseTouched(player, bc);
 			});
@@ -36,24 +36,33 @@ export default class CaseRace extends BaseChallenge {
 		this.ToggleCases(false);
 		task.wait(5);
 		this.ToggleCases(true);
+		task.wait(2);
+		this.EliminatePlayers();
 	}
 
-	private async BriefCaseTouched(player: Player, briefCase: BriefCaseComponent) {
-		if (this.playerSelections[player.Name]) return;
+	private EliminatePlayers() {
+		for (const [userId, briefcase] of pairs(this.playerSelections)) {
+			const player = Players.GetPlayerByUserId(userId);
+			if (!briefcase.attributes.safe && player) this.EliminatePlayer(player);
+		}
+	}
+
+	private async BriefCaseTouched(player: Player, briefCase: BriefcaseComponent) {
+		if (this.playerSelections[player.UserId]) return;
 		if (this.revealing) return;
 
-		this.playerSelections[player.Name] = briefCase;
+		this.playerSelections[player.UserId] = briefCase;
 		briefCase.attributes.highlightMode = "selected";
 		const character = await getCharacter(player);
-		character.Humanoid.WalkSpeed = 0;
-		character.Humanoid.JumpPower = 0;
+		// character.Humanoid.WalkSpeed = 0;
+		// character.Humanoid.JumpPower = 0;
 	}
 
 	private RandomizeCases() {
-		if (this.briefCases.size() < this.badBriefCases) throw "Not enough brief cases";
+		if (this.briefcases.size() < this.badBriefcases) throw "Not enough brief cases";
 
-		const unmarked = [...this.briefCases];
-		for (let i = 0; i < this.badBriefCases; i++) {
+		const unmarked = [...this.briefcases];
+		for (let i = 0; i < this.badBriefcases; i++) {
 			const index = math.random(0, unmarked.size() - 1);
 			const briefCase = unmarked.remove(index);
 			if (!briefCase) throw `Index ${index} does not exist for briefCase`;
@@ -62,7 +71,7 @@ export default class CaseRace extends BaseChallenge {
 	}
 
 	private ToggleCases(enabled: boolean) {
-		this.briefCases.forEach((bc) => (bc.attributes.highlightMode = enabled ? "reveal" : "disabled"));
+		this.briefcases.forEach((bc) => (bc.attributes.highlightMode = enabled ? "reveal" : "disabled"));
 		this.revealing = enabled;
 	}
 }

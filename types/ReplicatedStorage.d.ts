@@ -4,8 +4,9 @@ interface ReplicatedStorage extends Instance {
 		utils: Folder & {
 			["object-utils"]: ModuleScript;
 			functions: Folder & {
-				forEveryPlayer: ModuleScript;
 				getCharacter: ModuleScript;
+				getPlayerByName: ModuleScript;
+				forEveryPlayer: ModuleScript;
 			};
 		};
 		components: Folder;
@@ -13,6 +14,7 @@ interface ReplicatedStorage extends Instance {
 	};
 	Assets: Folder & {
 		Objects: Folder & {
+			Flag: Model;
 			Briefcase: Model & {
 				Part: Part & {
 					Highlight: Highlight;
