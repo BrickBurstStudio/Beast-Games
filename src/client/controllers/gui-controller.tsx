@@ -17,7 +17,7 @@ export class GuiController implements OnStart {
 		root.render(
 			createPortal(
 				<screengui Enabled={true} ResetOnSpawn={false}>
-					{/* <App /> */}
+					<App />
 				</screengui>,
 				this.playerGui,
 			),
