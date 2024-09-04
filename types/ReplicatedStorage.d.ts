@@ -25,6 +25,7 @@ interface ReplicatedStorage extends Instance {
 			};
 			MoneyPile: Model & {
 				Part: Part;
+				Dollars: NumberValue;
 			};
 		};
 		Gui: Folder & {
