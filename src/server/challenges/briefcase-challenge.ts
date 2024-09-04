@@ -1,11 +1,11 @@
 import { Dependency } from "@flamework/core";
-import BaseChallenge from "./base-challenge";
 import { Components } from "@flamework/components";
-import BriefcaseComponent from "server/components/briefcase-component";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { Players, ReplicatedStorage, Workspace } from "@rbxts/services";
+import { BaseChallenge } from "./base-challenge";
+import BriefcaseComponent from "server/components/claim-components/briefcase-component";
 
-export default class CaseRace extends BaseChallenge {
+export class BriefcaseChallenge extends BaseChallenge {
 	readonly components = Dependency<Components>();
 	readonly badBriefcases = 4;
 	readonly revealTime = 5;

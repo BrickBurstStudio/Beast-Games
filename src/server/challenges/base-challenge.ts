@@ -3,7 +3,7 @@ import { Service } from "@flamework/core";
 import { Players } from "@rbxts/services";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
-export default abstract class BaseChallenge {
+export abstract class BaseChallenge {
 	finished = false;
 
 	protected abstract Main(): void;
