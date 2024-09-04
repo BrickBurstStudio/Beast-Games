@@ -1,11 +1,12 @@
 import { Dependency } from "@flamework/core";
 import { Components } from "@flamework/components";
 import { getCharacter } from "shared/utils/functions/getCharacter";
-import { Players, ReplicatedStorage, Workspace } from "@rbxts/services";
+import { Players, ReplicatedStorage, ServerStorage, Workspace } from "@rbxts/services";
 import { BaseChallenge } from "./base-challenge";
 import { BriefcaseComponent } from "server/components/claim-components/briefcase-component";
 
 export class BriefcaseChallenge extends BaseChallenge {
+	protected readonly map = ServerStorage.ChallengeMaps.BriefcaseChallenge.Clone();
 	readonly components = Dependency<Components>();
 	readonly badBriefcases = 4;
 	readonly revealTime = 5;
