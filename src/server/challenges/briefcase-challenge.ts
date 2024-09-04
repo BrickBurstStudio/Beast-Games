@@ -3,7 +3,7 @@ import { Components } from "@flamework/components";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { Players, ReplicatedStorage, Workspace } from "@rbxts/services";
 import { BaseChallenge } from "./base-challenge";
-import BriefcaseComponent from "server/components/claim-components/briefcase-component";
+import { BriefcaseComponent } from "server/components/claim-components/briefcase-component";
 
 export class BriefcaseChallenge extends BaseChallenge {
 	readonly components = Dependency<Components>();

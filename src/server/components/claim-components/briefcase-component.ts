@@ -1,7 +1,7 @@
 import { BaseComponent, Component } from "@flamework/components";
 import { OnInit, OnStart } from "@flamework/core";
 import { Players } from "@rbxts/services";
-import ClaimComponent, { ClaimComponentProps } from "./claim-component";
+import { ClaimComponentProps, ClaimComponent } from "./claim-component";
 
 interface BriefcaseProps extends ClaimComponentProps {
 	safe: boolean;
@@ -16,7 +16,7 @@ interface BriefcaseProps extends ClaimComponentProps {
 		touchEnabled: false,
 	},
 })
-export default class BriefcaseComponent
+export class BriefcaseComponent
 	extends ClaimComponent<BriefcaseProps, ReplicatedStorage["Assets"]["Objects"]["Briefcase"]>
 	implements OnStart
 {

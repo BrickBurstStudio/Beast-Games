@@ -15,7 +15,7 @@ export interface ClaimComponentProps {
 	},
 	predicate: (instance) => instance.IsA("Model") && instance.PrimaryPart !== undefined,
 })
-export default class ClaimComponent<A extends ClaimComponentProps, I extends Model> extends BaseComponent<A, I> {
+export class ClaimComponent<A extends ClaimComponentProps, I extends Model> extends BaseComponent<A, I> {
 	public readonly claimedEvent = Make("BindableEvent", {});
 	private claimBGUI = ReplicatedStorage.Assets.Gui.ClaimBGUI.Clone();
 

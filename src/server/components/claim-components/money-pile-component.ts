@@ -3,12 +3,14 @@ import { ClaimComponent, ClaimComponentProps } from "./claim-component";
 import { OnStart } from "@flamework/core";
 
 @Component({
-	tag: "flag",
+	tag: "money-pile",
 	defaults: {
 		touchEnabled: true,
 	},
 })
-export class FlagComponent extends ClaimComponent<
-	ClaimComponentProps,
-	ReplicatedStorage["Assets"]["Objects"]["Flag"]
-> {}
+export class MoneyPileComponent
+	extends ClaimComponent<ClaimComponentProps, ReplicatedStorage["Assets"]["Objects"]["MoneyPile"]>
+	implements OnStart
+{
+	onStart() {}
+}

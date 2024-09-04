@@ -9,7 +9,7 @@ import { SprintController } from "./sprint-controller";
 // todo : organize subsystem logic into sister controllers & use dependency injection here
 
 @Controller()
-export default class MovementController implements OnStart {
+export class MovementController implements OnStart {
 	readonly diveActionName = "DIVE";
 	readonly sprintActionName = "SPRINT";
 	public readonly maxStamina = 100;

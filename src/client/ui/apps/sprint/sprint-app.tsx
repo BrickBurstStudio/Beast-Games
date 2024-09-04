@@ -1,7 +1,7 @@
 import { Dependency } from "@flamework/core";
 import React, { useEffect, useState } from "@rbxts/react";
 import motion from "@rbxts/react-motion";
-import MovementController from "client/controllers/movement-controller";
+import { MovementController } from "client/controllers/movement-controller";
 import { px } from "client/ui/utils/usePx";
 
 // todo : implement sprint value into root state

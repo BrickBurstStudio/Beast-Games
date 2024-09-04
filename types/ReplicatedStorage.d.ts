@@ -23,6 +23,9 @@ interface ReplicatedStorage extends Instance {
 					};
 				};
 			};
+			MoneyPile: Model & {
+				Part: Part;
+			};
 		};
 		Gui: Folder & {
 			ClaimBGUI: BillboardGui & {
