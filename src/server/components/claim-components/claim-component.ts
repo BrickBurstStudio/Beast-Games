@@ -1,5 +1,4 @@
 import { BaseComponent, Component } from "@flamework/components";
-import { OnStart } from "@flamework/core";
 import Make from "@rbxts/make";
 import { Players, ReplicatedStorage } from "@rbxts/services";
 import { getPlayerByName } from "shared/utils/functions/getPlayerByName";
