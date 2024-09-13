@@ -1,4 +1,4 @@
-import BaseItem from "shared/Items/BaseItem";
+import BaseItem from "shared/classes/items/BaseItem";
 import { Currency } from "shared/configs/Currency";
 
 export interface PlayerData {

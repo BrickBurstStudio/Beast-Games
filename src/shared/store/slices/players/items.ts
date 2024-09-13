@@ -1,7 +1,7 @@
 import { createProducer } from "@rbxts/reflex";
-import BaseItem from "shared/Items/BaseItem";
 import { PlayerData, PlayerItems } from "./types";
 import { defaultPlayerData } from "./utils";
+import BaseItem from "shared/classes/items/BaseItem";
 
 export interface ItemsState {
 	readonly [player: string]: PlayerItems | undefined;
