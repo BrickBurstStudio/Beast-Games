@@ -6,18 +6,21 @@ export class BaseOrderedDataStore {
 	protected playerKey: string;
 	private maxRetryAttempts = 4;
 	private orderedDataStore: OrderedDataStore;
+	private stateCallback: (amount: number) => void;
 
-	constructor(playerID: number, orderedDataStoreName: string) {
+	constructor(playerID: number, orderedDataStoreName: string, stateCallback: (amount: number) => void) {
 		if (playerID < 0) error("Invalid playerID, dont use multitest in studio. (Player1 = -1), (Player2 = -2), etc.");
 		this.playerID = playerID;
 		this.playerKey = `Player_${playerID}`;
 		this.orderedDataStore = DataStoreService.GetOrderedDataStore(orderedDataStoreName);
+		this.stateCallback = stateCallback;
 	}
 
 	UpdateBy(amount: number) {
 		BaseOrderedDataStore.SafeCall(
 			() => {
 				this.orderedDataStore.IncrementAsync(this.playerKey, amount);
+				this.stateCallback(amount);
 			},
 			Enum.DataStoreRequestType.SetIncrementAsync,
 			this.playerID,

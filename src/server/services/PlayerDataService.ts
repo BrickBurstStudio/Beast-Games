@@ -3,6 +3,7 @@ import { OnInit, Service } from "@flamework/core";
 import ProfileService from "@rbxts/profileservice";
 import { Profile } from "@rbxts/profileservice/globals";
 import { Players, RunService } from "@rbxts/services";
+import { OrderedPlayerData } from "server/OrderedPlayerData";
 
 import { store } from "server/store";
 import { selectPlayerBalances, selectPlayerData } from "shared/store/selectors/players";
@@ -40,6 +41,7 @@ export class PlayerDataService implements OnInit {
 		const userId = player.UserId;
 		const profileKey = KEY_TEMPLATE.format(userId);
 		const profile = this.profileStore.LoadProfileAsync(profileKey);
+		const orderedPlayerData = new OrderedPlayerData(player);
 
 		if (!profile) return player.Kick();
 
@@ -53,7 +55,10 @@ export class PlayerDataService implements OnInit {
 		profile.Reconcile();
 
 		this.profiles.set(player, profile);
-		store.loadPlayerData(tostring(player.UserId), profile.Data);
+		store.loadPlayerData(tostring(player.UserId), {
+			...profile.Data,
+			balance: { ...profile.Data.balance, cash: orderedPlayerData.cash.Get() },
+		});
 		this.createLeaderstats(player);
 
 		const unsubscribe = store.subscribe(selectPlayerData(tostring(player.UserId)), (save) => {

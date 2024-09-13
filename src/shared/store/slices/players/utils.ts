@@ -11,6 +11,10 @@ export const defaultPlayerData: PlayerData = {
 	balance: {
 		cash: 0,
 		gems: 0,
+		honor: 0,
 	},
 	items: [],
+	xp: 0,
+	wins: 0,
+	playTime: 0,
 };
