@@ -3,6 +3,7 @@ import { Currency } from "shared/configs/Currency";
 import { SharedState } from "..";
 import { PlayerData } from "../slices/players/types";
 import { defaultPlayerData } from "../slices/players/utils";
+import { playTimeSlice } from "../slices/players/playTime";
 
 export const selectPlayerBalances = (playerId: string) => {
 	return (state: SharedState) => {
@@ -46,18 +47,42 @@ export const selectEquipped = (playerId: string) => {
 	};
 };
 
+export const selectXP = (playerId: string) => {
+	return (state: SharedState) => {
+		return state.players.xp[playerId];
+	};
+};
+
+export const selectWins = (playerId: string) => {
+	return (state: SharedState) => {
+		return state.players.wins[playerId];
+	};
+};
+
+export const selectPlayTime = (playerId: string) => {
+	return (state: SharedState) => {
+		return state.players.playTime[playerId];
+	};
+};
+
 export const selectPlayerData = (playerId: string) => {
 	return createSelector(
 		selectPlayerBalances(playerId),
 		selectLoggedIns(playerId),
 		selectItems(playerId),
 		selectEquipped(playerId),
-		(balances, loggedIns, items, equipped): PlayerData => {
+		selectXP(playerId),
+		selectWins(playerId),
+		selectPlayTime(playerId),
+		(balances, loggedIns, items, equipped, xp, wins, playTime): PlayerData => {
 			return {
 				loggedIn: loggedIns || defaultPlayerData.loggedIn,
 				balance: balances || defaultPlayerData.balance,
 				items: items || defaultPlayerData.items,
 				equipped: equipped || defaultPlayerData.equipped,
+				xp: xp || defaultPlayerData.xp,
+				wins: wins || defaultPlayerData.wins,
+				playTime: playTime || defaultPlayerData.playTime,
 			};
 		},
 	);

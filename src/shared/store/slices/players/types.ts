@@ -6,6 +6,9 @@ export interface PlayerData {
 	balance: PlayerBalance;
 	items: PlayerItems;
 	equipped: PlayerEquipped;
+	xp: number;
+	wins: number;
+	playTime: number;
 }
 
 export type PlayerEquipped = {
