@@ -1,7 +1,9 @@
 // import { print } from "rbxts-transform-debug";
-import { getPlayerData } from "shared/atoms/player-data";
-import { BaseOrderedDataStore } from "./BaseOrderedDataStore";
+
+import { selectPlayerData } from "shared/store/selectors/players";
 import { getLevel } from "shared/utils/functions/getLevel";
+import { BaseOrderedDataStore } from "./BaseOrderedDataStore";
+import { store } from "./store";
 
 export class OrderedPlayerData {
 	player: Player;
@@ -26,7 +28,8 @@ export class OrderedPlayerData {
 		const xp = this.xp.Get();
 		const wins = this.wins.Get();
 		const playTime = this.playTime.Get();
-		const playerData = getPlayerData(this.player.UserId);
+		const playerData = store.getState(selectPlayerData(tostring(this.player.UserId)));
+
 		return {
 			...playerData,
 			xp,
@@ -38,7 +41,7 @@ export class OrderedPlayerData {
 	CheckDailyRewards() {
 		const today = os.date("!*t").yday;
 		let rewarded = true;
-		const playerData = getPlayerData(this.player.UserId);
+		const playerData = store.getState(selectPlayerData(tostring(this.player.UserId)));
 
 		// if (!playerData.loggedIn.last) {
 		// 	// first time logging in
