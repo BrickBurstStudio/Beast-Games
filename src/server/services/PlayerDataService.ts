@@ -93,6 +93,7 @@ export class PlayerDataService implements OnInit {
 			if (!save) return;
 			cash.Value = save.cash ?? 0;
 			gems.Value = save.gems ?? 0;
+			honor.Value = save.honor ?? 0;
 		});
 
 		//TODO: refactor with better player removal handling / performance
