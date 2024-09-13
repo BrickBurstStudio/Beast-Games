@@ -110,7 +110,7 @@ export class MovementController implements OnStart {
 					this.lastCharacterReference.Humanoid.WalkSpeed = this.defaultWalkSpeed;
 					this.sprinting = false;
 				}
-				print(this.stamina);
+				// print(this.stamina);
 			}
 		});
 	}

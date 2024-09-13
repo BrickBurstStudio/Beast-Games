@@ -1,9 +1,9 @@
-import { $print } from "rbxts-transform-debug";
+// import { print } from "rbxts-transform-debug";
+import { getPlayerData } from "shared/atoms/player-data";
 import { BaseOrderedDataStore } from "./BaseOrderedDataStore";
 import { getLevel } from "shared/utils/functions/getLevel";
-import { rootAtom } from "shared/atoms/player";
 
-export class PlayerData {
+export class OrderedPlayerData {
 	player: Player;
 	//TODO: Handle base orderd data in reflex
 	xp: BaseOrderedDataStore;
@@ -26,7 +26,7 @@ export class PlayerData {
 		const xp = this.xp.Get();
 		const wins = this.wins.Get();
 		const playTime = this.playTime.Get();
-		const playerData = rootAtom();
+		const playerData = getPlayerData(this.player.UserId);
 		return {
 			...playerData,
 			xp,
@@ -38,23 +38,23 @@ export class PlayerData {
 	CheckDailyRewards() {
 		const today = os.date("!*t").yday;
 		let rewarded = true;
-		const playerData = rootAtom().get(this.player.UserId);
+		const playerData = getPlayerData(this.player.UserId);
 
 		// if (!playerData.loggedIn.last) {
 		// 	// first time logging in
 		// 	// give welcome rewards
 		// 	this.xp.UpdateBy(75);
 		// 	store.changeBalance(tostring(this.player.UserId), "coins", 188);
-		// 	$print(`Player ${this.player.UserId} (${this.player.Name}) has logged in for the first time!`);
+		// 	print(`Player ${this.player.UserId} (${this.player.Name}) has logged in for the first time!`);
 		// } else if (playerData.loggedIn.last !== today) {
 		// 	// player has logged in on a new day
 		// 	// give daily rewards
 		// 	this.xp.UpdateBy(25);
 		// 	store.changeBalance(tostring(this.player.UserId), "coins", 63);
-		// 	$print(`Player ${this.player.UserId} (${this.player.Name}) has logged in today!`);
+		// 	print(`Player ${this.player.UserId} (${this.player.Name}) has logged in today!`);
 		// } else {
 		// 	// player has already logged in today. cringe. get a job
-		// 	$print(`Player ${this.player.UserId} (${this.player.Name}) has already logged in today!`);
+		// 	print(`Player ${this.player.UserId} (${this.player.Name}) has already logged in today!`);
 		// 	rewarded = false;
 		// }
 

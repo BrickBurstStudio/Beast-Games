@@ -39,7 +39,6 @@
 		"@flamework/components": "^1.2.3",
 		"@flamework/core": "^1.2.3",
 		"@flamework/networking": "^1.2.3",
-		"@rbxts/charm": "^0.6.1",
 		"@rbxts/janitor": "^1.17.0-ts.1",
 		"@rbxts/make": "^1.0.6",
 		"@rbxts/profileservice": "^1.4.2",
