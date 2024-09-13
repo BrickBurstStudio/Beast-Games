@@ -1,12 +1,43 @@
+/* eslint-disable no-unused-vars */
 import { Networking } from "@flamework/networking";
+import { BroadcastAction } from "@rbxts/reflex";
+// import BaseItem from "shared/components/Items/BaseItem";
 
-interface ClientToServerEvents {}
+import { PlayerData } from "./store/slices/players/types";
 
-interface ServerToClientEvents {}
+type updateLeaderboardsArgs = {
+	xp: { key: string; value: number }[];
+	playTime: { key: string; value: number }[];
+	wins: { key: string; value: number }[];
+};
 
-interface ClientToServerFunctions {}
+interface ServerEvents {
+	reflex: {
+		start: () => void;
+	};
+}
 
-interface ServerToClientFunctions {}
+interface ServerFunctions {
+	// purchaseItem: (itemId: BaseItem["id"]) => string | void;
+}
 
-export const GlobalEvents = Networking.createEvent<ClientToServerEvents, ServerToClientEvents>();
-export const GlobalFunctions = Networking.createFunction<ClientToServerFunctions, ServerToClientFunctions>();
+interface ClientEvents {
+	reflex: {
+		dispatch: (actions: Array<BroadcastAction>) => void;
+		hydrate: (actions: PlayerData) => void;
+		start: () => void;
+	};
+
+	updateLeaderboards: (args: updateLeaderboardsArgs) => void;
+
+	createChallenge: (name: string) => void;
+
+	// announceMessage: ({ ...args }: Announcement) => void;
+
+	animateUnboxing: ({ ...args }: { targetPlayer: Player; unboxModel: Model; itemModel: Model }) => void;
+}
+
+interface ClientFunctions {}
+
+export const GlobalEvents = Networking.createEvent<ServerEvents, ClientEvents>();
+export const GlobalFunctions = Networking.createFunction<ServerFunctions, ClientFunctions>();
