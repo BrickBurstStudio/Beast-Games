@@ -2,8 +2,8 @@
 
 import { selectPlayerData } from "shared/store/selectors/players";
 import { getLevel } from "shared/utils/functions/getLevel";
+import { store } from "../server/store";
 import { BaseOrderedDataStore } from "./BaseOrderedDataStore";
-import { store } from "./store";
 
 export class OrderedPlayerData {
 	player: Player;
@@ -39,7 +39,7 @@ export class OrderedPlayerData {
 	}
 
 	GetLevel() {
-		// return getLevel(this.xp.Get());
+		return getLevel(this.xp.Get());
 	}
 
 	GetAll() {

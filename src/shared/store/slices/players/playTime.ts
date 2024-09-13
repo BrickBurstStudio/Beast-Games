@@ -1,6 +1,5 @@
 import { createProducer } from "@rbxts/reflex";
-import { Currency } from "shared/configs/Currency";
-import { PlayerBalance, PlayerData } from "./types";
+import { PlayerData } from "./types";
 import { defaultPlayerData } from "./utils";
 
 export interface playTimeState {
@@ -19,6 +18,13 @@ export const playTimeSlice = createProducer(initialState, {
 		...state,
 		[playerId]: undefined,
 	}),
+
+	reset: (state, playerId: string) => {
+		return {
+			...state,
+			[playerId]: defaultPlayerData.playTime,
+		};
+	},
 
 	incrementPlayTime: (state, playerId: string, amount: number) => {
 		if (amount < 0) warn("Play Time should never be decremented.");

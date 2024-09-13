@@ -19,6 +19,12 @@ export const balanceSlice = createProducer(initialState, {
 		...state,
 		[playerId]: undefined,
 	}),
+	reset: (state, playerId: string) => {
+		return {
+			...state,
+			[playerId]: defaultPlayerData.balance,
+		};
+	},
 
 	changeBalance: (state, playerId: string, currency: Currency, amount: number) => {
 		const balance = state[playerId];
@@ -28,15 +34,6 @@ export const balanceSlice = createProducer(initialState, {
 			[playerId]: balance && {
 				...balance,
 				[currency]: balance[currency] + amount,
-			},
-		};
-	},
-
-	resetBalance: (state, playerId: string) => {
-		return {
-			...state,
-			[playerId]: {
-				...defaultPlayerData.balance,
 			},
 		};
 	},
