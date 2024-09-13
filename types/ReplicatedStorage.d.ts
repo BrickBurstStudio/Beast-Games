@@ -4,13 +4,50 @@ interface ReplicatedStorage extends Instance {
 		utils: Folder & {
 			["object-utils"]: ModuleScript;
 			functions: Folder & {
+				randomNumbers: ModuleScript;
+				getColor3FromLevel: ModuleScript;
+				toTitleCase: ModuleScript;
 				getCharacter: ModuleScript;
 				getPlayerByName: ModuleScript;
+				tweenUtil: ModuleScript;
+				randomColor: ModuleScript;
 				forEveryPlayer: ModuleScript;
+				getLevel: ModuleScript;
 			};
 		};
-		components: Folder;
 		network: ModuleScript;
+		Items: Folder & {
+			BaseItem: ModuleScript;
+			Outfit: ModuleScript;
+		};
+		configs: Folder & {
+			items: ModuleScript;
+			Currency: ModuleScript;
+			Gui: ModuleScript;
+		};
+		components: Folder;
+		store: ModuleScript & {
+			slices: Folder & {
+				players: ModuleScript & {
+					utils: ModuleScript;
+					wins: ModuleScript;
+					xp: ModuleScript;
+					items: ModuleScript;
+					balance: ModuleScript;
+					playTime: ModuleScript;
+					types: ModuleScript;
+					equipped: ModuleScript;
+					loggedIn: ModuleScript;
+				};
+				client: ModuleScript & {
+					gui: ModuleScript;
+				};
+			};
+			selectors: Folder & {
+				players: ModuleScript;
+				client: ModuleScript;
+			};
+		};
 	};
 	Assets: Folder & {
 		Objects: Folder & {
@@ -161,6 +198,7 @@ interface ReplicatedStorage extends Instance {
 					};
 					Reflex: ModuleScript;
 				};
+				signal: ModuleScript;
 				types: Folder & {
 					include: Folder & {
 						generated: Folder;
@@ -261,7 +299,9 @@ interface ReplicatedStorage extends Instance {
 						types: ModuleScript;
 					};
 				};
-				signal: ModuleScript;
+				remap: Folder & {
+					src: ModuleScript;
+				};
 				profileservice: Folder & {
 					src: ModuleScript;
 				};
