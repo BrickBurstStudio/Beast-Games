@@ -20,6 +20,13 @@ export const xpSlice = createProducer(initialState, {
 		[playerId]: undefined,
 	}),
 
+	reset: (state, playerId: string) => {
+		return {
+			...state,
+			[playerId]: defaultPlayerData.xp,
+		};
+	},
+
 	changeXP: (state, playerId: string, amount: number) => {
 		const xp = state[playerId];
 
