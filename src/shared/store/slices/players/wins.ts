@@ -20,6 +20,13 @@ export const winsSlice = createProducer(initialState, {
 		[playerId]: undefined,
 	}),
 
+	reset: (state, playerId: string) => {
+		return {
+			...state,
+			[playerId]: defaultPlayerData.wins,
+		};
+	},
+
 	incrementWins: (state, playerId: string, amount: number) => {
 		if (amount < 0) warn("Wins should never be decremented.");
 
