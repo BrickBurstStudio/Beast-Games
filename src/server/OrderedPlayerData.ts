@@ -11,6 +11,7 @@ export class OrderedPlayerData {
 	xp: BaseOrderedDataStore;
 	wins: BaseOrderedDataStore;
 	playTime: BaseOrderedDataStore;
+	cash: BaseOrderedDataStore;
 
 	constructor(player: Player) {
 		if (player.UserId < 0) error(`Player ${player.Name} has a negative UserId! Please use real players.`);
@@ -18,6 +19,7 @@ export class OrderedPlayerData {
 		this.xp = new BaseOrderedDataStore(player.UserId, "xp");
 		this.wins = new BaseOrderedDataStore(player.UserId, "wins");
 		this.playTime = new BaseOrderedDataStore(player.UserId, "playTime");
+		this.cash = new BaseOrderedDataStore(player.UserId, "cash");
 	}
 
 	GetLevel() {
