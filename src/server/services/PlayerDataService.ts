@@ -76,9 +76,9 @@ export class PlayerDataService implements OnInit {
 
 		const initialBalance = store.getState(selectPlayerBalances(tostring(player.UserId)));
 
-		const coins = new Instance("NumberValue", leaderstats);
-		coins.Name = "💰 Cash";
-		coins.Value = initialBalance?.cash ?? 0;
+		const cash = new Instance("NumberValue", leaderstats);
+		cash.Name = "💰 Cash";
+		cash.Value = initialBalance?.cash ?? 0;
 
 		const gems = new Instance("NumberValue", leaderstats);
 		gems.Name = "💎 Gems";
@@ -87,7 +87,7 @@ export class PlayerDataService implements OnInit {
 		const unsubscribe = store.subscribe(selectPlayerBalances(tostring(player.UserId)), (save) => {
 			print("Updating leaderstats", save);
 			if (!save) return;
-			coins.Value = save.cash ?? 0;
+			cash.Value = save.cash ?? 0;
 			gems.Value = save.gems ?? 0;
 		});
 
