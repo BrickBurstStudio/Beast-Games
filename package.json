@@ -33,7 +33,7 @@
 		"rbxts-transform-debug": "^2.2.0",
 		"rbxts-transformer-flamework": "^1.2.3",
 		"roblox-ts": "^3.0.0",
-		"typescript": "^5.6.2"
+		"typescript": "^5.5.3"
 	},
 	"dependencies": {
 		"@flamework/components": "^1.2.3",

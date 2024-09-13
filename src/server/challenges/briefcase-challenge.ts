@@ -12,7 +12,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 	readonly revealTime = 5;
 
 	readonly playerSelections: { [key: Player["UserId"]]: BriefcaseComponent } = {};
-	briefcases: Array<BriefcaseComponent> = [];
+	briefcases: BriefcaseComponent[] = [];
 	revealing = false;
 
 	protected Main() {

@@ -7,7 +7,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 
 export abstract class BaseChallenge {
 	private finished = false;
-	protected obliterator = new Janitor();
+	protected readonly obliterator = new Janitor();
 	protected abstract readonly map: Folder;
 
 	public Start() {
