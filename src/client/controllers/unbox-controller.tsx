@@ -1,7 +1,6 @@
 import { Controller, OnStart } from "@flamework/core";
 import { Component, BaseComponent } from "@flamework/components";
 import { Players, ReplicatedStorage, RunService, ServerStorage, TweenService, Workspace } from "@rbxts/services";
-import { $error, $print } from "rbxts-transform-debug";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { tweenNumber, tweenScale } from "shared/utils/functions/tweenUtil";
 import { Events } from "client/network";
@@ -18,8 +17,8 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 		// Guards
 		const unboxClone = unboxModel.Clone();
 		const itemClone = itemModel.Clone();
-		if (unboxClone.PrimaryPart === undefined) $error("unboxModel's clone must have a PrimaryPart");
-		if (itemClone.PrimaryPart === undefined) $error("unboxModel's clone must have a PrimaryPart");
+		if (unboxClone.PrimaryPart === undefined) error("unboxModel's clone must have a PrimaryPart");
+		if (itemClone.PrimaryPart === undefined) error("unboxModel's clone must have a PrimaryPart");
 
 		// Initialize
 		const billboardClone = ReplicatedStorage.Assets.Gui.ClaimBGUI.Clone();
