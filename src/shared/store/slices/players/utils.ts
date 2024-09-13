@@ -9,7 +9,7 @@ export const defaultPlayerData: PlayerData = {
 		total: 0,
 	},
 	balance: {
-		coins: 0,
+		cash: 0,
 		gems: 0,
 	},
 	items: [],
