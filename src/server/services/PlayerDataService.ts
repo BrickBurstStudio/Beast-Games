@@ -84,11 +84,16 @@ export class PlayerDataService implements OnInit {
 		gems.Name = "💎 Gems";
 		gems.Value = initialBalance?.gems ?? 0;
 
+		const honor = new Instance("NumberValue", leaderstats);
+		honor.Name = "🏆 Honor";
+		honor.Value = initialBalance?.honor ?? 0;
+
 		const unsubscribe = store.subscribe(selectPlayerBalances(tostring(player.UserId)), (save) => {
 			print("Updating leaderstats", save);
 			if (!save) return;
-			cash.Value = save.cash ?? 0;
-			gems.Value = save.gems ?? 0;
+			cash.Value = save.cash;
+			gems.Value = save.gems;
+			honor.Value = save.honor;
 		});
 
 		//TODO: refactor with better player removal handling / performance
@@ -100,16 +105,5 @@ export class PlayerDataService implements OnInit {
 	private removeProfile(player: Player) {
 		const profile = this.profiles.get(player);
 		profile?.Release();
-	}
-
-	//TODO: add better profile handling when getting profile
-	public getProfileSync(player: Player) {
-		let profile = this.profiles.get(player);
-		while (!profile) {
-			profile = this.profiles.get(player);
-			task.wait(0.25);
-		}
-
-		return profile!;
 	}
 }
