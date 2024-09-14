@@ -2,7 +2,8 @@ import { PlayerData } from "./types";
 
 export const defaultPlayerData: PlayerData = {
 	equipped: {
-		hat: undefined,
+		emote: [],
+		hat: [],
 	},
 	loggedIn: {
 		last: undefined,

@@ -10,8 +10,16 @@ export const ItemRarityConfig = {
 	legendary: { color: new Color3(1, 1, 0), weight: 1 },
 } as const;
 
+export const ItemMaxEquipped: Record<EquippableItemType, number> = {
+	emote: 3,
+	hat: 1,
+};
+
+export type ItemType = "emote" | "hat" | "case";
+export type EquippableItemType = Exclude<ItemType, "case">;
+export type EquippableItemId = Extract<ItemId, `${EquippableItemType}_${number}`>;
 export type Item = {
-	id: `${"emote" | "hat" | "case"}_${number}`;
+	id: `${ItemType}_${number}`;
 	rarity: keyof typeof ItemRarityConfig;
 	name: string;
 };
