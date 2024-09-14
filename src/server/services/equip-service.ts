@@ -20,7 +20,6 @@ export class EquipService implements OnStart {
 			const playerEquipped = state.players.equipped[`${player.UserId}`];
 			const success = (playerEquipped && !!playerEquipped[itemType].includes(itemId)) ?? false;
 
-			print(success, playerEquipped && playerEquipped[itemType]);
 			if (success) this.Equip(item);
 
 			return success;
@@ -35,7 +34,6 @@ export class EquipService implements OnStart {
 			const playerEquipped = state.players.equipped[`${player.UserId}`];
 			const success = (playerEquipped && !!!playerEquipped[itemType].includes(itemId)) ?? false;
 
-			print(success, playerEquipped && playerEquipped[itemType]);
 			if (success) this.Unequip(item);
 
 			return success;
