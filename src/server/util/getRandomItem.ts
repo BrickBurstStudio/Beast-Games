@@ -18,6 +18,8 @@ export function chooseRandomItem(caseObject: (typeof cases)[number]) {
 			return itemId;
 		}
 	}
+
+	return weights[weights.size() - 1].itemId;
 }
 
 export function calculateUnboxChance(caseObject: (typeof cases)[number]) {

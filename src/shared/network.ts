@@ -21,6 +21,7 @@ interface ServerEvents {
 
 interface ServerFunctions {
 	inventory: {
+		openCase: (caseId: (typeof cases)[number]["id"]) => string | void;
 		equip: (itemId: EquippableItemId) => boolean;
 		unequip: (itemId: EquippableItemId) => boolean;
 	};
