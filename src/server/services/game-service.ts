@@ -10,6 +10,9 @@ class GameService implements OnStart {
 
 		task.wait(3);
 		const player = Players.GetPlayers()[0];
-		store.equip(tostring(player.UserId), "hat_1");
+		store.equip(tostring(player.UserId), "emote_1");
 	}
 }
+
+type ValidItem = `${"emote" | "hat"}_${number}`;
+const x: ValidItem = "emote_1";

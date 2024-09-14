@@ -1,5 +1,5 @@
-import BaseItem from "shared/classes/items/BaseItem";
-import { Currency } from "shared/configs/Currency";
+import { Currency } from "shared/configs/currency";
+import { ItemId } from "shared/configs/items";
 
 export interface PlayerData {
 	loggedIn: PlayerLoggedIn;
@@ -12,10 +12,10 @@ export interface PlayerData {
 }
 
 export type PlayerEquipped = {
-	hat: BaseItem["id"] | undefined;
+	hat: ItemId | undefined;
 };
 
-export type PlayerItems = BaseItem["id"][];
+export type PlayerItems = ItemId[];
 
 export type PlayerLoggedIn = {
 	// os.date("!*t").yday;

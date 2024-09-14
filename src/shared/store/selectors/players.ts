@@ -1,9 +1,10 @@
 import { createSelector } from "@rbxts/reflex";
-import { Currency } from "shared/configs/Currency";
+import { Currency } from "shared/configs/currency";
 import { SharedState } from "..";
 import { PlayerData, PlayerEquipped } from "../slices/players/types";
 import { defaultPlayerData } from "../slices/players/utils";
 import { playTimeSlice } from "../slices/players/playTime";
+import { ItemId } from "shared/configs/items";
 
 export const selectPlayerBalances = (playerId: string) => {
 	return (state: SharedState) => {
@@ -35,7 +36,7 @@ export const selectItems = (playerId: string) => {
 	};
 };
 
-export const selectItem = (playerId: string, itemId: string) => {
+export const selectItem = (playerId: string, itemId: ItemId) => {
 	return createSelector(selectItems(playerId), (items) => {
 		return items && items.includes(itemId);
 	});
