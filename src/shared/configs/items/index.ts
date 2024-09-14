@@ -1,6 +1,6 @@
-import { cases } from "./cases";
-import { emotes } from "./emotes";
-import { hats } from "./hats";
+import { Case, cases } from "./cases";
+import { Emote, emotes } from "./emotes";
+import { Hat, hats } from "./hats";
 
 export const ItemRarityConfig = {
 	common: { color: new Color3(1, 1, 1), weight: 625 },
