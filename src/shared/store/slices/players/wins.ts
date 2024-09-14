@@ -1,5 +1,5 @@
 import { createProducer } from "@rbxts/reflex";
-import { Currency } from "shared/configs/Currency";
+import { Currency } from "shared/configs/currency";
 import { PlayerBalance, PlayerData } from "./types";
 import { defaultPlayerData } from "./utils";
 

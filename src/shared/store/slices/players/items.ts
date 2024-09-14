@@ -1,7 +1,7 @@
 import { createProducer } from "@rbxts/reflex";
 import { PlayerData, PlayerItems } from "./types";
 import { defaultPlayerData } from "./utils";
-import BaseItem from "shared/classes/items/BaseItem";
+import { ItemId } from "shared/configs/items";
 
 export interface ItemsState {
 	readonly [player: string]: PlayerItems | undefined;
@@ -27,7 +27,7 @@ export const itemsSlice = createProducer(initialState, {
 		};
 	},
 
-	addItemToInventory: (state, player: string, itemId: BaseItem["id"]) => {
+	addItemToInventory: (state, player: string, itemId: ItemId) => {
 		const items = state[player] || [];
 		return {
 			...state,
@@ -35,7 +35,7 @@ export const itemsSlice = createProducer(initialState, {
 		};
 	},
 
-	removeItemFromInventory: (state, player: string, itemId: BaseItem["id"]) => {
+	removeItemFromInventory: (state, player: string, itemId: ItemId) => {
 		const items = state[player] || [];
 		const index = items.indexOf(itemId);
 		if (index === -1) return state;
