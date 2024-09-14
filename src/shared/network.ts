@@ -3,8 +3,9 @@ import { Networking } from "@flamework/networking";
 import { BroadcastAction } from "@rbxts/reflex";
 // import BaseItem from "shared/components/Items/BaseItem";
 
+import { EquippableItemId } from "./configs/items";
+import { cases } from "./configs/items/cases";
 import { PlayerData } from "./store/slices/players/types";
-import { EquippableItemId, EquippableItemType, ItemId } from "./configs/items";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -22,6 +23,11 @@ interface ServerFunctions {
 	inventory: {
 		equip: (itemId: EquippableItemId) => boolean;
 		unequip: (itemId: EquippableItemId) => boolean;
+	};
+
+	purchase: {
+		case: (caseId: (typeof cases)[number]["id"]) => string | void;
+		action: () => string | void;
 	};
 }
 
