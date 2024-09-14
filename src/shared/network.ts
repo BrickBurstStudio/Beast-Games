@@ -4,6 +4,7 @@ import { BroadcastAction } from "@rbxts/reflex";
 // import BaseItem from "shared/components/Items/BaseItem";
 
 import { PlayerData } from "./store/slices/players/types";
+import { EquippableItemId, EquippableItemType, ItemId } from "./configs/items";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -18,7 +19,10 @@ interface ServerEvents {
 }
 
 interface ServerFunctions {
-	// purchaseItem: (itemId: BaseItem["id"]) => string | void;
+	inventory: {
+		equip: (itemId: EquippableItemId) => boolean;
+		unequip: (itemId: EquippableItemId) => boolean;
+	};
 }
 
 interface ClientEvents {

@@ -1,29 +1,42 @@
 import { OnStart, Service } from "@flamework/core";
 import { Janitor } from "@rbxts/janitor";
 import { Players, ReplicatedStorage } from "@rbxts/services";
+import { Events, Functions } from "server/network";
 import { store } from "server/store";
 import { hats } from "shared/configs/items/hats";
 import { selectEquippedType } from "shared/store/selectors/players";
+import { PlayerEquipped } from "shared/store/slices/players/types";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
 @Service()
 class EquipService implements OnStart {
 	onStart() {
-		forEveryPlayer((p) => {
-			const obliterator = new Janitor();
-			obliterator.Add(
-				store.subscribe(selectEquippedType(tostring(p.UserId), "hat"), (hat) => {
-					const meshId = hats.find((h) => h.id === hat)?.meshId;
-					if (!meshId) return;
-					const clone = ReplicatedStorage.Assets.Accessory.Clone();
-					clone.Parent = p.Character
-				}),
-			);
-			Players.PlayerRemoving.Connect((p1) => {
-				if (p === p1) {
-					obliterator.Cleanup();
-				}
-			});
+		Functions.inventory.equip.setCallback((player, itemId) => {
+			const state = store.equip(tostring(player.UserId), itemId);
+			const itemType = itemId.split("_")[0] as keyof PlayerEquipped;
+
+			const playerEquipped = state.players.equipped[`${player.UserId}`];
+			const success = (playerEquipped && !!playerEquipped[itemType].includes(itemId)) ?? false;
+
+			print(success, playerEquipped && playerEquipped[itemType]);
+
+			return success;
 		});
+
+		Functions.inventory.unequip.setCallback((player, itemId) => {
+			const state = store.unequip(tostring(player.UserId), itemId);
+			const itemType = itemId.split("_")[0] as keyof PlayerEquipped;
+
+			const playerEquipped = state.players.equipped[`${player.UserId}`];
+			const success = (playerEquipped && !!!playerEquipped[itemType].includes(itemId)) ?? false;
+
+			print(success, playerEquipped && playerEquipped[itemType]);
+
+			return success;
+		});
+
+		while (Players.GetPlayers().size() < 1) task.wait();
+		task.wait(3);
+		Functions.inventory.unequip.predict(Players.GetPlayers()[0], "emote_1");
 	}
 }

@@ -1,7 +1,7 @@
 import { createProducer } from "@rbxts/reflex";
 import { PlayerData, PlayerEquipped } from "./types";
 import { defaultPlayerData } from "./utils";
-import { ItemId } from "shared/configs/items";
+import { EquippableItemId, EquippableItemType, ItemId, ItemMaxEquipped, ItemType } from "shared/configs/items";
 
 export interface EquippedState {
 	readonly [player: string]: PlayerEquipped | undefined;
@@ -27,16 +27,34 @@ export const equippedSlice = createProducer(initialState, {
 		};
 	},
 
-	equip: (state, playerId: string, itemId: ItemId) => {
-		const itemType = itemId.split("_")[0];
+	equip: (state, playerId: string, itemId: EquippableItemId) => {
+		const itemType = itemId.split("_")[0] as keyof PlayerEquipped;
 		const equipped = state[playerId];
 
 		return {
 			...state,
-			[playerId]: equipped && {
-				...equipped,
-				[itemType]: itemId,
-			},
+			[playerId]: equipped &&
+				equipped[itemType] && {
+					...equipped,
+					[itemType]: [
+						...equipped[itemType].filter((_, i) => i + 1 < ItemMaxEquipped[itemType]).filterUndefined(),
+						itemId,
+					],
+				},
+		};
+	},
+
+	unequip: (state, playerId: string, itemId: EquippableItemId) => {
+		const itemType = itemId.split("_")[0] as keyof PlayerEquipped;
+		const equipped = state[playerId];
+
+		return {
+			...state,
+			[playerId]: equipped &&
+				equipped[itemType] && {
+					...equipped,
+					[itemType]: [...equipped[itemType].filter((id) => id !== itemId).filterUndefined()],
+				},
 		};
 	},
 });

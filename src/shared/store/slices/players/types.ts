@@ -1,5 +1,5 @@
 import { Currency } from "shared/configs/currency";
-import { ItemId } from "shared/configs/items";
+import { EquippableItemId, EquippableItemType, ItemId, ItemType } from "shared/configs/items";
 
 export interface PlayerData {
 	loggedIn: PlayerLoggedIn;
@@ -12,7 +12,7 @@ export interface PlayerData {
 }
 
 export type PlayerEquipped = {
-	hat: ItemId | undefined;
+	[K in EquippableItemType]: EquippableItemId[];
 };
 
 export type PlayerItems = ItemId[];
