@@ -3,6 +3,7 @@ import { Networking } from "@flamework/networking";
 import { BroadcastAction } from "@rbxts/reflex";
 // import BaseItem from "shared/components/Items/BaseItem";
 
+import { cases } from "./configs/items/cases";
 import { PlayerData } from "./store/slices/players/types";
 import { EquippableItemId, EquippableItemType, ItemId } from "./configs/items";
 
@@ -23,6 +24,8 @@ interface ServerFunctions {
 		equip: (itemId: EquippableItemId) => boolean;
 		unequip: (itemId: EquippableItemId) => boolean;
 	};
+	purchaseCase: (caseId: (typeof cases)[number]["id"]) => string | void;
+	purchaseAction: () => string | void;
 }
 
 interface ClientEvents {

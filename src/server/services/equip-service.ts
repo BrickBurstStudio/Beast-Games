@@ -9,7 +9,7 @@ import { PlayerEquipped } from "shared/store/slices/players/types";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
 @Service()
-class EquipService implements OnStart {
+export class EquipService implements OnStart {
 	onStart() {
 		Functions.inventory.equip.setCallback((player, itemId) => {
 			const state = store.equip(tostring(player.UserId), itemId);
