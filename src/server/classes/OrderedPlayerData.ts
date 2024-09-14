@@ -2,8 +2,8 @@
 
 import { selectPlayerData } from "shared/store/selectors/players";
 import { getLevel } from "shared/utils/functions/getLevel";
-import { store } from "../server/store";
 import { BaseOrderedDataStore } from "./BaseOrderedDataStore";
+import { store } from "server/store";
 
 export class OrderedPlayerData {
 	player: Player;
