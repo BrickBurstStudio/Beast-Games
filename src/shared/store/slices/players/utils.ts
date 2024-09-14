@@ -2,7 +2,7 @@ import { PlayerData } from "./types";
 
 export const defaultPlayerData: PlayerData = {
 	equipped: {
-		outfitId: undefined,
+		hat: undefined,
 	},
 	loggedIn: {
 		last: undefined,

@@ -1,5 +1,16 @@
 import { Case } from "shared/classes/items/Case";
 
+const test = [
+	{
+		x: "hi",
+	},
+	{
+		x: "bye",
+	},
+] as const;
+
+// let x: (typeof test)[number]["x"][] = ["hi"];
+
 export const cases = [
 	/* ---------------------------------- Pets ---------------------------------- */
 	new Case({

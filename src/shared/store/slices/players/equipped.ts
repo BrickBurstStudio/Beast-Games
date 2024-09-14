@@ -1,7 +1,7 @@
 import { createProducer } from "@rbxts/reflex";
-import BaseItem from "shared/Items/BaseItem";
 import { PlayerData, PlayerEquipped } from "./types";
 import { defaultPlayerData } from "./utils";
+import BaseItem from "shared/classes/items/BaseItem";
 
 export interface EquippedState {
 	readonly [player: string]: PlayerEquipped | undefined;
@@ -28,13 +28,14 @@ export const equippedSlice = createProducer(initialState, {
 	},
 
 	equip: (state, playerId: string, itemId: BaseItem["id"]) => {
+		const itemType = itemId.split("_")[0];
 		const equipped = state[playerId];
 
 		return {
 			...state,
 			[playerId]: equipped && {
 				...equipped,
-				outfitId: itemId,
+				[itemType]: itemId,
 			},
 		};
 	},

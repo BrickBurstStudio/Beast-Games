@@ -12,7 +12,7 @@ export interface PlayerData {
 }
 
 export type PlayerEquipped = {
-	outfitId: BaseItem["id"] | undefined;
+	hat: BaseItem["id"] | undefined;
 };
 
 export type PlayerItems = BaseItem["id"][];

@@ -3,6 +3,7 @@ import { Currency } from "./Currency";
 import BaseItem from "shared/classes/items/BaseItem";
 import { cases } from "./items/cases";
 import { emotes } from "./items/emotes";
+import { hats } from "./items/hats";
 
 export const ItemRarityConfig = {
 	common: { color: new Color3(1, 1, 1), cost: 200 },
@@ -16,4 +17,4 @@ export type ItemRarity = keyof typeof ItemRarityConfig;
 
 export const items = new Map<BaseItem["id"], BaseItem>();
 
-[...cases, ...emotes].forEach((item) => items.set(item.id, item));
+[...cases, ...emotes, ...hats].forEach((item) => items.set(item.id, item));

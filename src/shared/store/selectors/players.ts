@@ -1,7 +1,7 @@
 import { createSelector } from "@rbxts/reflex";
 import { Currency } from "shared/configs/Currency";
 import { SharedState } from "..";
-import { PlayerData } from "../slices/players/types";
+import { PlayerData, PlayerEquipped } from "../slices/players/types";
 import { defaultPlayerData } from "../slices/players/utils";
 import { playTimeSlice } from "../slices/players/playTime";
 
@@ -45,6 +45,12 @@ export const selectEquipped = (playerId: string) => {
 	return (state: SharedState) => {
 		return state.players.equipped[playerId];
 	};
+};
+
+export const selectEquippedType = (playerId: string, itemType: keyof PlayerEquipped) => {
+	return createSelector(selectEquipped(playerId), (equipped) => {
+		return equipped && equipped[itemType];
+	});
 };
 
 export const selectXP = (playerId: string) => {

@@ -16,14 +16,17 @@ interface ReplicatedStorage extends Instance {
 			};
 		};
 		network: ModuleScript;
-		Items: Folder & {
-			BaseItem: ModuleScript;
-			Outfit: ModuleScript;
+		classes: Folder & {
+			items: Folder & {
+				BaseItem: ModuleScript;
+				Hat: ModuleScript;
+				Emote: ModuleScript;
+				BaseCosmetic: ModuleScript;
+				Case: ModuleScript;
+			};
 		};
 		configs: Folder & {
-			items: ModuleScript;
 			Currency: ModuleScript;
-			Gui: ModuleScript;
 		};
 		components: Folder;
 		store: ModuleScript & {
@@ -39,13 +42,9 @@ interface ReplicatedStorage extends Instance {
 					equipped: ModuleScript;
 					loggedIn: ModuleScript;
 				};
-				client: ModuleScript & {
-					gui: ModuleScript;
-				};
 			};
 			selectors: Folder & {
 				players: ModuleScript;
-				client: ModuleScript;
 			};
 		};
 	};
@@ -63,6 +62,12 @@ interface ReplicatedStorage extends Instance {
 			MoneyPile: Model & {
 				Part: Part;
 				Dollars: NumberValue;
+			};
+		};
+		Accessory: Accessory & {
+			Handle: Part & {
+				Mesh: SpecialMesh;
+				HatAttachment: Attachment;
 			};
 		};
 		Gui: Folder & {
@@ -184,6 +189,9 @@ interface ReplicatedStorage extends Instance {
 						useAnimation: ModuleScript;
 						motion: ModuleScript;
 					};
+				};
+				react: ModuleScript & {
+					tags: ModuleScript;
 				};
 				["react-reflex"]: ModuleScript & {
 					React: ModuleScript;
@@ -314,8 +322,100 @@ interface ReplicatedStorage extends Instance {
 				maid: Folder & {
 					Maid: ModuleScript;
 				};
-				react: ModuleScript & {
-					tags: ModuleScript;
+				cmdr: Folder & {
+					Cmdr: ModuleScript & {
+						CreateGui: ModuleScript;
+						Shared: Folder & {
+							Registry: ModuleScript;
+							Dispatcher: ModuleScript;
+							Command: ModuleScript;
+							Argument: ModuleScript;
+							Util: ModuleScript;
+						};
+						BuiltInTypes: Folder & {
+							PlayerId: ModuleScript;
+							URL: ModuleScript;
+							Duration: ModuleScript;
+							StoredKey: ModuleScript;
+							Primitives: ModuleScript;
+							Vector: ModuleScript;
+							Command: ModuleScript;
+							ConditionFunction: ModuleScript;
+							JSON: ModuleScript;
+							Type: ModuleScript;
+							UserInput: ModuleScript;
+							Player: ModuleScript;
+							Color3: ModuleScript;
+							Team: ModuleScript;
+							BindableResource: ModuleScript;
+							MathOperator: ModuleScript;
+							BrickColor: ModuleScript;
+						};
+						BuiltInCommands: Folder & {
+							help: ModuleScript;
+							Admin: Folder & {
+								gotoPlaceServer: ModuleScript;
+								kill: ModuleScript;
+								teleport: ModuleScript;
+								kickServer: ModuleScript;
+								killServer: ModuleScript;
+								respawn: ModuleScript;
+								respawnServer: ModuleScript;
+								gotoPlace: ModuleScript;
+								kick: ModuleScript;
+								teleportServer: ModuleScript;
+								announce: ModuleScript;
+								announceServer: ModuleScript;
+							};
+							Debug: Folder & {
+								getPlayerPlaceInstance: ModuleScript;
+								version: ModuleScript;
+								thru: ModuleScript;
+								blink: ModuleScript;
+								uptime: ModuleScript;
+								position: ModuleScript;
+								fetchServer: ModuleScript;
+								uptimeServer: ModuleScript;
+								getPlayerPlaceInstanceServer: ModuleScript;
+								fetch: ModuleScript;
+							};
+							Utility: Folder & {
+								rand: ModuleScript;
+								jsonArrayEncode: ModuleScript;
+								pick: ModuleScript;
+								echo: ModuleScript;
+								bind: ModuleScript;
+								["var"]: ModuleScript;
+								math: ModuleScript;
+								alias: ModuleScript;
+								clear: ModuleScript;
+								varSetServer: ModuleScript;
+								varServer: ModuleScript;
+								jsonArrayDecode: ModuleScript;
+								varSet: ModuleScript;
+								unbind: ModuleScript;
+								run: ModuleScript;
+								runLines: ModuleScript;
+								runif: ModuleScript;
+								history: ModuleScript;
+								hover: ModuleScript;
+								replace: ModuleScript;
+								len: ModuleScript;
+								resolve: ModuleScript;
+								convertTimestamp: ModuleScript;
+								edit: ModuleScript;
+							};
+						};
+						CmdrClient: ModuleScript & {
+							CmdrInterface: ModuleScript & {
+								AutoComplete: ModuleScript;
+								Window: ModuleScript;
+							};
+							DefaultEventHandlers: ModuleScript;
+						};
+						Initialize: ModuleScript;
+					};
+					TS: ModuleScript;
 				};
 				ReactLua: Folder & {
 					node_modules: Folder & {
