@@ -1,12 +1,8 @@
 import { OnStart, Service } from "@flamework/core";
-import { Janitor } from "@rbxts/janitor";
-import { Players, ReplicatedStorage } from "@rbxts/services";
-import { Events, Functions } from "server/network";
+import { Players } from "@rbxts/services";
+import { Functions } from "server/network";
 import { store } from "server/store";
-import { hats } from "shared/configs/items/hats";
-import { selectEquippedType } from "shared/store/selectors/players";
 import { PlayerEquipped } from "shared/store/slices/players/types";
-import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
 @Service()
 export class EquipService implements OnStart {
