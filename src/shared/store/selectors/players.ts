@@ -1,10 +1,9 @@
 import { createSelector } from "@rbxts/reflex";
 import { Currency } from "shared/configs/currency";
+import { ItemId } from "shared/configs/items";
 import { SharedState } from "..";
 import { PlayerData, PlayerEquipped } from "../slices/players/types";
 import { defaultPlayerData } from "../slices/players/utils";
-import { playTimeSlice } from "../slices/players/playTime";
-import { ItemId } from "shared/configs/items";
 
 export const selectPlayerBalances = (playerId: string) => {
 	return (state: SharedState) => {
@@ -18,55 +17,55 @@ export const selectPlayerBalance = (playerId: string, currency: Currency) => {
 	});
 };
 
-export const selectLoggedIns = (playerId: string) => {
+export const selectPlayerLoggedIns = (playerId: string) => {
 	return (state: SharedState) => {
 		return state.players.loggedIn[playerId];
 	};
 };
 
-export const selectLoggedIn = (playerId: string, key: keyof PlayerData["loggedIn"]) => {
-	return createSelector(selectLoggedIns(playerId), (loggedIn) => {
+export const selectPlayerLoggedIn = (playerId: string, key: keyof PlayerData["loggedIn"]) => {
+	return createSelector(selectPlayerLoggedIns(playerId), (loggedIn) => {
 		return loggedIn && loggedIn[key];
 	});
 };
 
-export const selectItems = (playerId: string) => {
+export const selectPlayerItems = (playerId: string) => {
 	return (state: SharedState) => {
 		return state.players.items[playerId];
 	};
 };
 
-export const selectItem = (playerId: string, itemId: ItemId) => {
-	return createSelector(selectItems(playerId), (items) => {
+export const selectPlayerItem = (playerId: string, itemId: ItemId) => {
+	return createSelector(selectPlayerItems(playerId), (items) => {
 		return items && items.includes(itemId);
 	});
 };
 
-export const selectEquipped = (playerId: string) => {
+export const selectPlayerEquipped = (playerId: string) => {
 	return (state: SharedState) => {
 		return state.players.equipped[playerId];
 	};
 };
 
-export const selectEquippedType = (playerId: string, itemType: keyof PlayerEquipped) => {
-	return createSelector(selectEquipped(playerId), (equipped) => {
+export const selectPlayerEquippedType = (playerId: string, itemType: keyof PlayerEquipped) => {
+	return createSelector(selectPlayerEquipped(playerId), (equipped) => {
 		return equipped && equipped[itemType];
 	});
 };
 
-export const selectXP = (playerId: string) => {
+export const selectPlayerXP = (playerId: string) => {
 	return (state: SharedState) => {
 		return state.players.xp[playerId];
 	};
 };
 
-export const selectWins = (playerId: string) => {
+export const selectPlayerWins = (playerId: string) => {
 	return (state: SharedState) => {
 		return state.players.wins[playerId];
 	};
 };
 
-export const selectPlayTime = (playerId: string) => {
+export const selectPlayerPlayTime = (playerId: string) => {
 	return (state: SharedState) => {
 		return state.players.playTime[playerId];
 	};
@@ -75,12 +74,12 @@ export const selectPlayTime = (playerId: string) => {
 export const selectPlayerData = (playerId: string) => {
 	return createSelector(
 		selectPlayerBalances(playerId),
-		selectLoggedIns(playerId),
-		selectItems(playerId),
-		selectEquipped(playerId),
-		selectXP(playerId),
-		selectWins(playerId),
-		selectPlayTime(playerId),
+		selectPlayerLoggedIns(playerId),
+		selectPlayerItems(playerId),
+		selectPlayerEquipped(playerId),
+		selectPlayerXP(playerId),
+		selectPlayerWins(playerId),
+		selectPlayerPlayTime(playerId),
 		(balances, loggedIns, items, equipped, xp, wins, playTime): PlayerData => {
 			return {
 				loggedIn: loggedIns || defaultPlayerData.loggedIn,
