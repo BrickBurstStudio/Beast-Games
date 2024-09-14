@@ -2,10 +2,8 @@ import { OnStart, Service } from "@flamework/core";
 import { Janitor } from "@rbxts/janitor";
 import { Players, ReplicatedStorage } from "@rbxts/services";
 import { store } from "server/store";
-import { items } from "shared/configs/items";
 import { hats } from "shared/configs/items/hats";
-import { selectEquipped, selectEquippedType } from "shared/store/selectors/players";
-import { balanceSlice } from "shared/store/slices/players/balance";
+import { selectEquippedType } from "shared/store/selectors/players";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
 @Service()

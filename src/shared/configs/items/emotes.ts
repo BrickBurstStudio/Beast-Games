@@ -1,4 +1,4 @@
-import { Item } from "../items";
+import { Item } from ".";
 
 export const emotes = [
 	{ id: "emote_1", rarity: "common", name: "Dance Monkey" },

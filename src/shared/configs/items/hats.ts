@@ -1,4 +1,4 @@
-import { Item } from "../items";
+import { Item } from ".";
 
 export type Hat = { meshId: string } & Item;
 

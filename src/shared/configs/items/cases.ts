@@ -1,4 +1,4 @@
-import { allItems, Item } from "../items";
+import { Item } from ".";
 
 export type Case = {
 	price: number;

@@ -1,5 +1,5 @@
 import { CommandContext } from "@rbxts/cmdr";
-import { OrderedPlayerData } from "server/OrderedPlayerData";
+import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { store } from "server/store";
 
 export = function (context: CommandContext, player: Player) {

@@ -16,17 +16,8 @@ interface ReplicatedStorage extends Instance {
 			};
 		};
 		network: ModuleScript;
-		classes: Folder & {
-			items: Folder & {
-				BaseItem: ModuleScript;
-				Hat: ModuleScript;
-				Emote: ModuleScript;
-				BaseCosmetic: ModuleScript;
-				Case: ModuleScript;
-			};
-		};
 		configs: Folder & {
-			Currency: ModuleScript;
+			currency: ModuleScript;
 		};
 		components: Folder;
 		store: ModuleScript & {
