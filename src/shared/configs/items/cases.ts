@@ -60,3 +60,8 @@ export const cases = [
 		items: ["emote_3", "emote_4"],
 	},
 ] as const satisfies Case[];
+
+export function isCase(item: Item): item is Case {
+	cases[0].items;
+	return "items" in item;
+}
