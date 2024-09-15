@@ -12,4 +12,6 @@ export = function (context: CommandContext, player: Player) {
 	orderedPlayerData.playTime.UpdateBy(-orderedPlayerData.playTime.Get());
   
 	store.reset(tostring(player.UserId));
+
+	return `Reset ${player.Name}'s data.`;
 };
