@@ -26,15 +26,6 @@ export class PlayerDataService implements OnInit {
 			(player) => this.createProfile(player),
 			(player) => this.removeProfile(player),
 		);
-
-		// task.spawn(() => {
-		//   while (true) {
-		//     Players.GetPlayers().forEach((player) =>
-		//       store.changeBalance(tostring(player.UserId), "coins", 1),
-		//     );
-		//     task.wait(1);
-		//   }
-		// });
 	}
 
 	private createProfile(player: Player) {

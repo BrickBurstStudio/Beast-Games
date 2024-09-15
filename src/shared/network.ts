@@ -39,6 +39,8 @@ interface ClientEvents {
 		start: () => void;
 	};
 
+	levelUpPlayer: (level: number) => void;
+
 	updateLeaderboards: (args: updateLeaderboardsArgs) => void;
 
 	createChallenge: (name: string) => void;
