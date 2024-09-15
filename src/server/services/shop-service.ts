@@ -13,13 +13,13 @@ export class ShopService implements OnStart {
 			const caseObj = items.get(caseId) as (typeof cases)[number];
 			if (!caseObj) return `Case not found. This is a bug. Please report it to the developers.`;
 
-			const playerCash = store.getState(selectPlayerBalance(tostring(player.UserId), "cash"));
+			const orderedPlayerData = new OrderedPlayerData(player);
+			const playerCash = orderedPlayerData.cash.Get();
 
 			if (!playerCash) return "Player not found. Try again in a few seconds.";
 
 			if (playerCash < caseObj.price) return "You do not have enough cash to purchase this case.";
 
-			const orderedPlayerData = new OrderedPlayerData(player);
 			orderedPlayerData.cash.UpdateBy(-caseObj.price);
 			// Adding case to inventory should be the last operation to prevent duplication with players leaving
 			store.addItemToInventory(tostring(player.UserId), caseId);
