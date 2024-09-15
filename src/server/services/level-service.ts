@@ -12,7 +12,7 @@ export class LevelService implements OnStart {
 		forEveryPlayer((player) => {
 			let previousLevel: number | undefined = undefined;
 
-			store.subscribe(selectPlayerXP(tostring(player.UserId)), (xp) => {
+			return store.subscribe(selectPlayerXP(tostring(player.UserId)), (xp) => {
 				if (!xp) return;
 				if (previousLevel === undefined) return (previousLevel = getLevel(xp));
 				const currentLevel = getLevel(xp);
