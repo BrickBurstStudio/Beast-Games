@@ -17,8 +17,11 @@ export class LevelService implements OnStart {
 				if (previousLevel === undefined) return (previousLevel = getLevel(xp));
 				const currentLevel = getLevel(xp);
 				if (currentLevel > previousLevel) {
-					this.levelUpPlayer(player, currentLevel);
-					previousLevel = currentLevel;
+					const levelsUp = currentLevel - previousLevel;
+					for (let i = 0; i < levelsUp; i++) {
+						this.levelUpPlayer(player, currentLevel);
+						previousLevel = currentLevel;
+					}
 				}
 			});
 		});
