@@ -11,6 +11,9 @@ type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
 	playTime: { key: string; value: number }[];
 	wins: { key: string; value: number }[];
+	cash: { key: string; value: number }[];
+	gems: { key: string; value: number }[];
+	honor: { key: string; value: number }[];
 };
 
 interface ServerEvents {

@@ -7,13 +7,13 @@ import { BaseOrderedDataStore } from "./BaseOrderedDataStore";
 
 export class OrderedPlayerData {
 	player: Player;
-	//TODO: Handle base orderd data in reflex
+	// TODO: Handle base orderd data in reflex
 	xp: BaseOrderedDataStore;
 	wins: BaseOrderedDataStore;
 	playTime: BaseOrderedDataStore;
+	cash: BaseOrderedDataStore;
 	gems: BaseOrderedDataStore;
 	honor: BaseOrderedDataStore;
-	cash: BaseOrderedDataStore;
 
 	constructor(player: Player) {
 		if (player.UserId < 0) error(`Player ${player.Name} has a negative UserId! Please use real players.`);
