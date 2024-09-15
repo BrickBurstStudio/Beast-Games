@@ -1,4 +1,5 @@
 import { OnStart, Service } from "@flamework/core";
+import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Functions } from "server/network";
 import { store } from "server/store";
 import { items } from "shared/configs/items";
@@ -18,7 +19,8 @@ export class ShopService implements OnStart {
 
 			if (playerCash < caseObj.price) return "You do not have enough cash to purchase this case.";
 
-			store.changeBalance(tostring(player.UserId), "cash", -caseObj.price);
+			const orderedPlayerData = new OrderedPlayerData(player);
+			orderedPlayerData.cash.UpdateBy(-caseObj.price);
 			// Adding case to inventory should be the last operation to prevent duplication with players leaving
 			store.addItemToInventory(tostring(player.UserId), caseId);
 		});
