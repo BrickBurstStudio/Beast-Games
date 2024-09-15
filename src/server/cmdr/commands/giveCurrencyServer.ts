@@ -5,4 +5,6 @@ import { Currency } from "shared/configs/currency";
 export = function (context: CommandContext, player: Player, currency: Currency, amount: number) {
 	const orderedPlayerData = new OrderedPlayerData(player);
 	orderedPlayerData[currency].UpdateBy(amount);
+
+	return `Gave ${player.Name} ${amount} ${currency}.`;
 };

@@ -1,6 +1,6 @@
-import { Case, cases } from "./cases";
-import { Emote, emotes } from "./emotes";
-import { Hat, hats } from "./hats";
+import { cases } from "./cases";
+import { emotes } from "./emotes";
+import { hats } from "./hats";
 
 export const ItemRarityConfig = {
 	common: { color: new Color3(1, 1, 1), weight: 625 },
@@ -19,7 +19,9 @@ export type ItemType = "emote" | "hat" | "case";
 export type EquippableItemType = Exclude<ItemType, "case">;
 export type EquippableItemId = Extract<ItemId, `${EquippableItemType}_${number}`>;
 export type Item = {
-	id: `${ItemType}_${number}`;
+	//TODO: Find a way to fix this within flamework, otherwise make a test on CI to check for all ids to be unique and pass this constraint
+	// id: `${ItemType}_${number}`;
+	id: string;
 	rarity: keyof typeof ItemRarityConfig;
 	name: string;
 };
