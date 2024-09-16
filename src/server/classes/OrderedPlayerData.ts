@@ -18,22 +18,20 @@ export class OrderedPlayerData {
 	constructor(player: Player) {
 		if (player.UserId < 0) error(`Player ${player.Name} has a negative UserId! Please use real players.`);
 		this.player = player;
-		this.xp = new BaseOrderedDataStore(player.UserId, "xp", (amount) =>
-			store.changeXP(tostring(player.UserId), amount),
-		);
-		this.wins = new BaseOrderedDataStore(player.UserId, "wins", (amount) =>
+		this.xp = new BaseOrderedDataStore(player, "xp", (amount) => store.changeXP(tostring(player.UserId), amount));
+		this.wins = new BaseOrderedDataStore(player, "wins", (amount) =>
 			store.incrementWins(tostring(player.UserId), amount),
 		);
-		this.gems = new BaseOrderedDataStore(player.UserId, "gems", (amount) =>
+		this.gems = new BaseOrderedDataStore(player, "gems", (amount) =>
 			store.changeBalance(tostring(player.UserId), "gems", amount),
 		);
-		this.cash = new BaseOrderedDataStore(player.UserId, "cash", (amount) =>
+		this.cash = new BaseOrderedDataStore(player, "cash", (amount) =>
 			store.changeBalance(tostring(player.UserId), "cash", amount),
 		);
-		this.honor = new BaseOrderedDataStore(player.UserId, "honor", (amount) =>
+		this.honor = new BaseOrderedDataStore(player, "honor", (amount) =>
 			store.changeBalance(tostring(player.UserId), "honor", amount),
 		);
-		this.playTime = new BaseOrderedDataStore(player.UserId, "playTime", (amount) =>
+		this.playTime = new BaseOrderedDataStore(player, "playTime", (amount) =>
 			store.incrementPlayTime(tostring(player.UserId), amount),
 		);
 	}
