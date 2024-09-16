@@ -1,29 +1,41 @@
 import { DataStoreService, Players } from "@rbxts/services";
+import { getPlayerByName } from "shared/utils/functions/getPlayerByName";
+import { getPlayerMultiplier } from "shared/utils/functions/getPlayerMultiplier";
 // import { print, warn } from "rbxts-transform-debug";
 
 export class BaseOrderedDataStore {
-	private playerID: number;
+	private player: Player;
 	protected playerKey: string;
 	private maxRetryAttempts = 4;
 	private orderedDataStore: OrderedDataStore;
 	private stateCallback: (amount: number) => void;
+	private playerMultiplier: boolean;
 
-	constructor(playerID: number, orderedDataStoreName: string, stateCallback: (amount: number) => void) {
-		if (playerID < 0) error("Invalid playerID, dont use multitest in studio. (Player1 = -1), (Player2 = -2), etc.");
-		this.playerID = playerID;
-		this.playerKey = `Player_${playerID}`;
+	constructor(
+		player: Player,
+		orderedDataStoreName: string,
+		stateCallback: (amount: number) => void,
+		playerMultiplier: boolean = false,
+	) {
+		if (player.UserId < 0)
+			error("Invalid playerID, dont use multitest in studio. (Player1 = -1), (Player2 = -2), etc.");
+		this.player = player;
+		this.playerKey = `Player_${player}`;
+		this.playerMultiplier = playerMultiplier;
 		this.orderedDataStore = DataStoreService.GetOrderedDataStore(orderedDataStoreName);
 		this.stateCallback = stateCallback;
 	}
 
 	UpdateBy(amount: number) {
+		if (amount > 0 && this.playerMultiplier) amount *= getPlayerMultiplier(this.player);
+
 		BaseOrderedDataStore.SafeCall(
 			() => {
 				this.orderedDataStore.IncrementAsync(this.playerKey, amount);
 				this.stateCallback(amount);
 			},
 			Enum.DataStoreRequestType.SetIncrementAsync,
-			this.playerID,
+			this.player.UserId,
 		);
 	}
 
@@ -33,7 +45,7 @@ export class BaseOrderedDataStore {
 				return this.orderedDataStore.GetAsync(this.playerKey);
 			},
 			Enum.DataStoreRequestType.GetAsync,
-			this.playerID,
+			this.player.UserId,
 		);
 		if (value === undefined) {
 			this.orderedDataStore.SetAsync(this.playerKey, 0);

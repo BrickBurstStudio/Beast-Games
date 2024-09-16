@@ -5,7 +5,6 @@ import { store } from "server/store";
 import { selectPlayerXP } from "shared/store/selectors/players";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getLevel } from "shared/utils/functions/getLevel";
-import { getPlayerMultiplier } from "shared/utils/functions/getPlayerMultiplier";
 
 @Service()
 export class LevelService implements OnStart {
@@ -30,8 +29,8 @@ export class LevelService implements OnStart {
 
 	levelUpPlayer(player: Player, level: number) {
 		const orderedPlayerData = new OrderedPlayerData(player);
-		orderedPlayerData.cash.UpdateBy(100_000 * getPlayerMultiplier(player));
-		orderedPlayerData.gems.UpdateBy(100 * getPlayerMultiplier(player));
+		orderedPlayerData.cash.UpdateBy(100_000);
+		orderedPlayerData.gems.UpdateBy(100);
 
 		Events.levelUpPlayer(player, level);
 	}
