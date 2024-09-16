@@ -32,7 +32,7 @@ export const xpSlice = createProducer(initialState, {
 
 		return {
 			...state,
-			[playerId]: xp && xp + amount,
+			[playerId]: !!xp ? xp + amount : xp,
 		};
 	},
 });
