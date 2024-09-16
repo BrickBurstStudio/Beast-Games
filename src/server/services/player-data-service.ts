@@ -79,17 +79,12 @@ export class PlayerDataService implements OnInit {
 		honor.Name = "🏆 Honor";
 		honor.Value = initialBalance?.honor ?? 0;
 
-		const unsubscribe = store.subscribe(selectPlayerBalances(tostring(player.UserId)), (save) => {
+		return store.subscribe(selectPlayerBalances(tostring(player.UserId)), (save) => {
 			print("Updating leaderstats", save);
 			if (!save) return;
 			cash.Value = save.cash;
 			gems.Value = save.gems;
 			honor.Value = save.honor;
-		});
-
-		//TODO: refactor with better player removal handling / performance
-		Players.PlayerRemoving.Connect((playerIn) => {
-			if (playerIn === player) unsubscribe();
 		});
 	}
 
