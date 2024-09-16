@@ -1,5 +1,18 @@
 interface ServerStorage extends Instance {
-	__Rojo_SessionLock: ObjectValue;
+	Assets: Folder & {
+		Gui: Folder & {
+			TitleBGUI: BillboardGui & {
+				UIListLayout: UIListLayout;
+				Frame: Frame & {
+					UIListLayout: UIListLayout;
+					Level: TextLabel;
+					DisplayName: TextLabel;
+				};
+				Username: TextLabel;
+				Honor: TextLabel;
+			};
+		};
+	};
 	ChallengeMaps: Folder & {
 		BriefcaseChallenge: Folder;
 		MoneyPileChallenge: Folder;
