@@ -1,15 +1,16 @@
 import { Players } from "@rbxts/services";
 
-type Callback = (p: Player, c?: RBXScriptConnection) => (() => void) | void;
+type Callback = (p: Player, c?: RBXScriptConnection) => (() => void) | void | Promise<(() => void) | void>;
 
 function runCallback(player: Player, joinFunc: Callback, c?: RBXScriptConnection) {
 	const cleanupPlayer = joinFunc(player, c);
 	if (!cleanupPlayer) return;
 
-	const leaveConn = Players.PlayerRemoving.Connect((playerLeaving) => {
+	const leaveConn = Players.PlayerRemoving.Connect(async (playerLeaving) => {
 		if (playerLeaving === player) {
 			leaveConn.Disconnect();
-			cleanupPlayer();
+			const cleanup = await cleanupPlayer;
+			typeIs(cleanup, "function") && cleanup();
 		}
 	});
 }
