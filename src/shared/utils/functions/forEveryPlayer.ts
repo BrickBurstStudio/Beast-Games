@@ -1,16 +1,49 @@
 import { Players } from "@rbxts/services";
 
-type PlayerReceivingFunction = (player: Player) => unknown;
+type Callback = (p: Player, c?: RBXScriptConnection) => (() => void) | void;
 
-export function forEveryPlayer(
-	joinFunc: PlayerReceivingFunction,
-	leaveFunc?: PlayerReceivingFunction,
-): Array<RBXScriptConnection> {
-	const events: Array<RBXScriptConnection> = [];
+function runCallback(player: Player, joinFunc: Callback, c?: RBXScriptConnection) {
+	const cleanupPlayer = joinFunc(player, c);
+	if (!cleanupPlayer) return;
 
-	Players.GetPlayers().forEach(joinFunc);
-	events.push(Players.PlayerAdded.Connect(joinFunc));
-	if (leaveFunc) events.push(Players.PlayerRemoving.Connect(leaveFunc));
+	const leaveConn = Players.PlayerRemoving.Connect((playerLeaving) => {
+		if (playerLeaving === player) {
+			leaveConn.Disconnect();
+			cleanupPlayer();
+		}
+	});
+}
 
-	return events;
+/**
+ * 
+
+ * @param joinFunc 
+ * @param leaveFunc 
+ * @example 
+ * forEveryPlayer(
+ * 	(player, playerAddedConn) => {
+ * 		// ... do process for player
+ *
+ *			// playerAddedConn represents the PlayerAdded connection which spawned this function.
+ * 		// disconnecting will prevent this callback from running for any future players.
+ * 		if ("example condition is met") playerAddedConn?.Disconnect();
+ *
+ * 		// arg1's return func will run when this specific player leaves
+ * 		return () => {
+ * 			// ... do cleanup
+ * 		};
+ * 	},
+ *
+ *		// arg2 func is connected to PlayerRemoving
+ * 	(player) => {},
+ * );
+ */
+
+export function forEveryPlayer(joinFunc: Callback, leaveFunc?: (p: Player) => void) {
+	if (leaveFunc) Players.PlayerRemoving.Connect(leaveFunc);
+
+	Players.GetPlayers().forEach((p) => {
+		runCallback(p, joinFunc);
+	});
+	const joinConn = Players.PlayerAdded.Connect((p) => runCallback(p, joinFunc, joinConn));
 }
