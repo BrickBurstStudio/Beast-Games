@@ -60,7 +60,10 @@ export const questsSlice = createProducer(initialState, {
 
 		return {
 			...state,
-			[playerId]: quests && { ...quests, [questId]: quests[questId].targets + 1 },
+			[playerId]: quests && {
+				...quests,
+				[questId]: { targets: quests[questId].targets + 1, issuedAt: quests[questId].issuedAt },
+			},
 		};
 	},
 });
