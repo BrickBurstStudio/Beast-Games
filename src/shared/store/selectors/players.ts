@@ -71,6 +71,12 @@ export const selectPlayerPlayTime = (playerId: string) => {
 	};
 };
 
+export const selectPlayerQuests = (playerId: string) => {
+	return (state: SharedState) => {
+		return state.players.quests[playerId];
+	};
+};
+
 export const selectPlayerData = (playerId: string) => {
 	return createSelector(
 		selectPlayerBalances(playerId),
@@ -80,7 +86,8 @@ export const selectPlayerData = (playerId: string) => {
 		selectPlayerXP(playerId),
 		selectPlayerWins(playerId),
 		selectPlayerPlayTime(playerId),
-		(balances, loggedIns, items, equipped, xp, wins, playTime): PlayerData => {
+		selectPlayerQuests(playerId),
+		(balances, loggedIns, items, equipped, xp, wins, playTime, quests): PlayerData => {
 			return {
 				loggedIn: loggedIns || defaultPlayerData.loggedIn,
 				balance: balances || defaultPlayerData.balance,
@@ -89,6 +96,7 @@ export const selectPlayerData = (playerId: string) => {
 				xp: xp || defaultPlayerData.xp,
 				wins: wins || defaultPlayerData.wins,
 				playTime: playTime || defaultPlayerData.playTime,
+				quests: quests || defaultPlayerData.quests,
 			};
 		},
 	);

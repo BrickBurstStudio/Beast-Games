@@ -2,7 +2,7 @@
 import { OnInit, Service } from "@flamework/core";
 import ProfileService from "@rbxts/profileservice";
 import { Profile } from "@rbxts/profileservice/globals";
-import { Players, RunService } from "@rbxts/services";
+import { HttpService, Players, RunService } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 
 import { store } from "server/store";
