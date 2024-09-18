@@ -28,6 +28,14 @@ export class QuestService implements OnStart {
 						return;
 					}
 				}
+
+				// * incremented * //
+				for (const [id, data] of pairs(current)) {
+					if (data.targets !== previous[id]?.targets) {
+						Events.quests.incrementTarget(player, id, data);
+						return;
+					}
+				}
 			});
 		});
 	}

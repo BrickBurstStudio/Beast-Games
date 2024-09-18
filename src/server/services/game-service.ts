@@ -2,7 +2,7 @@ import { OnStart, Service } from "@flamework/core";
 import { Players } from "@rbxts/services";
 import { store } from "server/store";
 import { createDare } from "server/util/createDare";
-import { selectPlayerQuests } from "shared/store/selectors/players";
+import { selectPlayerData, selectPlayerQuests } from "shared/store/selectors/players";
 
 @Service()
 export class GameService implements OnStart {

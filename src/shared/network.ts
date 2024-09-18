@@ -41,6 +41,7 @@ interface ClientEvents {
 	quests: {
 		addQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
 		removeQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
+		incrementTarget: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
 		initQuests: (quests: PlayerQuests) => void;
 	};
 	reflex: {
