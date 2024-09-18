@@ -29,6 +29,9 @@ export class TitleService implements OnStart {
 				titleBGUIClone.Parent = character.Head;
 			});
 
+			titleBGUIClone.Username.Text = player.Name;
+			titleBGUIClone.Frame.DisplayName.Text = player.DisplayName;
+
 			return () => {
 				xpUnsub();
 				honorUnsub();

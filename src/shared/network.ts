@@ -6,6 +6,7 @@ import { BroadcastAction } from "@rbxts/reflex";
 import { EquippableItemId, Item } from "./configs/items";
 import { cases } from "./configs/items/cases";
 import { PlayerData } from "./store/slices/players/types";
+import { Dare } from "server/util/createDare";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -40,6 +41,12 @@ interface ClientEvents {
 		dispatch: (actions: Array<BroadcastAction>) => void;
 		hydrate: (actions: PlayerData) => void;
 		start: () => void;
+	};
+
+	dares: {
+		dareCreated: (dare: Dare) => void;
+		dareCompleted: (dare: Dare) => void;
+		targetCompleted: (dare: Dare) => void;
 	};
 
 	levelUpPlayer: (level: number) => void;

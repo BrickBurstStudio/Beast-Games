@@ -19,7 +19,7 @@ export type ItemType = "emote" | "hat" | "case";
 export type EquippableItemType = Exclude<ItemType, "case">;
 export type EquippableItemId = Extract<ItemId, `${EquippableItemType}_${number}`>;
 export type Item = {
-	//TODO: Find a way to fix this within flamework, otherwise make a test on CI to check for all ids to be unique and pass this constraint
+	// TODO: Find a way to fix this within flamework, otherwise make a test on CI to check for all ids to be unique and pass this constraint
 	// id: `${ItemType}_${number}`;
 	id: string;
 	rarity: keyof typeof ItemRarityConfig;
