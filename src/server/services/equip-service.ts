@@ -38,10 +38,6 @@ export class EquipService implements OnStart {
 
 			return success;
 		});
-
-		while (Players.GetPlayers().size() < 1) task.wait();
-		task.wait(3);
-		Functions.inventory.equip.predict(Players.GetPlayers()[0], "hat_1");
 	}
 
 	Equip(item: Item) {

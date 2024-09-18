@@ -5,8 +5,9 @@ import { BroadcastAction } from "@rbxts/reflex";
 
 import { EquippableItemId, Item } from "./configs/items";
 import { cases } from "./configs/items/cases";
-import { PlayerData } from "./store/slices/players/types";
+import { PlayerData, PlayerQuests, QuestData } from "./store/slices/players/types";
 import { Dare } from "server/util/createDare";
+import { quests } from "./configs/quests";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -37,6 +38,12 @@ interface ServerFunctions {
 }
 
 interface ClientEvents {
+	quests: {
+		addQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
+		removeQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
+		incrementTarget: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
+		initQuests: (quests: PlayerQuests) => void;
+	};
 	reflex: {
 		dispatch: (actions: Array<BroadcastAction>) => void;
 		hydrate: (actions: PlayerData) => void;

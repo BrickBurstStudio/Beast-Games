@@ -4,6 +4,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 import { Players, ReplicatedStorage, ServerStorage, Workspace } from "@rbxts/services";
 import { BaseChallenge } from "./base-challenge";
 import { BriefcaseComponent } from "server/components/claim-components/briefcase-component";
+import Object from "@rbxts/object-utils";
 
 export class BriefcaseChallenge extends BaseChallenge {
 	protected readonly map = ServerStorage.ChallengeMaps.BriefcaseChallenge.Clone();
@@ -42,7 +43,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 	}
 
 	private EliminatePlayers() {
-		for (const [userId, briefcase] of pairs(this.playerSelections)) {
+		for (const [userId, briefcase] of Object.entries(this.playerSelections)) {
 			const player = Players.GetPlayerByUserId(userId);
 			if (!briefcase.attributes.safe && player) this.EliminatePlayer(player);
 		}

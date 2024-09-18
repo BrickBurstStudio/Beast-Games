@@ -5,6 +5,7 @@ import { ContextActionService, Players, Workspace } from "@rbxts/services";
 import { debounce } from "@rbxts/set-timeout";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { SprintController } from "./sprint-controller";
+import Object from "@rbxts/object-utils";
 
 // todo : organize subsystem logic into sister controllers & use dependency injection here
 
@@ -74,7 +75,7 @@ export class MovementController implements OnStart {
 	}
 	private async SetupTracks() {
 		const character = await getCharacter(Players.LocalPlayer);
-		for (const [name, animation] of pairs(this.animations)) {
+		for (const [name, animation] of Object.entries(this.animations)) {
 			this.tracks[name] = character.Humanoid.Animator.LoadAnimation(animation);
 		}
 		this.tracks.dive?.GetMarkerReachedSignal("Dive").Connect(() => {

@@ -1,5 +1,6 @@
 import { Currency } from "shared/configs/currency";
 import { EquippableItemId, EquippableItemType, ItemId, ItemType } from "shared/configs/items";
+import { quests } from "shared/configs/quests";
 
 export interface PlayerData {
 	loggedIn: PlayerLoggedIn;
@@ -9,6 +10,11 @@ export interface PlayerData {
 	xp: number;
 	wins: number;
 	playTime: number;
+	quests: PlayerQuests;
+}
+
+export interface ProfileData extends Omit<PlayerData, "quests"> {
+	quests: string;
 }
 
 export type PlayerEquipped = {
@@ -24,3 +30,6 @@ export type PlayerLoggedIn = {
 };
 
 export type PlayerBalance = Record<Currency, number>;
+
+export type QuestData = { targets: number; issuedAt: number };
+export type PlayerQuests = Partial<Record<(typeof quests)[number]["id"], QuestData>>;
