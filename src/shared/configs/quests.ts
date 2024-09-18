@@ -27,6 +27,6 @@ export const quests = [
 		reward: "cash",
 		amount: 20_000,
 		expiration: undefined,
-		targets: 3,
+		targets: 1,
 	},
 ] as const satisfies Quest[];
