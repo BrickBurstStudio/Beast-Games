@@ -1,7 +1,7 @@
 import { Registry } from "@rbxts/cmdr";
+import Object from "@rbxts/object-utils";
 import { defaultPlayerData } from "shared/store/slices/players/utils";
-import { objectKeys } from "shared/utils/functions/objectKeys";
 
 export = function (registry: Registry) {
-	registry.RegisterType("playerData", registry.Cmdr.Util.MakeEnumType("playerData", objectKeys(defaultPlayerData)));
+	registry.RegisterType("playerData", registry.Cmdr.Util.MakeEnumType("playerData", Object.keys(defaultPlayerData)));
 };

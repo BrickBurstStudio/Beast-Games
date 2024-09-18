@@ -48,7 +48,12 @@ export class PlayerDataService implements OnInit {
 		this.profiles.set(player, profile);
 		store.loadPlayerData(tostring(player.UserId), {
 			...profile.Data,
-			balance: { ...profile.Data.balance, cash: orderedPlayerData.cash.Get() },
+			balance: {
+				...profile.Data.balance,
+				cash: orderedPlayerData.cash.Get(),
+				gems: orderedPlayerData.gems.Get(),
+				honor: orderedPlayerData.honor.Get(),
+			},
 			quests: HttpService.JSONDecode(profile.Data.quests) as PlayerQuests,
 		});
 		this.createLeaderstats(player);
