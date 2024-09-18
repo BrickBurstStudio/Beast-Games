@@ -1,8 +1,8 @@
+import { FormatCompact } from "@rbxts/format-number";
 import React, { useEffect, useState } from "@rbxts/react";
 import { Events } from "client/network";
 import { LeaderboardProps } from ".";
 import Player from "./player";
-
 export interface DatastoreValue {
 	key: string;
 	value: number | string;
@@ -16,10 +16,13 @@ export default function Leaderboard(props: LeaderboardProps) {
 			setDatastoreValues(
 				args[props.datastoreName]
 					.filter(({ key }) => (tonumber(key.split("_")[1]) ?? -1) > 0)
-					.map(({ key, value }) => ({
-						key: key.split("_")[1],
-						value: props.convertValue ? props.convertValue(value) : value,
-					})),
+					.map(({ key, value }) => {
+						const numberValue = tonumber(props.convertValue ? props.convertValue(value) : value);
+						return {
+							key: key.split("_")[1],
+							value: !!numberValue ? FormatCompact(numberValue) : value,
+						};
+					}),
 			);
 		});
 	}, []);

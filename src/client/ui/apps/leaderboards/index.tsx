@@ -9,7 +9,7 @@ export interface LeaderboardProps {
 	name: string;
 	datastoreName: "xp" | "wins" | "playTime" | Currency;
 	leaderboardModel: Leaderboard;
-	convertValue?: (value: number) => string;
+	convertValue?: (value: number) => string | number;
 }
 
 const leaderboardsFolder = Workspace.WaitForChild("Leaderboards") as Leaderboards;
@@ -28,7 +28,7 @@ const LEADERBOARDS: LeaderboardProps[] = [
 		name: "Level",
 		leaderboardModel: leaderboardsFolder.xp,
 		convertValue: (xp) => {
-			return `${getLevel(xp)}`;
+			return getLevel(xp);
 		},
 	},
 	{
