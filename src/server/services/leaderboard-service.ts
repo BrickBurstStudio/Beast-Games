@@ -15,10 +15,13 @@ export class LeaderboardService implements OnStart {
 		const gems = BaseOrderedDataStore.GetTop(100, "gems");
 		const honor = BaseOrderedDataStore.GetTop(100, "honor");
 
-		// Uncomment to reset leaderboards
+		//! Uncomment to reset leaderboards
 		// BaseOrderedDataStore.Reset("xp");
 		// BaseOrderedDataStore.Reset("playTime");
 		// BaseOrderedDataStore.Reset("wins");
+		// BaseOrderedDataStore.Reset("cash");
+		// BaseOrderedDataStore.Reset("gems");
+		// BaseOrderedDataStore.Reset("honor");
 
 		forEveryPlayer((player) => {
 			player.CharacterAdded.Connect(() => {
@@ -41,6 +44,7 @@ export class LeaderboardService implements OnStart {
 			const cash = BaseOrderedDataStore.GetTop(100, "cash");
 			const gems = BaseOrderedDataStore.GetTop(100, "gems");
 			const honor = BaseOrderedDataStore.GetTop(100, "honor");
+			print("Updating leaderboards", cash);
 			Events.updateLeaderboards.broadcast({
 				xp,
 				playTime,
@@ -49,7 +53,7 @@ export class LeaderboardService implements OnStart {
 				gems,
 				honor,
 			});
-			task.wait(60 * 2);
+			task.wait(60);
 		}
 	}
 }
