@@ -1,8 +1,9 @@
 import { createProducer } from "@rbxts/reflex";
 import { Currency } from "shared/configs/currency";
-import { PlayerBalance, PlayerData, PlayerQuests } from "./types";
+import { PlayerBalance, PlayerData, PlayerQuests, QuestData } from "./types";
 import { defaultPlayerData } from "./utils";
 import { quests } from "shared/configs/quests";
+import { HttpService } from "@rbxts/services";
 
 export interface questsState {
 	readonly [player: string]: PlayerQuests | undefined;
@@ -30,10 +31,14 @@ export const questsSlice = createProducer(initialState, {
 
 	addQuest: (state, playerId: string, questId: (typeof quests)[number]["id"]) => {
 		const quests = state[playerId];
+		print(quests);
 
 		return {
 			...state,
-			[playerId]: quests && { ...quests, [questId]: { targets: 0, issuedAt: DateTime.now() } },
+			[playerId]: quests && {
+				...quests,
+				[questId]: { targets: 0, issuedAt: DateTime.now().UnixTimestamp } as QuestData,
+			},
 		};
 	},
 

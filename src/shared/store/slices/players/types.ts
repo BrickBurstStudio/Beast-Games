@@ -13,6 +13,10 @@ export interface PlayerData {
 	quests: PlayerQuests;
 }
 
+export interface ProfileData extends Omit<PlayerData, "quests"> {
+	quests: string;
+}
+
 export type PlayerEquipped = {
 	[K in EquippableItemType]: EquippableItemId[];
 };
@@ -27,5 +31,5 @@ export type PlayerLoggedIn = {
 
 export type PlayerBalance = Record<Currency, number>;
 
-type QuestData = { targets: number; issuedAt: DateTime };
+export type QuestData = { targets: number; issuedAt: number };
 export type PlayerQuests = Partial<Record<(typeof quests)[number]["id"], QuestData>>;

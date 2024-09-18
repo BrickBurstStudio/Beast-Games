@@ -7,8 +7,8 @@ import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 
 import { store } from "server/store";
 import { selectPlayerBalances, selectPlayerData } from "shared/store/selectors/players";
-import { PlayerData } from "shared/store/slices/players/types";
-import { defaultPlayerData } from "shared/store/slices/players/utils";
+import { PlayerData, PlayerQuests, ProfileData, QuestData } from "shared/store/slices/players/types";
+import { defaultPlayerData, defaultProfileData } from "shared/store/slices/players/utils";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
 let DataStoreName = "Production";
@@ -18,8 +18,8 @@ if (RunService.IsStudio()) DataStoreName = "Testing";
 
 @Service({})
 export class PlayerDataService implements OnInit {
-	private profileStore = ProfileService.GetProfileStore(DataStoreName, defaultPlayerData);
-	private profiles = new Map<Player, Profile<PlayerData>>();
+	private profileStore = ProfileService.GetProfileStore(DataStoreName, defaultProfileData);
+	private profiles = new Map<Player, Profile<ProfileData>>();
 
 	onInit() {
 		forEveryPlayer(
@@ -49,11 +49,15 @@ export class PlayerDataService implements OnInit {
 		store.loadPlayerData(tostring(player.UserId), {
 			...profile.Data,
 			balance: { ...profile.Data.balance, cash: orderedPlayerData.cash.Get() },
+			quests: HttpService.JSONDecode(profile.Data.quests) as PlayerQuests,
 		});
 		this.createLeaderstats(player);
 
 		const unsubscribe = store.subscribe(selectPlayerData(tostring(player.UserId)), (save) => {
-			if (save) profile.Data = save;
+			if (save) {
+				const jsonQuests = HttpService.JSONEncode(save.quests);
+				profile.Data = { ...save, quests: jsonQuests };
+			}
 		});
 		Players.PlayerRemoving.Connect((playerBeingRemoved) => {
 			if (player === playerBeingRemoved) unsubscribe();
