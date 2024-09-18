@@ -31,7 +31,6 @@ export const questsSlice = createProducer(initialState, {
 
 	addQuest: (state, playerId: string, questId: (typeof quests)[number]["id"]) => {
 		const quests = state[playerId];
-		print(quests);
 
 		return {
 			...state,
@@ -49,10 +48,9 @@ export const questsSlice = createProducer(initialState, {
 			return state;
 		}
 
-		delete quests[questId];
 		return {
 			...state,
-			[playerId]: quests,
+			[playerId]: { ...quests, [questId]: undefined },
 		};
 	},
 

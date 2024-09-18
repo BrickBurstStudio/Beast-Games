@@ -1,19 +1,34 @@
 import { OnStart, Service } from "@flamework/core";
 import { Players } from "@rbxts/services";
+import { Events } from "server/network";
 import { store } from "server/store";
-import { selectPlayerData } from "shared/store/selectors/players";
+import { selectPlayerData, selectPlayerQuests } from "shared/store/selectors/players";
+import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
 @Service()
 export class QuestService implements OnStart {
 	onStart() {
-		while (Players.GetPlayers().size() < 1) task.wait();
+		forEveryPlayer((player) => {
+			return store.subscribe(selectPlayerQuests(tostring(player.UserId)), (current, previous) => {
+				if (!current) return warn("No current quests...");
+				if (!previous) return Events.quests.initQuests(player, current);
 
-		const player = Players.GetPlayers()[0];
-		store.once(selectPlayerData(tostring(player.UserId)), (state) => {
-			const x = store.addQuest(tostring(player.UserId), "quest_1");
-			// store.incrementTarget(tostring(player.UserId), "quest_1");
-			store.changeXP(tostring(player.UserId), 300);
-			print(state.quests, state.xp);
+				// * added * //
+				for (const [id, data] of pairs(current)) {
+					if (!(id in previous)) {
+						Events.quests.addQuest(player, id, data);
+						return;
+					}
+				}
+
+				// * removed * //
+				for (const [id, data] of pairs(previous)) {
+					if (!(id in current)) {
+						Events.quests.removeQuest(player, id, data);
+						return;
+					}
+				}
+			});
 		});
 	}
 }

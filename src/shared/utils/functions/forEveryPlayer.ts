@@ -1,6 +1,6 @@
 import { Players } from "@rbxts/services";
 
-type Callback = (p: Player, c?: RBXScriptConnection) => (() => void) | void | Promise<(() => void) | void>;
+type Callback = (player: Player, addedConn?: RBXScriptConnection) => (() => void) | void | Promise<(() => void) | void>;
 
 function runCallback(player: Player, joinFunc: Callback, c?: RBXScriptConnection) {
 	const cleanupPlayer = joinFunc(player, c);
@@ -46,5 +46,5 @@ export function forEveryPlayer(joinFunc: Callback, leaveFunc?: (p: Player) => vo
 	Players.GetPlayers().forEach((p) => {
 		runCallback(p, joinFunc);
 	});
-	const joinConn = Players.PlayerAdded.Connect((p) => runCallback(p, joinFunc, joinConn));
+	const addedConn = Players.PlayerAdded.Connect((p) => runCallback(p, joinFunc, addedConn));
 }
