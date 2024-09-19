@@ -39,7 +39,7 @@ interface ServerFunctions {
 
 interface ClientEvents {
 	announcer: {
-		announce: (announcement: Announcement) => void;
+		announce: (announcements: string[]) => void;
 	};
 	quests: {
 		addQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;

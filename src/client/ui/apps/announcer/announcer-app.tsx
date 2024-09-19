@@ -8,11 +8,11 @@ function useAnnouncement() {
 	const lastMessage = useRef("_!_");
 
 	useEffect(() => {
-		const conn = Events.announcer.announce.connect((announcement) => {
-			setMessage(announcement.message);
-			lastMessage.current = announcement.message;
-			task.wait(5);
-			if (lastMessage.current === announcement.message) setMessage(undefined);
+		const conn = Events.announcer.announce.connect((announcements) => {
+			// setMessage(announcement.message);
+			// lastMessage.current = announcement.message;
+			// task.wait(5);
+			// if (lastMessage.current === announcement.message) setMessage(undefined);
 		});
 
 		return () => conn.Disconnect();
