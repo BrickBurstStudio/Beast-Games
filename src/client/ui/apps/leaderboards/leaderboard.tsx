@@ -16,10 +16,13 @@ export default function Leaderboard(props: LeaderboardProps) {
 			setDatastoreValues(
 				args[props.datastoreName]
 					.filter(({ key }) => (tonumber(key.split("_")[1]) ?? -1) > 0)
-					.map(({ key, value }) => ({
-						key: key.split("_")[1],
-						value: FormatCompact(tonumber(props.convertValue ? props.convertValue(value) : value) ?? 0),
-					})),
+					.map(({ key, value }) => {
+						const numberValue = tonumber(props.convertValue ? props.convertValue(value) : value);
+						return {
+							key: key.split("_")[1],
+							value: !!numberValue ? FormatCompact(numberValue) : value,
+						};
+					}),
 			);
 		});
 	}, []);
