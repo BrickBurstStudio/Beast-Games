@@ -38,6 +38,9 @@ interface ServerFunctions {
 }
 
 interface ClientEvents {
+	announcer: {
+		announce: (announcement: Announcement) => void;
+	};
 	quests: {
 		addQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
 		removeQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
