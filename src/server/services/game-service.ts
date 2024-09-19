@@ -10,6 +10,6 @@ export class GameService implements OnStart {
 
 		// new FlagChallenge().Start();
 		task.wait(3);
-		ProductService.PromptPurchase(Players.GetPlayers()[0], "BecomeMrBeast");
+		// ProductService.PromptPurchase(Players.GetPlayers()[0], "BecomeMrBeast");
 	}
 }
