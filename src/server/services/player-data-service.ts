@@ -33,7 +33,6 @@ export class PlayerDataService implements OnInit {
 		const profileKey = KEY_TEMPLATE.format(userId);
 		const profile = this.profileStore.LoadProfileAsync(profileKey);
 		const orderedPlayerData = new OrderedPlayerData(player);
-
 		if (!profile) return player.Kick();
 
 		profile.ListenToRelease(() => {
