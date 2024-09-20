@@ -72,7 +72,17 @@ export class FlagChallenge extends BaseChallenge {
 			this.flagPoles.push(flagPole);
 			if (!flagPole.PrimaryPart) continue;
 			flagPole.Parent = this.map;
-			flagPole.PrimaryPart.CFrame = new CFrame(50, 4, -30).mul(CFrame.Angles(0, math.rad(90), math.rad(90)));
+			// flagPole.PrimaryPart.CFrame = new CFrame(50, 4, -30).mul(CFrame.Angles(0, math.rad(90), math.rad(90)));
+			flagPole.PrimaryPart.CFrame = this.map.Baseplate.CFrame.add(
+				new Vector3(
+					math.random(
+						-this.map.Baseplate.Size.X + this.map.Baseplate.Size.X / 2,
+						this.map.Baseplate.Size.X - this.map.Baseplate.Size.X / 2,
+					),
+					this.map.Baseplate.Size.Y / 2 + flagPole.Pole.Size.X / 2,
+					math.random(-this.map.Baseplate.Size.Z / 2, 60),
+				),
+			).mul(CFrame.Angles(0, math.rad(math.random(0, 180)), math.rad(90)));
 			print("Flag spawned");
 		}
 	}

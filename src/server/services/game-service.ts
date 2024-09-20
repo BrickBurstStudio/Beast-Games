@@ -9,7 +9,5 @@ export class GameService implements OnStart {
 		while (Players.GetPlayers().size() < 1) task.wait();
 
 		await new FlagChallenge().Start();
-		// task.wait(3);
-		// ProductService.PromptPurchase(Players.GetPlayers()[0], "BecomeMrBeast");
 	}
 }
