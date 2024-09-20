@@ -7,7 +7,7 @@ export = identity<CommandDefinition>({
 	Group: "Admin",
 	Args: [
 		{
-			Type: "string",
+			Type: "strings",
 			Name: "Message",
 			Description: "Message",
 		},

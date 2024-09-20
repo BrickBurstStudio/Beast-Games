@@ -3,7 +3,7 @@ import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { Currency } from "shared/configs/currency";
 
-export = function (context: CommandContext, message: string) {
-	Events.announcer.announce.broadcast([message]);
-	return "Announcement sent.";
+export = function (context: CommandContext, messages: string[]) {
+	Events.announcer.announce.broadcast([...messages]);
+	return `Announcements sent: (${messages.join(", ")})`;
 };
