@@ -18,7 +18,10 @@ export class OrderedPlayerData {
 	constructor(player: Player) {
 		if (player.UserId < 0) error(`Player ${player.Name} has a negative UserId! Please use real players.`);
 		this.player = player;
-		this.xp = new BaseOrderedDataStore(player, "xp", (amount) => store.changeXP(tostring(player.UserId), amount));
+		this.xp = new BaseOrderedDataStore(player, "xp", (amount) => {
+			print("Rewarding XP: ", amount);
+			store.changeXP(tostring(player.UserId), amount);
+		});
 		this.wins = new BaseOrderedDataStore(player, "wins", (amount) =>
 			store.incrementWins(tostring(player.UserId), amount),
 		);

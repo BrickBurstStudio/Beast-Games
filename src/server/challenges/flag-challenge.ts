@@ -9,13 +9,12 @@ import { ClaimComponent } from "server/components/claim-components/claim-compone
 import { FlagPoleComponent } from "server/components/claim-components/flag-pole-component";
 import { Events } from "server/network";
 
-const components = Dependency<Components>();
-
 export class FlagChallenge extends BaseChallenge {
 	protected announcements = ["Olivia", "Allison"];
 	protected readonly map = ServerStorage.ChallengeMaps.FlagChallenge.Clone();
 
 	private flagPoles: FlagPole[] = [];
+	private components = Dependency<Components>();
 
 	protected async Main() {
 		let playerCount = Players.GetPlayers().size() + 1;
@@ -54,7 +53,7 @@ export class FlagChallenge extends BaseChallenge {
 		// TODO: Refactor this to use `onAttributeChanged` instead of a while loop for performance reasons
 		while (this.flagPoles.size() > 0) {
 			for (const flag of this.flagPoles) {
-				const flagComponent = components.getComponent<FlagPoleComponent>(flag);
+				const flagComponent = this.components.getComponent<FlagPoleComponent>(flag);
 				if (!flagComponent) continue;
 				if (flagComponent.attributes.owner) {
 					this.flagPoles.remove(this.flagPoles.indexOf(flag));
