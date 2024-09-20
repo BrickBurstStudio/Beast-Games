@@ -39,6 +39,7 @@ export class LoginService implements OnStart {
 					task.wait(60);
 					if (!Players.GetPlayers().find((p: Player) => p === player)) break;
 					orderedPlayerData.playTime.UpdateBy(1);
+					print(`Player ${player.UserId} (${player.Name}) has played for 1 minute!`);
 					orderedPlayerData.xp.UpdateBy(1);
 				}
 			});

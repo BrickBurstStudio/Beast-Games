@@ -6,9 +6,12 @@ interface ReplicatedStorage extends Instance {
 			functions: Folder & {
 				randomNumbers: ModuleScript;
 				getColor3FromLevel: ModuleScript;
+				objectKeys: ModuleScript;
 				toTitleCase: ModuleScript;
 				getCharacter: ModuleScript;
 				getPlayerByName: ModuleScript;
+				getPlayerMultiplier: ModuleScript;
+				getHonorTitle: ModuleScript;
 				tweenUtil: ModuleScript;
 				randomColor: ModuleScript;
 				forEveryPlayer: ModuleScript;
@@ -17,7 +20,13 @@ interface ReplicatedStorage extends Instance {
 		};
 		network: ModuleScript;
 		configs: Folder & {
+			items: ModuleScript & {
+				hats: ModuleScript;
+				cases: ModuleScript;
+				emotes: ModuleScript;
+			};
 			currency: ModuleScript;
+			quests: ModuleScript;
 		};
 		components: Folder;
 		store: ModuleScript & {
@@ -29,6 +38,7 @@ interface ReplicatedStorage extends Instance {
 					items: ModuleScript;
 					balance: ModuleScript;
 					playTime: ModuleScript;
+					quests: ModuleScript;
 					types: ModuleScript;
 					equipped: ModuleScript;
 					loggedIn: ModuleScript;
@@ -41,7 +51,6 @@ interface ReplicatedStorage extends Instance {
 	};
 	Assets: Folder & {
 		Objects: Folder & {
-			Flag: Model;
 			Briefcase: Model & {
 				Part: Part & {
 					Highlight: Highlight;
@@ -54,11 +63,17 @@ interface ReplicatedStorage extends Instance {
 				Part: Part;
 				Dollars: NumberValue;
 			};
+			FlagPole: Model & {
+				Flag: Part;
+				WeldConstraint: WeldConstraint;
+				Pole: Part;
+			};
 		};
 		Accessory: Accessory & {
 			Handle: Part & {
-				Mesh: SpecialMesh;
 				HatAttachment: Attachment;
+				Mesh: SpecialMesh;
+				TouchInterest: TouchTransmitter;
 			};
 		};
 		Gui: Folder & {
@@ -179,6 +194,27 @@ interface ReplicatedStorage extends Instance {
 						};
 						useAnimation: ModuleScript;
 						motion: ModuleScript;
+					};
+				};
+				["format-number"]: Folder & {
+					src: ModuleScript & {
+						DoubleConversion: Folder & {
+							proxy: ModuleScript;
+							diy_fp: ModuleScript;
+							LICENSE: ModuleScript;
+							uint64_t: ModuleScript;
+							DoubleToStringConverter: ModuleScript;
+							ieee: ModuleScript;
+							strtod: ModuleScript;
+							cached_power: ModuleScript;
+							grisu3: ModuleScript;
+							DoubleToDecimalConverter: ModuleScript;
+							bignum_dtoa: ModuleScript;
+							bignum: ModuleScript;
+							DecimalToDoubleConverter: ModuleScript;
+						};
+						_aux: ModuleScript;
+						config: ModuleScript;
 					};
 				};
 				react: ModuleScript & {

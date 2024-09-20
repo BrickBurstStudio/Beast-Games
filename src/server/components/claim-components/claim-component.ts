@@ -1,6 +1,6 @@
 import { BaseComponent, Component } from "@flamework/components";
 import Make from "@rbxts/make";
-import { Players, ReplicatedStorage } from "@rbxts/services";
+import { ControllerService, Players, ReplicatedStorage } from "@rbxts/services";
 import { getPlayerByName } from "shared/utils/functions/getPlayerByName";
 
 export interface ClaimComponentProps {

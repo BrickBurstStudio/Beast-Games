@@ -5,11 +5,11 @@ import { ProductService } from "./product-service";
 
 @Service()
 export class GameService implements OnStart {
-	onStart() {
+	async onStart() {
 		while (Players.GetPlayers().size() < 1) task.wait();
 
-		// new FlagChallenge().Start();
-		task.wait(3);
-		ProductService.PromptPurchase(Players.GetPlayers()[0], "BecomeMrBeast");
+		await new FlagChallenge().Start();
+		// task.wait(3);
+		// ProductService.PromptPurchase(Players.GetPlayers()[0], "BecomeMrBeast");
 	}
 }
