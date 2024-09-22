@@ -14,18 +14,21 @@ interface ServerStorage extends Instance {
 			};
 		};
 	};
-	RBX_ANIMSAVES: Model & {
-		Rig: ObjectValue & {
-			["Automatic Save"]: KeyframeSequence;
-		};
-	};
 	ChallengeMaps: Folder & {
-		BriefcaseChallenge: Folder;
+		BriefcaseChallenge: Folder & {
+			Baseplate: Part;
+			Briefcases: Model;
+		};
 		MoneyPileChallenge: Folder;
 		BoulderChallenge: Folder;
 		FlagChallenge: Folder & {
 			Baseplate: Part;
 			StartingLine: Part;
+		};
+	};
+	RBX_ANIMSAVES: Model & {
+		Rig: ObjectValue & {
+			["Automatic Save"]: KeyframeSequence;
 		};
 	};
 }

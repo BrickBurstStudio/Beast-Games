@@ -27,25 +27,22 @@ export class BriefcaseComponent
 	onStart() {
 		this.onAttributeChanged("highlightMode", (mode) => {
 			if (mode === "disabled") {
-				this.instance.Part.Highlight.Enabled = false;
+				this.instance.Part.BrickColor = new BrickColor("Dark stone grey");
 				this.instance.Part.BillboardGui.TextLabel.Text = "";
 				this.attributes.touchEnabled = true;
 			}
 			if (mode === "reveal") {
-				this.instance.Part.Highlight.FillColor = this.attributes.safe ? this.safeColor : this.unsafeColor;
+				this.instance.Part.Color = this.attributes.safe ? this.safeColor : this.unsafeColor;
 				this.instance.Part.BillboardGui.TextLabel.TextColor3 = this.attributes.safe
 					? this.safeColor
 					: this.unsafeColor;
 				this.instance.Part.BillboardGui.TextLabel.Text = this.attributes.safe ? "!" : "X";
-				this.instance.Part.Highlight.Enabled = true;
 				this.attributes.touchEnabled = false;
 			}
 			if (mode === "selected") {
-				this.instance.Part.Highlight.FillColor = this.selectedColor;
-				this.instance.Part.Highlight.FillTransparency = 0.25;
+				this.instance.Part.BrickColor = new BrickColor("White");
 				this.instance.Part.BillboardGui.TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
 				this.instance.Part.BillboardGui.TextLabel.Text = "?";
-				this.instance.Part.Highlight.Enabled = true;
 				this.attributes.touchEnabled = false;
 			}
 		});
