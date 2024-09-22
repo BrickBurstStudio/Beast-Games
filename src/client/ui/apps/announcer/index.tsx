@@ -4,14 +4,10 @@ import { Events } from "client/network";
 import { px } from "client/ui/utils/usePx";
 import { ANNOUNCER_CONFIGS } from "shared/configs/announcer";
 
-function typeString(str: string, direction: "->" | "<-", update: (str: string) => void) {
-	for (
-		let i = direction === "->" ? 0 : str.size();
-		direction === "->" ? i <= str.size() : i >= 0;
-		direction === "->" ? i++ : i--
-	) {
+function typeString(str: string, update: (str: string) => void) {
+	for (let i = 0; i <= str.size(); i++) {
 		update(str.sub(0, i));
-		task.wait(direction === "->" ? ANNOUNCER_CONFIGS.keystrokeTime * 2 : ANNOUNCER_CONFIGS.keystrokeTime);
+		task.wait(ANNOUNCER_CONFIGS.keystrokeTime);
 	}
 }
 
@@ -33,7 +29,7 @@ function useAnnouncement() {
 
 				setHide(false);
 				task.wait(ANNOUNCER_CONFIGS.preMessageTime);
-				typeString(msg, "->", setMessage);
+				typeString(msg, setMessage);
 				task.wait(ANNOUNCER_CONFIGS.postMessageTime);
 
 				if (messageQueue.current.size() < 1) {
