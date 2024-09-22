@@ -7,6 +7,7 @@ interface ReplicatedStorage extends Instance {
 				randomNumbers: ModuleScript;
 				getColor3FromLevel: ModuleScript;
 				objectKeys: ModuleScript;
+				calculateReward: ModuleScript;
 				toTitleCase: ModuleScript;
 				getCharacter: ModuleScript;
 				getPlayerByName: ModuleScript;
@@ -51,9 +52,13 @@ interface ReplicatedStorage extends Instance {
 	};
 	Assets: Folder & {
 		Objects: Folder & {
+			BriefcaseStand: Model & {
+				Part: Part;
+				Primary: Part;
+			};
 			Briefcase: Model & {
 				Part: Part & {
-					Highlight: Highlight;
+					Mesh: SpecialMesh;
 					BillboardGui: BillboardGui & {
 						TextLabel: TextLabel;
 					};

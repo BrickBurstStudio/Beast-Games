@@ -24,7 +24,6 @@ export abstract class BaseChallenge {
 
 		this.SpawnPlayers(players);
 		this.players = players;
-		Events.announcer.announce.broadcast(this.announcements);
 
 		await this.Main();
 		await this.RewardPlayers();
