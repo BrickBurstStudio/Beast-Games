@@ -1,5 +1,6 @@
 import { Controller, OnStart } from "@flamework/core";
 import React from "@rbxts/react";
+import { ReflexProvider } from "@rbxts/react-reflex";
 import { createPortal, createRoot } from "@rbxts/react-roblox";
 import { Players } from "@rbxts/services";
 import { store } from "client/store";
@@ -18,9 +19,11 @@ export class GuiController implements OnStart {
 			const root = createRoot(new Instance("Folder"));
 			root.render(
 				createPortal(
-					<screengui Enabled={true} ResetOnSpawn={false}>
-						<App />
-					</screengui>,
+					<ReflexProvider producer={store}>
+						<screengui Enabled={true} ResetOnSpawn={false}>
+							<App />
+						</screengui>
+					</ReflexProvider>,
 					this.playerGui,
 				),
 			);
