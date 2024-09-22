@@ -90,15 +90,15 @@ export class BriefcaseChallenge extends BaseChallenge {
 
 		this.RandomizeCases();
 
-		// announceAndWait([
-		// 	`Only ${cases - this.badBriefcases} cases here are safe. ${this.badBriefcases} cases are deadly.`,
-		// 	"Once a case is touched, that player owns that case. It cannot be stolen back.",
-		// 	"If you end up with a red case, you are eliminated.",
-		// 	`Memorize the safe cases! You have ${this.memorizeTime} seconds until you must run for a case.`,
-		// ]);
+		announceAndWait([
+			`Only ${cases - this.badBriefcases} cases here are safe. ${this.badBriefcases} cases are deadly.`,
+			"Once a case is touched, that player owns that case. It cannot be stolen back.",
+			"If you end up with a red case, you are eliminated.",
+			`Memorize the safe cases! You have ${this.memorizeTime} seconds until you must run for a case.`,
+		]);
 		Events.announcer.announce.broadcast(["(dev: second countdown is supposed to start now, but no implementation"]);
 		this.ToggleCases(true);
-		// task.wait(this.memorizeTime);
+		task.wait(this.memorizeTime);
 		task.wait(5);
 		this.ToggleCases(false);
 		barrier.Destroy();
@@ -138,10 +138,13 @@ export class BriefcaseChallenge extends BaseChallenge {
 	}
 
 	private EliminatePlayers() {
-		for (const [userId, briefcase] of Object.entries(this.playerSelections)) {
-			const player = Players.GetPlayerByUserId(userId);
-			if (!briefcase.attributes.safe && player) this.EliminatePlayer(player);
-		}
+		this.players.forEach((p) => {
+			if (this.playerSelections[p.UserId]) {
+				if (!this.playerSelections[p.UserId].attributes.safe) this.EliminatePlayer(p);
+			} else {
+				this.EliminatePlayer(p);
+			}
+		});
 	}
 
 	private async BriefCaseTouched(player: Player, briefCase: BriefcaseComponent) {
