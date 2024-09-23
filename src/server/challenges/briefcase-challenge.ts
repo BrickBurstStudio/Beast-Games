@@ -8,6 +8,7 @@ import Object from "@rbxts/object-utils";
 import { generatePlayerGrid } from "server/util/generatePlayerGrid";
 import Make from "@rbxts/make";
 import { Events } from "server/network";
+import { announceAndWait } from "server/util/announceAndWait";
 
 export class BriefcaseChallenge extends BaseChallenge {
 	protected announcements = ["fetus"];
@@ -16,13 +17,15 @@ export class BriefcaseChallenge extends BaseChallenge {
 	readonly badBriefcases = 50;
 	readonly revealTime = 5;
 	readonly cellPadding = 10;
+	readonly memorizeTime = 15;
+	readonly runTime = 30;
 
 	readonly playerSelections: { [key: Player["UserId"]]: BriefcaseComponent } = {};
 	briefcases: BriefcaseComponent[] = [];
 	revealing = false;
 
 	protected async Main() {
-		const cases = 150 + this.badBriefcases;
+		const cases = 130 + this.badBriefcases;
 		const grid = generatePlayerGrid(cases, 10);
 		const largestY = this.GetLargestSubarray(grid)!;
 		const gridCenterXOffset = grid.size() * (this.cellPadding / 2) - this.cellPadding / 2;
@@ -85,33 +88,33 @@ export class BriefcaseChallenge extends BaseChallenge {
 			});
 		});
 
-		Events.announcer.announce.broadcast([
+		this.RandomizeCases();
+
+		announceAndWait([
 			`Only ${cases - this.badBriefcases} cases here are safe. ${this.badBriefcases} cases are deadly.`,
 			"Once a case is touched, that player owns that case. It cannot be stolen back.",
 			"If you end up with a red case, you are eliminated.",
-			"Memorize the safe cases! You have 30 seconds until you must run for a case.",
+			`Memorize the safe cases! You have ${this.memorizeTime} seconds until you must run for a case.`,
 		]);
-		this.RandomizeCases();
-		task.wait(20);
-		Events.announcer.announce.broadcast([
-			"(dev: 15 second countdown is supposed to start now, but no implementation",
-		]);
+		Events.announcer.announce.broadcast(["(dev: second countdown is supposed to start now, but no implementation"]);
 		this.ToggleCases(true);
-		task.wait(15);
+		task.wait(this.memorizeTime);
+		task.wait(5);
 		this.ToggleCases(false);
 		barrier.Destroy();
-		// todo: wait until time, or until all cases are claimed
-		task.wait(10);
 
-		Events.announcer.announce.broadcast([
-			"All players have claimed a case. Let's reveal who won, and who will die...",
-		]);
-		task.wait(8);
+		// todo: wait until time
+		const t = DateTime.now().UnixTimestamp;
+		while (
+			!this.players.every((p) => p.UserId in this.playerSelections) &&
+			DateTime.now().UnixTimestamp - t < this.runTime
+		)
+			task.wait();
+		announceAndWait(["It's time to reveal who won, and who will die..."]);
+		task.wait(3);
 		this.ToggleCases(true);
-		task.wait(10);
+		task.wait(5);
 		this.EliminatePlayers();
-
-		task.wait(50000);
 	}
 
 	private RandomizeCases() {
@@ -135,10 +138,13 @@ export class BriefcaseChallenge extends BaseChallenge {
 	}
 
 	private EliminatePlayers() {
-		for (const [userId, briefcase] of Object.entries(this.playerSelections)) {
-			const player = Players.GetPlayerByUserId(userId);
-			if (!briefcase.attributes.safe && player) this.EliminatePlayer(player);
-		}
+		this.players.forEach((p) => {
+			if (this.playerSelections[p.UserId]) {
+				if (!this.playerSelections[p.UserId].attributes.safe) this.EliminatePlayer(p);
+			} else {
+				this.EliminatePlayer(p);
+			}
+		});
 	}
 
 	private async BriefCaseTouched(player: Player, briefCase: BriefcaseComponent) {

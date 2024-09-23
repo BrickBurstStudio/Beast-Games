@@ -1,7 +1,9 @@
 import React from "@rbxts/react";
+import { ReflexProvider } from "@rbxts/react-reflex";
 import ReactRoblox from "@rbxts/react-roblox";
-import { usePx } from "./utils/usePx";
+import { store } from "client/store";
 import App from "./apps/app";
+import { usePx } from "./utils/usePx";
 
 const controls = {};
 
@@ -11,7 +13,12 @@ const Story = {
 	reactRoblox: ReactRoblox,
 	story: () => {
 		usePx();
-		return <App />;
+
+		return (
+			<ReflexProvider producer={store}>
+				<App />
+			</ReflexProvider>
+		);
 	},
 };
 
