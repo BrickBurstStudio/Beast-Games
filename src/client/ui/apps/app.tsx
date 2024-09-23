@@ -11,9 +11,10 @@ import SettingsApp from "./menu/pages/settings";
 import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
 
+
 export default function App() {
 	const page = useSelector(selectGuiPage);
-
+	
 	function CurrentPage() {
 		if (page === "Inventory") return <InventoryApp />;
 		if (page === "Shop") return <ShopApp />;
@@ -43,7 +44,7 @@ export default function App() {
 			task.cancel(thread);
 		};
 	}, []);
-
+	
 	return (
 		<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
 			{/* <RhthymApp /> */}

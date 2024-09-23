@@ -1,4 +1,4 @@
-import React from "@rbxts/react";
+import React, { useState } from "@rbxts/react";
 import { store } from "client/store";
 
 type ImageButtonProps = {
@@ -24,7 +24,8 @@ export default function ImageButton(props: ImageButtonProps) {
 				MouseButton1Click: onClick,
 				MouseEnter: () => {
 					store.setToolTip({
-						header: "Click to view item",
+						header: "Test",
+						body: "This is a test",
 					});
 				},
 				MouseLeave: () => {
