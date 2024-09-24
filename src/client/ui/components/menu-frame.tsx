@@ -57,15 +57,21 @@ export default function MenuFrame(props: MenuFrameProps) {
 					<uicorner CornerRadius={new UDim(0, px(10))} />
 				</imagebutton>
 			</frame>
-			<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
+			<scrollingframe
+				BackgroundTransparency={1}
+				Size={UDim2.fromScale(1, 1)}
+				CanvasSize={UDim2.fromScale(0,0)}
+				AutomaticCanvasSize={Enum.AutomaticSize.XY}
+				ScrollBarImageColor3={Color3.fromRGB(0, 0, 0)}
+			>
 				<uipadding
-					PaddingTop={new UDim(0, px(headerElementSize))}
-					PaddingRight={new UDim(0, px(headerElementSize))}
-					PaddingBottom={new UDim(0, px(headerElementSize))}
-					PaddingLeft={new UDim(0, px(headerElementSize))}
+					PaddingTop={new UDim(0, px(headerElementSize / 2))}
+					PaddingBottom={new UDim(0, px(headerElementSize / 2))}
+					PaddingRight={new UDim(0, px(headerElementSize / 2))}
+					PaddingLeft={new UDim(0, px(headerElementSize / 2))}
 				/>
 				{props.children}
-			</frame>
+			</scrollingframe>
 		</frame>
 	);
 }
