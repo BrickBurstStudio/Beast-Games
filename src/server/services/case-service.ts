@@ -1,5 +1,5 @@
 import { OnStart, Service } from "@flamework/core";
-import { Functions } from "server/network";
+import { Events, Functions } from "server/network";
 import { store } from "server/store";
 import { chooseRandomItem } from "server/util/getRandomItem";
 import { items } from "shared/configs/items";
@@ -21,6 +21,7 @@ export class CaseService implements OnStart {
 			store.addItemToInventory(tostring(player.UserId), randomItemIdWonFromCase);
 			const randomItem = items.get(randomItemIdWonFromCase);
 			if (!randomItem) throw error("Item not found. This is a bug. Please report it to the developers.");
+			// Events.animateUnboxing.broadcast(player, randomItem);
 			return randomItem;
 		});
 	}
