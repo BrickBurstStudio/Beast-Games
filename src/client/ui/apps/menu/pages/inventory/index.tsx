@@ -26,6 +26,7 @@ export default function InventoryApp() {
 						onClick={() => {
 							print("Clicked item", item.name);
 						}}
+						toolTip={{ header: item.name, body: "Click To Open" }}
 					/>
 				);
 			})}

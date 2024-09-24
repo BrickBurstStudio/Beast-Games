@@ -27,18 +27,10 @@ export default function MenuFrame(props: MenuFrameProps) {
 			<uiaspectratioconstraint AspectRatio={props.square ? 1 : 2} DominantAxis={Enum.DominantAxis.Height} />
 
 			<frame Size={UDim2.fromScale(1, 0)} ZIndex={2} BackgroundTransparency={1}>
-				{/* Icon */}
-				<imagelabel
-					Size={UDim2.fromOffset(px(headerElementSize), px(headerElementSize))}
-					AnchorPoint={new Vector2(0.5, 0.5)}
-					BackgroundColor3={Color3.fromRGB(255, 0, 0)}
-					Image={props.header.icon}
-					BorderSizePixel={0}
-				/>
 				{/* title */}
 				<textlabel
 					Text={props.header.title}
-					Size={new UDim2(1, px(-headerElementSize), 0, px(headerElementSize * 0.75))}
+					Size={new UDim2(1, px(headerElementSize), 0, px(headerElementSize * 0.75))}
 					Position={new UDim2(0.5, 0, 0, 0)}
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					TextScaled={true}

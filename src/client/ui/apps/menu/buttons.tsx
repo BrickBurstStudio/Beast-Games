@@ -31,10 +31,11 @@ export default function MenuButtons() {
 			{BUTTONS.map((button) => {
 				return (
 					<ImageButton
-						image="rbxassetid://3926305904"
+						image="rbxassetid://images/plus.png"
 						onClick={() => {
 							store.setGuiPage(button);
 						}}
+						toolTip={{ header: button }}
 					/>
 				);
 			})}
