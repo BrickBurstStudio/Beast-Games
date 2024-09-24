@@ -1,34 +1,41 @@
 import React from "@rbxts/react";
 import { store } from "client/store";
+import ImageButton from "client/ui/components/image-button";
 import { px } from "client/ui/utils/usePx";
 import { GuiPage } from "shared/configs/gui";
 
 const BUTTONS: GuiPage[] = ["Inventory", "Shop", "Achievements", "Trading", "Settings"];
-const BUTTON_SIZE = 50;
+const BUTTON_SIZE = 100;
+const PADDING_SIZE = BUTTON_SIZE / 4;
 
 export default function MenuButtons() {
 	return (
 		<frame
-			Size={new UDim2(0.75, 0, 0, 0)}
-			Position={new UDim2(0.5, 0, 1, px(-150))}
+			Size={
+				new UDim2(
+					0,
+					px(BUTTON_SIZE) * BUTTONS.size() + px(PADDING_SIZE) * (BUTTONS.size() - 1),
+					0,
+					px(BUTTON_SIZE),
+				)
+			}
+			Position={new UDim2(0.5, 0, 1, px(-(BUTTON_SIZE + PADDING_SIZE)))}
 			AnchorPoint={new Vector2(0.5, 0)}
-			// BackgroundTransparency={1}
+			BackgroundTransparency={1}
 		>
 			<uigridlayout
 				FillDirection={Enum.FillDirection.Horizontal}
-				CellPadding={new UDim2(0, px(BUTTON_SIZE), 0, 0)}
-				CellSize={new UDim2(0, px(BUTTON_SIZE * 2), 0, px(BUTTON_SIZE * 2))}
+				CellPadding={new UDim2(0, px(PADDING_SIZE), 0, 0)}
+				CellSize={new UDim2(0, px(BUTTON_SIZE), 0, px(BUTTON_SIZE))}
 			/>
 			{BUTTONS.map((button) => {
 				return (
-					<textbutton
-						Text={button}
-						BackgroundColor3={Color3.fromRGB(100, 100, 100)}
-						Event={{
-							MouseButton1Click: () => {
-								store.setGuiPage(button);
-							},
+					<ImageButton
+						image="rbxassetid://images/plus.png"
+						onClick={() => {
+							store.setGuiPage(button);
 						}}
+						toolTip={{ header: button }}
 					/>
 				);
 			})}

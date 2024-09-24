@@ -10,8 +10,11 @@ export const COLORS = {
 		On: Color3.fromRGB(61, 220, 68),
 	},
 
+	Border: Color3.fromHSV(0, 0, 0.2),
 	White: Color3.fromRGB(255, 255, 255),
 };
+
+export const BORDER_THICKNESS = 7.5;
 
 export const IMAGES = {
 	coins: "15416676802",
