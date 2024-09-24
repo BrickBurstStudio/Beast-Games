@@ -26,6 +26,6 @@ export type Item = {
 	name: string;
 };
 
-export const allItems = [...cases, ...emotes, ...hats];
+export const allItems = [...cases, ...emotes, ...hats] as const;
 export type ItemId = (typeof allItems)[number]["id"];
 export const items = new ReadonlyMap<ItemId, Item>(allItems.map((i) => [i.id, i]));
