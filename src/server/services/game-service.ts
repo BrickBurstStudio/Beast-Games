@@ -8,6 +8,6 @@ import { BriefcaseChallenge } from "server/challenges/briefcase-challenge";
 export class GameService implements OnStart {
 	async onStart() {
 		while (Players.GetPlayers().size() < 1) task.wait();
-		await new BriefcaseChallenge().Start();
+		// await new BriefcaseChallenge().Start();
 	}
 }
