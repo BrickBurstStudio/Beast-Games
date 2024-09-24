@@ -23,16 +23,16 @@ export default function InventoryApp() {
 			<uigridlayout CellSize={new UDim2(0, 100, 0, 100)} CellPadding={new UDim2(0, 10, 0, 10)} />
 			{inventory?.map((itemId) => {
 				const item = items.get(itemId);
+				const isCase = itemId.find("case").size() > 0;
 				if (!item) return <></>;
 				return (
 					<ImageButton
 						image={"rbxassetid://3926305904"}
 						onClick={() => {
 							store.setGuiPage(undefined);
-							if (itemId.find("case").size() > 0)
-								Functions.inventory.openCase(itemId as (typeof cases)[number]["id"]);
+							if (isCase) Functions.inventory.openCase(itemId as (typeof cases)[number]["id"]);
 						}}
-						toolTip={{ header: item.name, body: "Click To Open" }}
+						toolTip={{ header: item.name, body: isCase ? "Click To Open" : "Click To Equip" }}
 					/>
 				);
 			})}

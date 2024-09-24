@@ -57,7 +57,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 					<uicorner CornerRadius={new UDim(0, px(10))} />
 				</imagebutton>
 			</frame>
-			<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
+			<scrollingframe BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
 				<uipadding
 					PaddingTop={new UDim(0, px(headerElementSize))}
 					PaddingRight={new UDim(0, px(headerElementSize))}
@@ -65,7 +65,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 					PaddingLeft={new UDim(0, px(headerElementSize))}
 				/>
 				{props.children}
-			</frame>
+			</scrollingframe>
 		</frame>
 	);
 }
