@@ -16,10 +16,12 @@ interface ServerStorage extends Instance {
 	};
 	ChallengeMaps: Folder & {
 		BriefcaseChallenge: Folder & {
-			Baseplate: Part;
 			Briefcases: Model;
+			Baseplate: Part;
 		};
-		MoneyPileChallenge: Folder;
+		MoneyPileChallenge: Folder & {
+			Platforms: Model;
+		};
 		BoulderChallenge: Folder;
 		FlagChallenge: Folder & {
 			Baseplate: Part;
