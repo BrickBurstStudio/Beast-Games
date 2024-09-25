@@ -11,6 +11,7 @@ import InventoryApp from "./menu/pages/inventory";
 import SettingsApp from "./menu/pages/settings";
 import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
+import CountdownApp from "./countdown";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);
@@ -40,10 +41,12 @@ export default function App() {
 		<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
 			{/* <RhthymApp /> */}
 			{/* <SprintApp /> */}
-			<AnnouncerApp />
+			{/* <AnnouncerApp />
 			<CurrentPage />
-			<MenuButtons />
-			{toolTip && <ToolTip />}
+			<MenuButtons /> */}
+			<CountdownApp />
+			{/* {toolTip && <ToolTip />} */}
+			{/* {<CountdownApp></CountdownApp>} */}
 		</frame>
 	);
 }

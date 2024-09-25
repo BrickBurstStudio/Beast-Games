@@ -18,7 +18,9 @@ function useCountdown() {
 		const conn = Events.announcer.countdown.connect(({ seconds, description }) => {});
 
 		task.spawn(() => {
-			while (true) {}
+			while (true) {
+				task.wait();
+			}
 		});
 
 		return () => conn.Disconnect();
@@ -30,5 +32,5 @@ function useCountdown() {
 export default function CountdownApp() {
 	const [message, hide] = useCountdown();
 
-	return <frame BackgroundTransparency={0} Size={UDim2.fromScale(1, 1)} Position={UDim2.fromOffset(0, 0)}></frame>;
+	return <frame BackgroundTransparency={0.5} Size={UDim2.fromScale(1, 1)} Position={UDim2.fromOffset(0, 0)}></frame>;
 }
