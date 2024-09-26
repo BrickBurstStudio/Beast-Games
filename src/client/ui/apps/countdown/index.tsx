@@ -4,33 +4,71 @@ import { Events } from "client/network";
 import { px } from "client/ui/utils/usePx";
 
 function useCountdown() {
-	const [message, setMessage] = useState("");
-	const [hideState, setHideState] = useState(true);
-	const hideRef = useRef(true);
-	const messageQueue = useRef<string[]>([]);
-
-	const setHide = (bool: boolean) => {
-		setHideState(bool);
-		hideRef.current = bool;
-	};
+	const [description, setDescription] = useState("");
+	const [seconds, setSeconds] = useState<number>(0);
+	const [hide, setHide] = useState(true);
+	const initialSeconds = useRef<number>(0);
 
 	useEffect(() => {
-		const conn = Events.announcer.countdown.connect(({ seconds, description }) => {});
-
-		task.spawn(() => {
-			while (true) {
-				task.wait();
+		const conn = Events.announcer.countdown.connect(({ seconds, description }) => {
+			initialSeconds.current = seconds;
+			setDescription(description);
+			setHide(false);
+			for (let i = seconds; i >= 0; i--) {
+				setSeconds(i);
+				task.wait(1);
 			}
+			setHide(true);
+			task.wait(0.5);
+			setDescription("");
 		});
 
 		return () => conn.Disconnect();
 	}, []);
 
-	return [message, hideState];
+	return { initialSeconds, seconds, description, hide };
 }
 
 export default function CountdownApp() {
-	const [message, hide] = useCountdown();
+	let { initialSeconds, seconds, description, hide } = useCountdown();
 
-	return <frame BackgroundTransparency={0.5} Size={UDim2.fromScale(1, 1)} Position={UDim2.fromOffset(0, 0)}></frame>;
+	return (
+		<motion.frame
+			animate={{ Position: hide ? UDim2.fromScale(0.5, 0) : new UDim2(0.5, 0, 0, px(250)) }}
+			BackgroundTransparency={1}
+			Position={UDim2.fromScale(0.5, 0)}
+			AnchorPoint={new Vector2(0.5, 1)}
+			transition={{
+				duration: 0.5,
+				easingStyle: Enum.EasingStyle.Cubic,
+				easingDirection: Enum.EasingDirection.InOut,
+			}}
+			AutomaticSize={"XY"}
+		>
+			<uilistlayout HorizontalAlignment={"Center"} />
+			<motion.textlabel
+				animate={{
+					TextColor3: Color3.fromRGB(
+						255,
+						seconds ? (seconds / initialSeconds.current) * 255 : 255,
+						seconds ? (seconds / initialSeconds.current) * 255 : 255,
+					),
+				}}
+				Size={UDim2.fromOffset(px(125), px(125))}
+				Text={`<b>${seconds}</b>`}
+				Font={"Jura"}
+				BackgroundTransparency={1}
+				TextWrapped
+				TextScaled
+				RichText
+			/>
+			<textlabel
+				BackgroundTransparency={1}
+				Size={UDim2.fromOffset(px(500), px(100))}
+				Text={description}
+				TextColor3={Color3.fromRGB(255, 255, 255)}
+				TextScaled
+			/>
+		</motion.frame>
+	);
 }

@@ -6,6 +6,12 @@ import { Events } from "server/network";
 import { calculateReward } from "shared/utils/functions/calculateReward";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
+export type SpawnCharacterArgs = {
+	player: Player;
+	character: CharacterRigR6;
+	i: number;
+};
+
 export abstract class BaseChallenge {
 	private readonly socialPeriodDuration = 30;
 	private readonly mapLoadingTime = 2;
@@ -36,15 +42,7 @@ export abstract class BaseChallenge {
 
 	protected abstract Main(): Promise<void>;
 
-	protected abstract SpawnCharacter({
-		player,
-		character,
-		i,
-	}: {
-		player: Player;
-		character: CharacterRigR6;
-		i: number;
-	}): void;
+	protected abstract SpawnCharacter({ player, character, i }: SpawnCharacterArgs): void;
 
 	protected async EliminatePlayer(player: Player) {
 		if (!Players.GetChildren().includes(player)) return;

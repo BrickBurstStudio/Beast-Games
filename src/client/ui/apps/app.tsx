@@ -40,12 +40,11 @@ export default function App() {
 		<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
 			{/* <RhthymApp /> */}
 			{/* <SprintApp /> */}
-			{/* <AnnouncerApp />
-			<CurrentPage />
-			<MenuButtons /> */}
+			<AnnouncerApp />
+			{/* <CurrentPage /> */}
+			{/* <MenuButtons />  */}
 			<CountdownApp />
 			{/* {toolTip && <ToolTip />} */}
-			{/* {<CountdownApp></CountdownApp>} */}
 		</frame>
 	);
 }
