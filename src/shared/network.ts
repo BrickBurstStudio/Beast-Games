@@ -67,7 +67,7 @@ interface ClientEvents {
 
 	// announceMessage: ({ ...args }: Announcement) => void;
 
-	animateUnboxing: ({ ...args }: { targetPlayer: Player; unboxModel: Model; itemModel: Model }) => void;
+	animateUnboxing: ({ ...args }: { targetPlayer: Player; unboxModel: Model; itemModel: Model; item: Item }) => void;
 }
 
 interface ClientFunctions {}

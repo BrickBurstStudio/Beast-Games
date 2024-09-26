@@ -4,23 +4,27 @@ import { Players, ReplicatedStorage, RunService, ServerStorage, TweenService, Wo
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { tweenNumber, tweenScale } from "shared/utils/functions/tweenUtil";
 import { Events } from "client/network";
+import { Item, ItemRarityConfig } from "shared/configs/items";
 
 @Controller()
 export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnStart {
 	onStart() {
-		Events.animateUnboxing.connect(({ targetPlayer, unboxModel, itemModel }) => {
-			this.Unbox(targetPlayer, unboxModel, itemModel);
+		Events.animateUnboxing.connect(({ targetPlayer, unboxModel, itemModel, item }) => {
+			this.Unbox(targetPlayer, unboxModel, itemModel, item);
 		});
 	}
 
-	private async Unbox(player: Player, unboxModel: Model, itemModel: Model) {
+	private async Unbox(player: Player, unboxModel: Model, itemModel: Model, item: Item) {
 		// Guards
 		const unboxClone = unboxModel.Clone();
 		const itemClone = itemModel.Clone();
 		if (unboxClone.PrimaryPart === undefined) error("unboxModel's clone must have a PrimaryPart");
-		if (itemClone.PrimaryPart === undefined) error("unboxModel's clone must have a PrimaryPart");
+		if (itemClone.PrimaryPart === undefined) error("itemModel's clone must have a PrimaryPart");
 
 		// Initialize
+		const shakeSound = ReplicatedStorage.Assets.Sounds.BabyBoy.Clone();
+		shakeSound.Parent = itemClone;
+
 		const billboardClone = ReplicatedStorage.Assets.Gui.ClaimBGUI.Clone();
 		const character = await getCharacter(player);
 		unboxClone.Parent = Workspace;
@@ -63,6 +67,14 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 			unboxClone,
 		);
 		unboxSpin.Play();
+		task.spawn(() => {
+			for (let i = 0; i < 3; i++) {
+				task.wait(0.5);
+				shakeSound.Play();
+				task.wait(1);
+			}
+		});
+
 		unboxSpin.Completed.Wait();
 		await tweenScale(
 			unboxClone.GetScale(),
@@ -71,6 +83,11 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 			unboxClone,
 		);
 		unboxClone.Destroy();
+
+		const sound = ItemRarityConfig[item.rarity].sound.Clone();
+		sound.Parent = itemClone.PrimaryPart;
+		sound.Play();
+
 		tweenScale(
 			itemClone.GetScale(),
 			1,

@@ -27,7 +27,9 @@ interface ReplicatedStorage extends Instance {
 				emotes: ModuleScript;
 			};
 			currency: ModuleScript;
+			announcer: ModuleScript;
 			quests: ModuleScript;
+			gui: ModuleScript;
 		};
 		components: Folder;
 		store: ModuleScript & {
@@ -44,9 +46,13 @@ interface ReplicatedStorage extends Instance {
 					equipped: ModuleScript;
 					loggedIn: ModuleScript;
 				};
+				client: ModuleScript & {
+					gui: ModuleScript;
+				};
 			};
 			selectors: Folder & {
 				players: ModuleScript;
+				client: ModuleScript;
 			};
 		};
 	};
@@ -62,6 +68,18 @@ interface ReplicatedStorage extends Instance {
 					BillboardGui: BillboardGui & {
 						TextLabel: TextLabel;
 					};
+				};
+			};
+			Box: Model & {
+				ThumbnailCamera: Camera;
+				Cardboard: MeshPart;
+			};
+			Kanye: Model & {
+				Handle: Part & {
+					OriginalSize: Vector3Value;
+					HatAttachment: Attachment;
+					SpecialMesh: SpecialMesh;
+					AvatarPartScaleType: StringValue;
 				};
 			};
 			MoneyPile: Model & {
@@ -80,6 +98,12 @@ interface ReplicatedStorage extends Instance {
 				Mesh: SpecialMesh;
 				TouchInterest: TouchTransmitter;
 			};
+		};
+		Sounds: Folder & {
+			UnboxRare: Sound;
+			UnboxCommon: Sound;
+			UnboxLegendary: Sound;
+			BabyBoy: Sound;
 		};
 		Gui: Folder & {
 			ClaimBGUI: BillboardGui & {

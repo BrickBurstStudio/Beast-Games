@@ -1,8 +1,9 @@
 import { OnStart, Service } from "@flamework/core";
+import { ReplicatedStorage } from "@rbxts/services";
 import { Events, Functions } from "server/network";
 import { store } from "server/store";
 import { chooseRandomItem } from "server/util/getRandomItem";
-import { items } from "shared/configs/items";
+import { Item, items } from "shared/configs/items";
 import { cases } from "shared/configs/items/cases";
 import { selectPlayerItems } from "shared/store/selectors/players";
 
@@ -21,7 +22,12 @@ export class CaseService implements OnStart {
 			store.addItemToInventory(tostring(player.UserId), randomItemIdWonFromCase);
 			const randomItem = items.get(randomItemIdWonFromCase);
 			if (!randomItem) throw error("Item not found. This is a bug. Please report it to the developers.");
-			// Events.animateUnboxing.broadcast(player, randomItem);
+			Events.animateUnboxing.broadcast({
+				targetPlayer: player,
+				unboxModel: ReplicatedStorage.Assets.Objects.Box,
+				itemModel: ReplicatedStorage.Assets.Objects.Kanye,
+				item: caseObject,
+			});
 			return randomItem;
 		});
 	}
