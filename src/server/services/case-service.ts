@@ -26,7 +26,7 @@ export class CaseService implements OnStart {
 				targetPlayer: player,
 				unboxModel: ReplicatedStorage.Assets.Objects.Box,
 				itemModel: ReplicatedStorage.Assets.Objects.Kanye,
-				item: caseObject,
+				item: randomItem,
 			});
 			return randomItem;
 		});

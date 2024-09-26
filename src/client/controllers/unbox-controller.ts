@@ -25,7 +25,7 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 		const shakeSound = ReplicatedStorage.Assets.Sounds.BabyBoy.Clone();
 		shakeSound.Parent = itemClone;
 
-		const billboardClone = ReplicatedStorage.Assets.Gui.ClaimBGUI.Clone();
+		const billboardClone = ReplicatedStorage.Assets.Gui.UnboxBGUI.Clone();
 		const character = await getCharacter(player);
 		unboxClone.Parent = Workspace;
 		unboxClone.MoveTo(
@@ -105,11 +105,8 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 		billboardClone.Parent = itemClone.PrimaryPart;
 		billboardClone.Enabled = true;
 		billboardClone.Adornee = itemClone.PrimaryPart;
-		billboardClone.TextLabel.Text = itemClone.Name;
-		billboardClone.Size = UDim2.fromScale(0.1, 1);
-		tweenNumber(0, 3, new TweenInfo(1, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut), (value: number) => {
-			if (value > 0.1) billboardClone.Size = UDim2.fromScale(value, 1);
-		});
+		billboardClone.ItemName.Text = item.name;
+		billboardClone.Rarity.Text = item.rarity.sub(1, 1).upper() + item.rarity.sub(2);
 
 		TweenService.Create(
 			itemClone.PrimaryPart,
@@ -133,6 +130,6 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 			new TweenInfo(0.5, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut),
 			itemClone,
 		);
-		itemClone.Destroy();
+		// itemClone.Destroy();
 	}
 }
