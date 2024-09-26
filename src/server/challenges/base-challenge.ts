@@ -10,7 +10,6 @@ export abstract class BaseChallenge {
 	private readonly mapLoadingTime = 2;
 	protected readonly obliterator = new Janitor();
 	protected abstract readonly map: Folder;
-	protected abstract readonly announcements: string[];
 	protected players: Player[] = [];
 	static round = 0;
 

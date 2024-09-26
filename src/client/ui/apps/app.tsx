@@ -3,7 +3,6 @@ import { useSelector } from "@rbxts/react-reflex";
 import { UserInputService } from "@rbxts/services";
 import { Events } from "client/network";
 import { selectGuiPage, selectToolTip } from "shared/store/selectors/client";
-import { px } from "../utils/usePx";
 import AnnouncerApp from "./announcer";
 import MenuButtons from "./menu/buttons";
 import AchievementsApp from "./menu/pages/achievements";
@@ -54,6 +53,7 @@ function ToolTip() {
 	const mouseLocation = UserInputService.GetMouseLocation();
 	return (
 		<textlabel
+			ZIndex={100}
 			AutomaticSize={Enum.AutomaticSize.XY}
 			Position={new UDim2(0, mouseLocation.X, 0, mouseLocation.Y)}
 			Text={`${toolTip.header}${toolTip.body ? "\n\n" + toolTip.body : ""}`}

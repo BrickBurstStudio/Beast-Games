@@ -1,10 +1,10 @@
-import React, { useState } from "@rbxts/react";
+import React from "@rbxts/react";
 import { store } from "client/store";
 import { ToolTip } from "shared/store/slices/client/gui";
 
 type ImageButtonProps = {
 	image: string;
-	onClick: Callback;
+	onClick: (rbx: ImageButton) => void;
 	position?: UDim2;
 	size?: UDim2;
 	anchorPoint?: Vector2;
@@ -23,7 +23,10 @@ export default function ImageButton(props: ImageButtonProps) {
 			Size={size}
 			AnchorPoint={anchorPoint}
 			Event={{
-				MouseButton1Click: onClick,
+				MouseButton1Click: (rbx) => {
+					store.setToolTip(undefined);
+					onClick(rbx);
+				},
 				MouseEnter: () => {
 					store.setToolTip(props.toolTip);
 				},
