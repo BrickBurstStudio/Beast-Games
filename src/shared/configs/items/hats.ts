@@ -1,3 +1,4 @@
+import { ReplicatedStorage } from "@rbxts/services";
 import { Item } from ".";
 
 export type Hat = { hatMeshId: string } & Item;
@@ -8,24 +9,28 @@ export const hats = [
 		rarity: "legendary",
 		name: "Ghost Fedora",
 		hatMeshId: "http://www.roblox.com/asset/?id=13640868",
+		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
 	{
 		id: "hat_2",
 		rarity: "legendary",
 		name: "Ghost Fedora",
 		hatMeshId: "http://www.roblox.com/asset/?id=13640868",
+		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
 	{
 		id: "hat_3",
 		rarity: "legendary",
 		name: "Ghost Fedora",
 		hatMeshId: "http://www.roblox.com/asset/?id=13640868",
+		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
 	{
 		id: "hat_4",
 		rarity: "legendary",
 		name: "Ghost Fedora",
 		hatMeshId: "http://www.roblox.com/asset/?id=13640868",
+		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
 ] as const satisfies Hat[];
 

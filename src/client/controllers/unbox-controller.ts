@@ -1,23 +1,23 @@
+import { BaseComponent } from "@flamework/components";
 import { Controller, OnStart } from "@flamework/core";
-import { Component, BaseComponent } from "@flamework/components";
-import { Players, ReplicatedStorage, RunService, ServerStorage, TweenService, Workspace } from "@rbxts/services";
-import { getCharacter } from "shared/utils/functions/getCharacter";
-import { tweenNumber, tweenScale } from "shared/utils/functions/tweenUtil";
+import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
 import { Events } from "client/network";
 import { Item, ItemRarityConfig } from "shared/configs/items";
+import { getCharacter } from "shared/utils/functions/getCharacter";
+import { tweenNumber, tweenScale } from "shared/utils/functions/tweenUtil";
 
 @Controller()
 export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnStart {
 	onStart() {
-		Events.animateUnboxing.connect(({ targetPlayer, unboxModel, itemModel, item }) => {
-			this.Unbox(targetPlayer, unboxModel, itemModel, item);
+		Events.animateUnboxing.connect(({ targetPlayer, item }) => {
+			this.Unbox({ player: targetPlayer, item });
 		});
 	}
 
-	private async Unbox(player: Player, unboxModel: Model, itemModel: Model, item: Item) {
+	private async Unbox({ player, item }: { player: Player; item: Item }) {
 		// Guards
-		const unboxClone = unboxModel.Clone();
-		const itemClone = itemModel.Clone();
+		const unboxClone = ReplicatedStorage.Assets.Objects.Box.Clone();
+		const itemClone = item.model.Clone();
 		if (unboxClone.PrimaryPart === undefined) error("unboxModel's clone must have a PrimaryPart");
 		if (itemClone.PrimaryPart === undefined) error("itemModel's clone must have a PrimaryPart");
 

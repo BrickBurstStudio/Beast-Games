@@ -41,6 +41,7 @@ export type Item = {
 	id: string;
 	rarity: keyof typeof ItemRarityConfig;
 	name: string;
+	model: Model;
 };
 
 export const allItems = [...cases, ...emotes, ...hats] as const;
