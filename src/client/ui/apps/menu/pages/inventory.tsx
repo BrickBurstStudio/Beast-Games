@@ -1,14 +1,18 @@
 import React from "@rbxts/react";
 import { useSelector } from "@rbxts/react-reflex";
+import { Players } from "@rbxts/services";
+import { Functions } from "client/network";
+import { store } from "client/store";
 import ImageButton from "client/ui/components/image-button";
 import MenuFrame from "client/ui/components/menu-frame";
 import { items } from "shared/configs/items";
+import { cases } from "shared/configs/items/cases";
 import { selectPlayerItems } from "shared/store/selectors/players";
 
 export default function InventoryApp() {
-	// const inventory = useSelector(selectPlayerItems(tostring(Players.LocalPlayer.UserId)));
-	const inventory = useSelector(selectPlayerItems("test"));
-	if (!inventory) return <></>;
+	const inventory = useSelector(selectPlayerItems(tostring(Players.LocalPlayer.UserId)));
+	// const inventory = useSelector(selectPlayerItems("test"));
+
 	return (
 		<MenuFrame
 			header={{
@@ -17,16 +21,18 @@ export default function InventoryApp() {
 			}}
 		>
 			<uigridlayout CellSize={new UDim2(0, 100, 0, 100)} CellPadding={new UDim2(0, 10, 0, 10)} />
-			{inventory.map((itemId) => {
+			{inventory?.map((itemId) => {
 				const item = items.get(itemId);
+				const isCase = itemId.find("case").size() > 0;
 				if (!item) return <></>;
 				return (
 					<ImageButton
 						image={"rbxassetid://3926305904"}
 						onClick={() => {
-							print("Clicked item", item.name);
+							store.setGuiPage(undefined);
+							if (isCase) Functions.inventory.openCase(itemId as (typeof cases)[number]["id"]);
 						}}
-						toolTip={{ header: item.name, body: "Click To Open" }}
+						toolTip={{ header: item.name, body: isCase ? "Click To Open" : "Click To Equip" }}
 					/>
 				);
 			})}
