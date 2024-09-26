@@ -109,6 +109,11 @@ interface ReplicatedStorage extends Instance {
 			ClaimBGUI: BillboardGui & {
 				TextLabel: TextLabel;
 			};
+			UnboxBGUI: BillboardGui & {
+				UIListLayout: UIListLayout;
+				ItemName: TextLabel;
+				Rarity: TextLabel;
+			};
 		};
 	};
 	rbxts_include: Folder & {

@@ -54,7 +54,7 @@ export const cases = [
 	{
 		id: "case_6",
 		price: 40_000,
-		rarity: "rare",
+		rarity: "legendary",
 		name: "Rare Emote Case",
 		type: "emote",
 		items: ["emote_3", "emote_4"],
