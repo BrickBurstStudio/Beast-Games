@@ -1,31 +1,20 @@
-import Object from "@rbxts/object-utils";
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import motion from "@rbxts/react-motion";
-import { Workspace } from "@rbxts/services";
 import { Events } from "client/network";
-import { px, usePx } from "client/ui/utils/usePx";
+import { px } from "client/ui/utils/usePx";
+import { ANNOUNCER_CONFIGS } from "shared/configs/announcer";
 
-function typeString(str: string, direction: "->" | "<-", update: (str: string) => void) {
-	for (
-		let i = direction === "->" ? 0 : str.size();
-		direction === "->" ? i <= str.size() : i >= 0;
-		direction === "->" ? i++ : i--
-	) {
+function typeString(str: string, update: (str: string) => void) {
+	for (let i = 0; i <= str.size(); i++) {
 		update(str.sub(0, i));
-		task.wait(direction === "->" ? 0.03 : 0.01);
+		task.wait(ANNOUNCER_CONFIGS.keystrokeTime);
 	}
 }
 
 function useAnnouncement() {
 	const [message, setMessage] = useState("");
-	const [hideState, setHideState] = useState(true);
-	const hideRef = useRef(true);
+	const [hide, setHide] = useState(true);
 	const messageQueue = useRef<string[]>([]);
-
-	const setHide = (bool: boolean) => {
-		setHideState(bool);
-		hideRef.current = bool;
-	};
 
 	useEffect(() => {
 		const conn = Events.announcer.announce.connect((announcements) => {
@@ -39,13 +28,13 @@ function useAnnouncement() {
 				const msg = messageQueue.current.remove(0)!;
 
 				setHide(false);
-				task.wait(0.5);
-				typeString(msg, "->", setMessage);
-				task.wait(2);
+				task.wait(ANNOUNCER_CONFIGS.preMessageTime);
+				typeString(msg, setMessage);
+				task.wait(ANNOUNCER_CONFIGS.postMessageTime);
 
 				if (messageQueue.current.size() < 1) {
 					setHide(true);
-					task.wait(0.5);
+					task.wait(ANNOUNCER_CONFIGS.animationTime);
 					setMessage("");
 				}
 			}
@@ -54,7 +43,7 @@ function useAnnouncement() {
 		return () => conn.Disconnect();
 	}, []);
 
-	return [message, hideState];
+	return [message, hide];
 }
 
 export default function AnnouncerApp() {

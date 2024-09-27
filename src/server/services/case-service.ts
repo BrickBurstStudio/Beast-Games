@@ -21,7 +21,11 @@ export class CaseService implements OnStart {
 			store.addItemToInventory(tostring(player.UserId), randomItemIdWonFromCase);
 			const randomItem = items.get(randomItemIdWonFromCase);
 			if (!randomItem) throw error("Item not found. This is a bug. Please report it to the developers.");
-			// Events.animateUnboxing.broadcast(player, randomItem);
+			Events.animateUnboxing.broadcast({
+				targetPlayer: player,
+				caseObject,
+				item: randomItem,
+			});
 			return randomItem;
 		});
 	}
