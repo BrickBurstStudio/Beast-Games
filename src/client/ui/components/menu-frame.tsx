@@ -26,7 +26,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 			<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS)} />
 			<uiaspectratioconstraint AspectRatio={props.square ? 1 : 2} DominantAxis={Enum.DominantAxis.Height} />
 
-			<frame Size={UDim2.fromScale(1, 0)} ZIndex={2} BackgroundTransparency={1}>
+			<frame Size={UDim2.fromScale(1, 0)} ZIndex={10} BackgroundTransparency={1}>
 				{/* title */}
 				<textlabel
 					Text={props.header.title}
@@ -61,7 +61,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 				BackgroundTransparency={1}
 				Size={UDim2.fromScale(1, 1)}
 				CanvasSize={UDim2.fromScale(0,0)}
-				AutomaticCanvasSize={Enum.AutomaticSize.XY}
+				AutomaticCanvasSize={"Y"}
 				ScrollBarImageColor3={Color3.fromRGB(0, 0, 0)}
 			>
 				<uipadding

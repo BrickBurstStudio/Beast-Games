@@ -32,24 +32,6 @@ export const hats = [
 		hatMeshId: "http://www.roblox.com/asset/?id=13640868",
 		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
-	{
-		id: "hat_2",
-		rarity: "legendary",
-		name: "Ghost Fedora",
-		hatMeshId: "http://www.roblox.com/asset/?id=13640868",
-	},
-	{
-		id: "hat_3",
-		rarity: "legendary",
-		name: "Ghost Fedora",
-		hatMeshId: "http://www.roblox.com/asset/?id=13640868",
-	},
-	{
-		id: "hat_4",
-		rarity: "legendary",
-		name: "Ghost Fedora",
-		hatMeshId: "http://www.roblox.com/asset/?id=13640868",
-	},
 ] as const satisfies Hat[];
 
 export function isHat(item: Item): item is Hat {

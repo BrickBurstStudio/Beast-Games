@@ -25,7 +25,7 @@ export const cases = [
 		rarity: "uncommon",
 		name: "Uncommon Pet Case",
 		type: "pet",
-		items: ["emote_1", "emote_2"],
+		items: ["emote_1", "emote_2", "emote_3"],
 	},
 	{
 		id: "case_3",
@@ -34,7 +34,7 @@ export const cases = [
 		rarity: "rare",
 		name: "Rare Pet Case",
 		type: "pet",
-		items: ["emote_1", "emote_2"],
+		items: ["emote_1", "emote_2", "emote_3", "emote_4"],
 	},
 
 	/* --------------------------------- Emotes --------------------------------- */
@@ -54,7 +54,7 @@ export const cases = [
 		rarity: "uncommon",
 		name: "Uncommon Emote Case",
 		type: "emote",
-		items: ["emote_2", "emote_3"],
+		items: ["emote_1", "emote_2", "emote_3"],
 	},
 	{
 		id: "case_6",
@@ -63,7 +63,7 @@ export const cases = [
 		rarity: "legendary",
 		name: "Rare Emote Case",
 		type: "emote",
-		items: ["emote_3", "emote_4"],
+		items: ["emote_1", "emote_2", "emote_3", "emote_4"],
 	},
 
 	/* -------------------------------- Hats -------------------------------- */
@@ -83,7 +83,7 @@ export const cases = [
 		rarity: "uncommon",
 		name: "Uncommon Cosmetics Case",
 		type: "cosmetic",
-		items: ["hat_2", "hat_3"],
+		items: ["hat_1", "hat_2", "hat_3"],
 	},
 	{
 		id: "case_9",
@@ -92,7 +92,7 @@ export const cases = [
 		rarity: "rare",
 		name: "Rare Cosmetics Case",
 		type: "cosmetic",
-		items: ["hat_3", "hat_4"],
+		items: ["hat_1", "hat_2", "hat_3", "hat_4"],
 	},
 ] as const satisfies Case[];
 
