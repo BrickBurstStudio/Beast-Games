@@ -46,7 +46,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 					Position={new UDim2(1, 0, 0, 0)}
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					BackgroundColor3={Color3.fromRGB(255, 0, 0)}
-					Image="rbxassetid://"
+					Image="rbxassetid://2195446979"
 					BorderSizePixel={0}
 					Event={{
 						MouseButton1Click: () => {

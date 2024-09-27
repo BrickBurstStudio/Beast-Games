@@ -18,9 +18,7 @@ export default function InventoryApp() {
 		"case_1",
 		"case_2",
 	];
-	// const inventory = useSelector(selectPlayerItems("test"));
 
-	// group items by type
 	const groupedItems = new Map<string, ItemId[]>();
 	for (const itemId of inventory ?? []) {
 		const item = items.get(itemId);
@@ -81,10 +79,7 @@ export default function InventoryApp() {
 				title: "Inventory",
 			}}
 		>
-			<uilistlayout
-				FillDirection={Enum.FillDirection.Vertical}
-				// CellSize={new UDim2(1, 0, 0, 0)}
-			/>
+			<uilistlayout FillDirection={Enum.FillDirection.Vertical} />
 			{groupedItemsComponents}
 		</MenuFrame>
 	);

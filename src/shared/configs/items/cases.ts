@@ -94,6 +94,35 @@ export const cases = [
 		type: "cosmetic",
 		items: ["hat_1", "hat_2", "hat_3", "hat_4"],
 	},
+
+	/* -------------------------------- Hats -------------------------------- */
+	{
+		id: "case_7",
+		model: ReplicatedStorage.Assets.Objects.Box,
+		price: 10_000,
+		rarity: "common",
+		name: "Common Cosmetics Case",
+		type: "cosmetic",
+		items: ["hat_1", "hat_2"],
+	},
+	{
+		id: "case_8",
+		model: ReplicatedStorage.Assets.Objects.Box,
+		price: 20_000,
+		rarity: "uncommon",
+		name: "Uncommon Cosmetics Case",
+		type: "cosmetic",
+		items: ["hat_2", "hat_3"],
+	},
+	{
+		id: "case_9",
+		model: ReplicatedStorage.Assets.Objects.Box,
+		price: 40_000,
+		rarity: "rare",
+		name: "Rare Cosmetics Case",
+		type: "cosmetic",
+		items: ["hat_3", "hat_4"],
+	},
 ] as const satisfies Case[];
 
 export function isCase(item: Item): item is Case {
