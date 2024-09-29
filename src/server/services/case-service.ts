@@ -1,9 +1,8 @@
 import { OnStart, Service } from "@flamework/core";
-import { ReplicatedStorage } from "@rbxts/services";
 import { Events, Functions } from "server/network";
 import { store } from "server/store";
 import { chooseRandomItem } from "server/util/getRandomItem";
-import { Item, items } from "shared/configs/items";
+import { items } from "shared/configs/items";
 import { cases } from "shared/configs/items/cases";
 import { selectPlayerItems } from "shared/store/selectors/players";
 
@@ -14,7 +13,7 @@ export class CaseService implements OnStart {
 			const playerInventory = store.getState(selectPlayerItems(tostring(player.UserId)));
 			if (!playerInventory) throw error("Player inventory not found");
 			if (!playerInventory.includes(caseId)) throw error("Player does not have this case");
-			const caseObject = items.get(caseId) as (typeof cases)[number];
+			const caseObject = cases.find((c) => c.id === caseId)
 			if (!caseObject) throw error("Case not found");
 
 			store.removeItemFromInventory(tostring(player.UserId), caseId);
@@ -24,8 +23,7 @@ export class CaseService implements OnStart {
 			if (!randomItem) throw error("Item not found. This is a bug. Please report it to the developers.");
 			Events.animateUnboxing.broadcast({
 				targetPlayer: player,
-				unboxModel: ReplicatedStorage.Assets.Objects.Box,
-				itemModel: ReplicatedStorage.Assets.Objects.Kanye,
+				caseObject,
 				item: randomItem,
 			});
 			return randomItem;
