@@ -26,7 +26,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 			<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS)} />
 			<uiaspectratioconstraint AspectRatio={props.square ? 1 : 2} DominantAxis={Enum.DominantAxis.Height} />
 
-			<frame Size={UDim2.fromScale(1, 0)} ZIndex={2} BackgroundTransparency={1}>
+			<frame Size={UDim2.fromScale(1, 0)} ZIndex={10} BackgroundTransparency={1}>
 				{/* title */}
 				<textlabel
 					Text={props.header.title}
@@ -46,7 +46,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 					Position={new UDim2(1, 0, 0, 0)}
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					BackgroundColor3={Color3.fromRGB(255, 0, 0)}
-					Image="rbxassetid://"
+					Image="rbxassetid://2195446979"
 					BorderSizePixel={0}
 					Event={{
 						MouseButton1Click: () => {
@@ -61,7 +61,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 				BackgroundTransparency={1}
 				Size={UDim2.fromScale(1, 1)}
 				CanvasSize={UDim2.fromScale(0,0)}
-				AutomaticCanvasSize={Enum.AutomaticSize.XY}
+				AutomaticCanvasSize={"Y"}
 				ScrollBarImageColor3={Color3.fromRGB(0, 0, 0)}
 			>
 				<uipadding

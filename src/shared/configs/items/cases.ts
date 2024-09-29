@@ -25,7 +25,7 @@ export const cases = [
 		rarity: "uncommon",
 		name: "Emote Case",
 		type: "emote",
-		items: ["emote_1", "emote_2", "emote_3", "emote_4", "emote_5"],
+		items: ["emote_1", "emote_2", "emote_3"],
 	},
 	{
 		id: "case_3",
