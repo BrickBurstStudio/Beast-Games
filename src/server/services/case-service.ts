@@ -13,7 +13,7 @@ export class CaseService implements OnStart {
 			const playerInventory = store.getState(selectPlayerItems(tostring(player.UserId)));
 			if (!playerInventory) throw error("Player inventory not found");
 			if (!playerInventory.includes(caseId)) throw error("Player does not have this case");
-			const caseObject = items.get(caseId) as (typeof cases)[number];
+			const caseObject = cases.find((c) => c.id === caseId)
 			if (!caseObject) throw error("Case not found");
 
 			store.removeItemFromInventory(tostring(player.UserId), caseId);
