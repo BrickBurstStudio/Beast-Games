@@ -16,19 +16,23 @@ export default function InventoryApp() {
 		"emote_1",
 		"hat_1",
 		"case_1",
+		"case_1",
 		"case_2",
 	];
 
-	const groupedItems = new Map<string, ItemId[]>();
+	const groupedItems = new Map<string, { id: ItemId; quantity: number }[]>();
 	for (const itemId of inventory ?? []) {
 		const item = items.get(itemId);
 		if (!item) continue;
 		const itemType = itemId.split("_")[0];
-		if (!groupedItems.has(itemType)) groupedItems.set(itemType, []);
-		groupedItems.get(itemType)!.push(itemId);
+		const group = groupedItems.get(itemType) ?? [];
+		const existingItem = group.find((i) => i.id === itemId);
+		if (existingItem) existingItem.quantity++;
+		else group.push({ id: itemId, quantity: 1 });
+		groupedItems.set(itemType, group);
 	}
 	const groupedItemsComponents: JSX.Element[] = [];
-	groupedItems.forEach((itemIds, itemType) => {
+	groupedItems.forEach((itemMapObjects, itemType) => {
 		const isCase = itemType === "case";
 		groupedItemsComponents.push(
 			<frame key={itemType} BackgroundTransparency={1} Size={UDim2.fromScale(1, 0)} AutomaticSize={"Y"}>
@@ -52,7 +56,7 @@ export default function InventoryApp() {
 						CellPadding={new UDim2(0, px(15), 0, px(15))}
 						CellSize={new UDim2(0, px(150), 0, px(150))}
 					/>
-					{itemIds.map((itemId) => (
+					{/* {itemIds.map((itemId) => (
 						<ImageButton
 							key={itemId}
 							image={"rbxassetid://3926305904"}
@@ -66,7 +70,47 @@ export default function InventoryApp() {
 								body: `Click To ${isCase ? "Open" : "Equip"}`,
 							}}
 						/>
-					))}
+					))} */}
+					{itemMapObjects.map((itemMapObject) => {
+						const item = items.get(itemMapObject.id);
+						// show the quantity of the item on top of the image
+						print(itemMapObject);
+						return (
+							<frame BackgroundTransparency={0}>
+								<ImageButton
+									key={itemMapObject.id}
+									image={""}
+									onClick={() => {
+										store.setGuiPage(undefined);
+										if (isCase)
+											Functions.inventory.openCase(
+												itemMapObject.id as (typeof cases)[number]["id"],
+											);
+										else Functions.inventory.equip(itemMapObject.id as EquippableItemId);
+									}}
+									toolTip={{
+										header: item?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
+										body: `Click To ${isCase ? "Open" : "Equip"}`,
+									}}
+									size={UDim2.fromScale(1,1)}
+								/>
+								{itemMapObject.quantity > 1 && (
+									<textlabel
+										Text={tostring(itemMapObject.quantity)}
+										BackgroundTransparency={1}
+										Position={new UDim2(0, px(7.5), 0, px(7.5))}
+										AutomaticSize={"XY"}
+										TextXAlignment={Enum.TextXAlignment.Right}
+										TextYAlignment={Enum.TextYAlignment.Top}
+										TextColor3={COLORS.White}
+										TextSize={px(18)}
+									>
+										<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS * .75)} />
+									</textlabel>
+								)}
+							</frame>
+						);
+					})}
 				</frame>
 			</frame>,
 		);
