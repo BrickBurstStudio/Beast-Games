@@ -81,13 +81,15 @@ export default function InventoryApp() {
 									<textlabel
 										Text={tostring(itemMapObject.quantity)}
 										BackgroundTransparency={1}
-										Position={new UDim2(0, px(5), 0, px(5))}
+										Position={new UDim2(0, px(7.5), 0, px(7.5))}
 										AutomaticSize={"XY"}
 										TextXAlignment={Enum.TextXAlignment.Right}
 										TextYAlignment={Enum.TextYAlignment.Top}
 										TextColor3={COLORS.White}
 										TextSize={px(18)}
-									/>
+									>
+										<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS * 0.75)} />
+									</textlabel>
 								)}
 							</frame>
 						);
