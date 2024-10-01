@@ -56,27 +56,10 @@ export default function InventoryApp() {
 						CellPadding={new UDim2(0, px(15), 0, px(15))}
 						CellSize={new UDim2(0, px(150), 0, px(150))}
 					/>
-					{/* {itemIds.map((itemId) => (
-						<ImageButton
-							key={itemId}
-							image={"rbxassetid://3926305904"}
-							onClick={() => {
-								store.setGuiPage(undefined);
-								if (isCase) Functions.inventory.openCase(itemId as (typeof cases)[number]["id"]);
-								else Functions.inventory.equip(itemId as EquippableItemId);
-							}}
-							toolTip={{
-								header: items.get(itemId)?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
-								body: `Click To ${isCase ? "Open" : "Equip"}`,
-							}}
-						/>
-					))} */}
 					{itemMapObjects.map((itemMapObject) => {
 						const item = items.get(itemMapObject.id);
-						// show the quantity of the item on top of the image
-						print(itemMapObject);
 						return (
-							<frame>
+							<frame BackgroundTransparency={0}>
 								<ImageButton
 									key={itemMapObject.id}
 									image={""}
@@ -92,18 +75,21 @@ export default function InventoryApp() {
 										header: item?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
 										body: `Click To ${isCase ? "Open" : "Equip"}`,
 									}}
+									size={UDim2.fromScale(1, 1)}
 								/>
 								{itemMapObject.quantity > 1 && (
 									<textlabel
 										Text={tostring(itemMapObject.quantity)}
 										BackgroundTransparency={1}
-										Position={new UDim2(0, px(5), 0, px(5))}
+										Position={new UDim2(0, px(7.5), 0, px(7.5))}
 										AutomaticSize={"XY"}
 										TextXAlignment={Enum.TextXAlignment.Right}
 										TextYAlignment={Enum.TextYAlignment.Top}
 										TextColor3={COLORS.White}
 										TextSize={px(18)}
-									/>
+									>
+										<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS * 0.75)} />
+									</textlabel>
 								)}
 							</frame>
 						);
