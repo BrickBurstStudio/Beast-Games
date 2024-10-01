@@ -1,12 +1,12 @@
-import { DataStoreService, Players } from "@rbxts/services";
-import { getPlayerByName } from "shared/utils/functions/getPlayerByName";
+import { DataStoreService, Players, RunService } from "@rbxts/services";
 import { getPlayerMultiplier } from "shared/utils/functions/getPlayerMultiplier";
-// import { print, warn } from "rbxts-transform-debug";
+
+let DataStoreName = "Production";
+if (RunService.IsStudio()) DataStoreName = "Testing";
 
 export class BaseOrderedDataStore {
 	private player: Player;
 	protected playerKey: string;
-	private maxRetryAttempts = 4;
 	private orderedDataStore: OrderedDataStore;
 	private stateCallback: (amount: number) => void;
 	private playerMultiplier: boolean;
@@ -19,6 +19,7 @@ export class BaseOrderedDataStore {
 	) {
 		if (player.UserId < 0)
 			error("Invalid playerID, dont use multitest in studio. (Player1 = -1), (Player2 = -2), etc.");
+		orderedDataStoreName = orderedDataStoreName + "_" + DataStoreName;
 		this.player = player;
 		this.playerKey = `Player_${player.UserId}`;
 		this.playerMultiplier = playerMultiplier;
@@ -55,6 +56,7 @@ export class BaseOrderedDataStore {
 	}
 
 	static GetTop(top: number, orderedDataStoreName: string) {
+		orderedDataStoreName = orderedDataStoreName + "_" + DataStoreName;
 		if (top > 100) error("Must implement AdvanceToNextPageAsync"); // atm, no use case for page iteration
 
 		const pages = BaseOrderedDataStore.SafeCall<DataStorePages | undefined>(() => {
@@ -73,6 +75,7 @@ export class BaseOrderedDataStore {
 	}
 
 	static Reset(orderedDataStoreName: string) {
+		orderedDataStoreName = orderedDataStoreName + "_" + DataStoreName;
 		DataStoreService.GetOrderedDataStore(orderedDataStoreName)
 			.GetSortedAsync(false, 100)
 			.GetCurrentPage()

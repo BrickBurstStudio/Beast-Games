@@ -13,7 +13,7 @@ export class CaseService implements OnStart {
 			const playerInventory = store.getState(selectPlayerItems(tostring(player.UserId)));
 			if (!playerInventory) throw error("Player inventory not found");
 			if (!playerInventory.includes(caseId)) throw error("Player does not have this case");
-			const caseObject = items.get(caseId) as (typeof cases)[number];
+			const caseObject = cases.find((c) => c.id === caseId)
 			if (!caseObject) throw error("Case not found");
 
 			store.removeItemFromInventory(tostring(player.UserId), caseId);
@@ -21,7 +21,11 @@ export class CaseService implements OnStart {
 			store.addItemToInventory(tostring(player.UserId), randomItemIdWonFromCase);
 			const randomItem = items.get(randomItemIdWonFromCase);
 			if (!randomItem) throw error("Item not found. This is a bug. Please report it to the developers.");
-			// Events.animateUnboxing.broadcast(player, randomItem);
+			Events.animateUnboxing.broadcast({
+				targetPlayer: player,
+				caseObject,
+				item: randomItem,
+			});
 			return randomItem;
 		});
 	}

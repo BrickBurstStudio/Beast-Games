@@ -1,16 +1,15 @@
-import React, { useEffect } from "@rbxts/react";
+import React from "@rbxts/react";
 import { useSelector } from "@rbxts/react-reflex";
 import { UserInputService } from "@rbxts/services";
-import { Events } from "client/network";
 import { selectGuiPage, selectToolTip } from "shared/store/selectors/client";
 import AnnouncerApp from "./announcer";
-import MenuButtons from "./menu/buttons";
+import MenuButtonsApp from "./menu/buttons";
 import AchievementsApp from "./menu/pages/achievements";
 import InventoryApp from "./menu/pages/inventory";
 import SettingsApp from "./menu/pages/settings";
 import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
-import CountdownApp from "./countdown";
+import AnimateEventsApp from "./animateEvents";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);
@@ -26,25 +25,15 @@ export default function App() {
 
 	const toolTip = useSelector(selectToolTip);
 
-	useEffect(() => {
-		const connection = Events.levelUpPlayer.connect((level: number) => {
-			print(`Level up to ${level}`);
-		});
-
-		return () => {
-			connection.Disconnect();
-		};
-	}, []);
-
 	return (
 		<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
 			{/* <RhthymApp /> */}
 			{/* <SprintApp /> */}
 			<AnnouncerApp />
-			{/* <CurrentPage /> */}
-			{/* <MenuButtons />  */}
-			<CountdownApp />
-			{/* {toolTip && <ToolTip />} */}
+			<CurrentPage />
+			<MenuButtonsApp />
+			<AnimateEventsApp/>
+			{toolTip && <ToolTip />}
 		</frame>
 	);
 }

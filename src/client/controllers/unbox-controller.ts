@@ -1,27 +1,31 @@
+import { BaseComponent } from "@flamework/components";
 import { Controller, OnStart } from "@flamework/core";
-import { Component, BaseComponent } from "@flamework/components";
-import { Players, ReplicatedStorage, RunService, ServerStorage, TweenService, Workspace } from "@rbxts/services";
+import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
+import { Events } from "client/network";
+import { Item, ItemRarityConfig } from "shared/configs/items";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { tweenNumber, tweenScale } from "shared/utils/functions/tweenUtil";
-import { Events } from "client/network";
 
 @Controller()
 export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnStart {
 	onStart() {
-		Events.animateUnboxing.connect(({ targetPlayer, unboxModel, itemModel }) => {
-			this.Unbox(targetPlayer, unboxModel, itemModel);
+		Events.animateUnboxing.connect(({ targetPlayer, item }) => {
+			this.Unbox({ player: targetPlayer, item });
 		});
 	}
 
-	private async Unbox(player: Player, unboxModel: Model, itemModel: Model) {
+	private async Unbox({ player, item }: { player: Player; item: Item }) {
 		// Guards
-		const unboxClone = unboxModel.Clone();
-		const itemClone = itemModel.Clone();
+		const unboxClone = ReplicatedStorage.Assets.Objects.Box.Clone();
+		const itemClone = item.model.Clone();
 		if (unboxClone.PrimaryPart === undefined) error("unboxModel's clone must have a PrimaryPart");
-		if (itemClone.PrimaryPart === undefined) error("unboxModel's clone must have a PrimaryPart");
+		if (itemClone.PrimaryPart === undefined) error("itemModel's clone must have a PrimaryPart");
 
 		// Initialize
-		const billboardClone = ReplicatedStorage.Assets.Gui.ClaimBGUI.Clone();
+		const shakeSound = ReplicatedStorage.Assets.Sounds.BabyBoy.Clone();
+		shakeSound.Parent = itemClone;
+
+		const billboardClone = ReplicatedStorage.Assets.Gui.UnboxBGUI.Clone();
 		const character = await getCharacter(player);
 		unboxClone.Parent = Workspace;
 		unboxClone.MoveTo(
@@ -63,6 +67,14 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 			unboxClone,
 		);
 		unboxSpin.Play();
+		task.spawn(() => {
+			for (let i = 0; i < 3; i++) {
+				task.wait(0.5);
+				shakeSound.Play();
+				task.wait(1);
+			}
+		});
+
 		unboxSpin.Completed.Wait();
 		await tweenScale(
 			unboxClone.GetScale(),
@@ -71,6 +83,11 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 			unboxClone,
 		);
 		unboxClone.Destroy();
+
+		const sound = ItemRarityConfig[item.rarity].sound.Clone();
+		sound.Parent = itemClone.PrimaryPart;
+		sound.Play();
+
 		tweenScale(
 			itemClone.GetScale(),
 			1,
@@ -88,11 +105,9 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 		billboardClone.Parent = itemClone.PrimaryPart;
 		billboardClone.Enabled = true;
 		billboardClone.Adornee = itemClone.PrimaryPart;
-		billboardClone.TextLabel.Text = itemClone.Name;
-		billboardClone.Size = UDim2.fromScale(0.1, 1);
-		tweenNumber(0, 3, new TweenInfo(1, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut), (value: number) => {
-			if (value > 0.1) billboardClone.Size = UDim2.fromScale(value, 1);
-		});
+		billboardClone.ItemName.Text = item.name;
+		billboardClone.Rarity.Text = item.rarity.sub(1, 1).upper() + item.rarity.sub(2);
+		billboardClone.Rarity.TextColor3 = ItemRarityConfig[item.rarity].color;
 
 		TweenService.Create(
 			itemClone.PrimaryPart,
@@ -116,6 +131,6 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 			new TweenInfo(0.5, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut),
 			itemClone,
 		);
-		itemClone.Destroy();
+		// itemClone.Destroy();
 	}
 }
