@@ -11,9 +11,9 @@ import { PlayerData, PlayerQuests, ProfileData, QuestData } from "shared/store/s
 import { defaultPlayerData, defaultProfileData } from "shared/store/slices/players/utils";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
-let DataStoreName = "Production";
 const KEY_TEMPLATE = "%d_Data";
 
+let DataStoreName = "Production";
 if (RunService.IsStudio()) DataStoreName = "Testing";
 
 @Service({})
