@@ -4,11 +4,11 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { debounce } from "@rbxts/set-timeout";
 
-type PlatformData = { eliminated: boolean; players: Player[]; platform: Model };
+type PlatformData = { eliminated: boolean; players: Player[]; platform: TPlatform };
 
 export class MoneyPileChallenge extends BaseChallenge {
 	protected readonly map = ServerStorage.ChallengeMaps.MoneyPileChallenge;
-	readonly platforms = this.map.Platforms.GetChildren() as Model[];
+	readonly platforms = this.map.Platforms.GetChildren() as TPlatform[];
 	readonly floorTag = "stadium-floor" as const;
 	private platformData: PlatformData[] = [];
 
@@ -33,9 +33,8 @@ export class MoneyPileChallenge extends BaseChallenge {
 
 	private EliminatePlatform({ platform, players }: PlatformData) {
 		players.forEach((eP) => this.players.remove(this.players.findIndex((p) => p === eP)));
-		platform.FindFirstChildOfClass("UnionOperation")!.Color = Color3.fromRGB(255, 0, 0);
-		platform.FindFirstChild("Lights")!.FindFirstChildOfClass("PointLight")!.Color = Color3.fromRGB(255, 0, 0);
-		print(platform);
+		platform.Lights.Color = Color3.fromRGB(255, 0, 0);
+		platform.Lights.PointLight.Color = Color3.fromRGB(255, 0, 0);
 	}
 
 	protected SpawnCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
@@ -48,6 +47,6 @@ export class MoneyPileChallenge extends BaseChallenge {
 		};
 		character.HumanoidRootPart.CFrame = platform
 			.FindFirstChildOfClass("Part")!
-			.CFrame.mul(new CFrame(0, platform.FindFirstChildOfClass("Part")!.Size.Y / 2 + 3, 0));
+			.CFrame.mul(new CFrame(0, platform.Part.Size.Y / 2 + 3, 0));
 	}
 }
