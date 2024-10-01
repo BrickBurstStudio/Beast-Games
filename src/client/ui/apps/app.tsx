@@ -29,11 +29,11 @@ export default function App() {
 		<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
 			{/* <RhthymApp /> */}
 			{/* <SprintApp /> */}
-			<AnnouncerApp />
+			{/* <AnnouncerApp />
 			<CurrentPage />
-			<MenuButtonsApp />
-			<AnimateEventsApp/>
-			{toolTip && <ToolTip />}
+			<MenuButtonsApp /> */}
+			<AnimateEventsApp />
+			{/* {toolTip && <ToolTip />} */}
 		</frame>
 	);
 }
