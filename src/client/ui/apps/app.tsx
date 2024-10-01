@@ -10,6 +10,7 @@ import SettingsApp from "./menu/pages/settings";
 import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
 import AnimateEventsApp from "./animateEvents";
+import CountdownApp from "./countdown";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);
@@ -32,7 +33,8 @@ export default function App() {
 			<AnnouncerApp />
 			<CurrentPage />
 			<MenuButtonsApp />
-			<AnimateEventsApp/>
+			<CountdownApp />
+			<AnimateEventsApp />
 			{toolTip && <ToolTip />}
 		</frame>
 	);

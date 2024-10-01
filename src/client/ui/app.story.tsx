@@ -21,6 +21,7 @@ const Story = {
 			<ReflexProvider producer={store}>
 				<App />
 			</ReflexProvider>
+			// <frame Size={UDim2.fromScale(1, 1)} Position={UDim2.fromOffset(0, 0)} BackgroundTransparency={.5}></frame>
 		);
 	},
 };
