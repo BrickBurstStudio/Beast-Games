@@ -8,7 +8,7 @@ const BUTTONS: GuiPage[] = ["Inventory", "Shop", "Achievements", "Trading", "Set
 const BUTTON_SIZE = 100;
 const PADDING_SIZE = BUTTON_SIZE / 4;
 
-export default function MenuButtons() {
+export default function MenuButtonsApp() {
 	return (
 		<frame
 			Size={

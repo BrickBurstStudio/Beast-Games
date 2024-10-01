@@ -60,7 +60,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 			<scrollingframe
 				BackgroundTransparency={1}
 				Size={UDim2.fromScale(1, 1)}
-				CanvasSize={UDim2.fromScale(0,0)}
+				CanvasSize={UDim2.fromScale(0, 0)}
 				AutomaticCanvasSize={"Y"}
 				ScrollBarImageColor3={Color3.fromRGB(0, 0, 0)}
 			>

@@ -8,6 +8,7 @@ import { EquippableItemId, Item } from "./configs/items";
 import { Case, cases } from "./configs/items/cases";
 import { quests } from "./configs/quests";
 import { PlayerData, PlayerQuests, QuestData } from "./store/slices/players/types";
+import { Currency } from "./configs/currency";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -52,20 +53,23 @@ interface ClientEvents {
 		hydrate: (actions: PlayerData) => void;
 		start: () => void;
 	};
-
 	dares: {
 		dareCreated: (dare: Dare) => void;
 		dareCompleted: (dare: Dare) => void;
 		targetCompleted: (dare: Dare) => void;
 	};
 
-	levelUpPlayer: (level: number) => void;
+	animations: {
+		levelUp: (level: number) => void;
+		recieveCurrency: (args: {
+			currency: Currency;
+			amount: number;
+		}) => void;
+	};
 
 	updateLeaderboards: (args: updateLeaderboardsArgs) => void;
 
 	createChallenge: (name: string) => void;
-
-	// announceMessage: (args : Announcement) => void;
 
 	animateUnboxing: (args: { targetPlayer: Player; caseObject: Case; item: Item }) => void;
 }
