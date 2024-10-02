@@ -2,7 +2,7 @@ import { Dependency } from "@flamework/core";
 import { Components } from "@flamework/components";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { KeyframeSequenceProvider, Players, ReplicatedStorage, ServerStorage, Workspace } from "@rbxts/services";
-import { BaseChallenge } from "./base-challenge";
+import { BaseChallenge, SpawnCharacterArgs } from "./base-challenge";
 import { BriefcaseComponent } from "server/components/claim-components/briefcase-component";
 import Object from "@rbxts/object-utils";
 import { generatePlayerGrid } from "server/util/generatePlayerGrid";
@@ -11,7 +11,6 @@ import { Events } from "server/network";
 import { announceAndWait } from "server/util/announceAndWait";
 
 export class BriefcaseChallenge extends BaseChallenge {
-	protected announcements = ["fetus"];
 	protected readonly map = ServerStorage.ChallengeMaps.BriefcaseChallenge.Clone();
 	readonly components = Dependency<Components>();
 	readonly badBriefcases = 50;
@@ -128,13 +127,10 @@ export class BriefcaseChallenge extends BaseChallenge {
 		}
 	}
 
-	protected async SpawnPlayers(players: Player[]) {
-		players.forEach(async (player) => {
-			const character = await getCharacter(player);
-			character.HumanoidRootPart.CFrame = this.map.Baseplate.CFrame.add(
-				new Vector3(-10, this.map.Baseplate.Size.Y / 2 + 5, 0),
-			);
-		});
+	protected async SpawnCharacter({ character }: SpawnCharacterArgs) {
+		character.HumanoidRootPart.CFrame = this.map.Baseplate.CFrame.add(
+			new Vector3(-10, this.map.Baseplate.Size.Y / 2 + 5, 0),
+		);
 	}
 
 	private EliminatePlayers() {

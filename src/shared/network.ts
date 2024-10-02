@@ -41,6 +41,7 @@ interface ServerFunctions {
 interface ClientEvents {
 	announcer: {
 		announce: (announcements: string[]) => void;
+		countdown: (countdown: Countdown) => void;
 	};
 	quests: {
 		addQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
@@ -78,3 +79,8 @@ interface ClientFunctions {}
 
 export const GlobalEvents = Networking.createEvent<ServerEvents, ClientEvents>();
 export const GlobalFunctions = Networking.createFunction<ServerFunctions, ClientFunctions>();
+
+type Countdown = {
+	seconds: number;
+	description: string;
+};

@@ -1,9 +1,16 @@
 import { Janitor } from "@rbxts/janitor";
+import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { calculateReward } from "shared/utils/functions/calculateReward";
 import { getCharacter } from "shared/utils/functions/getCharacter";
+
+export type SpawnCharacterArgs = {
+	player: Player;
+	character: CharacterRigR6;
+	i: number;
+};
 
 export abstract class BaseChallenge {
 	private readonly socialPeriodDuration = 30;
@@ -15,14 +22,16 @@ export abstract class BaseChallenge {
 
 	public async Start() {
 		BaseChallenge.round++;
-		const players = Players.GetPlayers();
+		this.players = Players.GetPlayers();
 
 		this.obliterator.Add(this.map, "Destroy");
 		this.map.Parent = Workspace;
 		task.wait(this.mapLoadingTime);
 
-		this.SpawnPlayers(players);
-		this.players = players;
+		this.players.forEach(async (player, i) => {
+			const character = await getCharacter(player);
+			this.SpawnCharacter({ player, character, i });
+		});
 
 		await this.Main();
 		await this.RewardPlayers();
@@ -33,7 +42,7 @@ export abstract class BaseChallenge {
 
 	protected abstract Main(): Promise<void>;
 
-	protected abstract SpawnPlayers(players: Player[]): void;
+	protected abstract SpawnCharacter({ player, character, i }: SpawnCharacterArgs): void;
 
 	protected async EliminatePlayer(player: Player) {
 		if (!Players.GetChildren().includes(player)) return;

@@ -20,7 +20,7 @@ export class GuiController implements OnStart {
 			root.render(
 				createPortal(
 					<ReflexProvider producer={store}>
-						<screengui Enabled={true} ResetOnSpawn={false}>
+						<screengui Enabled={true} ResetOnSpawn={false} IgnoreGuiInset>
 							<App />
 						</screengui>
 					</ReflexProvider>,
