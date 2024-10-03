@@ -34,7 +34,7 @@ export class PlayerDataService implements OnInit {
 		const profile = this.profileStore.LoadProfileAsync(profileKey);
 		const orderedPlayerData = new OrderedPlayerData(player);
 		if (!profile) return player.Kick();
-
+		player.SetAttribute("eliminated", false)
 		profile.ListenToRelease(() => {
 			this.profiles.delete(player);
 			store.closePlayerData(tostring(player.UserId));

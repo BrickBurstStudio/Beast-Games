@@ -1,14 +1,13 @@
-import { Dependency } from "@flamework/core";
 import { Components } from "@flamework/components";
-import { getCharacter } from "shared/utils/functions/getCharacter";
-import { KeyframeSequenceProvider, Players, ReplicatedStorage, ServerStorage, Workspace } from "@rbxts/services";
-import { BaseChallenge, SpawnCharacterArgs } from "./base-challenge";
-import { BriefcaseComponent } from "server/components/claim-components/briefcase-component";
-import Object from "@rbxts/object-utils";
-import { generatePlayerGrid } from "server/util/generatePlayerGrid";
+import { Dependency } from "@flamework/core";
 import Make from "@rbxts/make";
+import { ReplicatedStorage, ServerStorage } from "@rbxts/services";
+import { BriefcaseComponent } from "server/components/claim-components/briefcase.component";
 import { Events } from "server/network";
 import { announceAndWait } from "server/util/announceAndWait";
+import { generatePlayerGrid } from "server/util/generatePlayerGrid";
+import { getCharacter } from "shared/utils/functions/getCharacter";
+import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 
 export class BriefcaseChallenge extends BaseChallenge {
 	protected readonly map = ServerStorage.ChallengeMaps.BriefcaseChallenge.Clone();

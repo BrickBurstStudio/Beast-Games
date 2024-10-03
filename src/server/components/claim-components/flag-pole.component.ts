@@ -1,6 +1,6 @@
 import { Component } from "@flamework/components";
 import { OnStart } from "@flamework/core";
-import { ClaimComponent, ClaimComponentProps } from "./claim-component";
+import { ClaimComponent, ClaimComponentProps } from "./claim.component";
 
 @Component({
 	tag: "flag-pole",

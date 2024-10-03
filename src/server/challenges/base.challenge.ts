@@ -49,6 +49,8 @@ export abstract class BaseChallenge {
 		if (!player.Character) return;
 		const character = await getCharacter(player);
 		character.Humanoid.Health = 0;
+		task.wait(1);
+		player.SetAttribute("eliminated", true);
 	}
 
 	private async RewardPlayers() {
