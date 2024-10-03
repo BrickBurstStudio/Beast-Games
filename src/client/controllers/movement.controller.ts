@@ -4,7 +4,7 @@ import { CharacterRigR6 } from "@rbxts/promise-character";
 import { ContextActionService, Players, Workspace } from "@rbxts/services";
 import { debounce } from "@rbxts/set-timeout";
 import { getCharacter } from "shared/utils/functions/getCharacter";
-import { SprintController } from "./sprint-controller";
+import { SprintController } from "./sprint.controller";
 import Object from "@rbxts/object-utils";
 
 // todo : organize subsystem logic into sister controllers & use dependency injection here

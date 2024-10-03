@@ -1,7 +1,7 @@
 import { Component } from "@flamework/components";
-import { ClaimComponent, ClaimComponentProps } from "./claim-component";
 import { OnStart } from "@flamework/core";
 import Make from "@rbxts/make";
+import { ClaimComponent, ClaimComponentProps } from "./claim.component";
 
 @Component({
 	tag: "money-pile",
