@@ -20,6 +20,7 @@ function runCallback(player: Player, joinFunc: Callback, c?: RBXScriptConnection
 
  * @param joinFunc 
  * @param leaveFunc 
+ * @returns all connections that were made
  * @example 
  * forEveryPlayer(
  * 	(player, playerAddedConn) => {
@@ -41,10 +42,13 @@ function runCallback(player: Player, joinFunc: Callback, c?: RBXScriptConnection
  */
 
 export function forEveryPlayer(joinFunc: Callback, leaveFunc?: (p: Player) => void) {
-	if (leaveFunc) Players.PlayerRemoving.Connect(leaveFunc);
+	const connections = new Array<RBXScriptConnection>();
+	if (leaveFunc) connections.push(Players.PlayerRemoving.Connect(leaveFunc))
 
 	Players.GetPlayers().forEach((p) => {
 		runCallback(p, joinFunc);
 	});
 	const addedConn = Players.PlayerAdded.Connect((p) => runCallback(p, joinFunc, addedConn));
+
+	return connections;
 }

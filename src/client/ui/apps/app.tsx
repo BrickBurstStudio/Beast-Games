@@ -1,16 +1,19 @@
-import React from "@rbxts/react";
+import React, { useEffect } from "@rbxts/react";
 import { useSelector } from "@rbxts/react-reflex";
-import { UserInputService } from "@rbxts/services";
+import { Players, UserInputService } from "@rbxts/services";
 import { selectGuiPage, selectToolTip } from "shared/store/selectors/client";
+import AnimateEventsApp from "./animateEvents";
 import AnnouncerApp from "./announcer";
+import CountdownApp from "./countdown";
 import MenuButtonsApp from "./menu/buttons";
 import AchievementsApp from "./menu/pages/achievements";
 import InventoryApp from "./menu/pages/inventory";
 import SettingsApp from "./menu/pages/settings";
 import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
-import AnimateEventsApp from "./animateEvents";
-import CountdownApp from "./countdown";
+import SpectateApp from "./spectate";
+
+
 
 export default function App() {
 	const page = useSelector(selectGuiPage);
@@ -26,6 +29,20 @@ export default function App() {
 
 	const toolTip = useSelector(selectToolTip);
 
+	const [eliminated, setEliminated] = React.useState(false);
+
+	useEffect(() => {
+		const player = Players.LocalPlayer;
+
+		const connection = player.GetAttributeChangedSignal("eliminated").Connect(() => {
+			print("eliminated changed");
+			setEliminated(player.GetAttribute("eliminated") === true);
+		});
+		return () => {
+			connection.Disconnect();
+		};
+	}, []);
+
 	return (
 		<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
 			{/* <RhthymApp /> */}
@@ -35,6 +52,7 @@ export default function App() {
 			<MenuButtonsApp />
 			<CountdownApp />
 			<AnimateEventsApp />
+			{eliminated && <SpectateApp />}
 			{toolTip && <ToolTip />}
 		</frame>
 	);
