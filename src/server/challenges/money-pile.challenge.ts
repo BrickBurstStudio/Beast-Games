@@ -5,7 +5,7 @@ import { BaseChallenge } from "./base.challenge";
 type PlatformData = { eliminated: boolean; players: Player[]; platform: TPlatform };
 
 export class MoneyPileChallenge extends BaseChallenge {
-	protected readonly map = ServerStorage.ChallengeMaps.MoneyPileChallenge;
+	protected readonly map = ServerStorage.ChallengeMaps.MoneyPileChallenge.Clone();
 	readonly platforms = this.map.Platforms.GetChildren() as TPlatform[];
 	readonly floorTag = "stadium-floor" as const;
 	private platformData: PlatformData[] = [];
