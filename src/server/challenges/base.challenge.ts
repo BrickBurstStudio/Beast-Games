@@ -34,6 +34,7 @@ export abstract class BaseChallenge {
 		});
 
 		await this.Main();
+		Events.announcer.announce.broadcast(["Game over!"]);
 		await this.RewardPlayers();
 
 		task.wait(this.socialPeriodDuration);
