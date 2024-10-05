@@ -1,7 +1,6 @@
-import { BaseComponent, Component } from "@flamework/components";
-import { OnInit, OnStart } from "@flamework/core";
-import { Players } from "@rbxts/services";
-import { ClaimComponentProps, ClaimComponent } from "./claim-component";
+import { Component } from "@flamework/components";
+import { OnStart } from "@flamework/core";
+import { ClaimComponent, ClaimComponentProps } from "./claim.component";
 
 interface BriefcaseProps extends ClaimComponentProps {
 	safe: boolean;
@@ -25,6 +24,7 @@ export class BriefcaseComponent
 	private readonly selectedColor = Color3.fromRGB(255, 255, 255);
 
 	onStart() {
+		
 		this.onAttributeChanged("highlightMode", (mode) => {
 			if (mode === "disabled") {
 				this.instance.Part.BrickColor = new BrickColor("Dark stone grey");

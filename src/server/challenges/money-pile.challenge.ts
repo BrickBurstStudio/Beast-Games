@@ -1,8 +1,6 @@
-import { CollectionService, Players, ServerStorage } from "@rbxts/services";
-import { BaseChallenge } from "./base-challenge";
-import { getCharacter } from "shared/utils/functions/getCharacter";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { debounce } from "@rbxts/set-timeout";
+import { CollectionService, Players, ServerStorage } from "@rbxts/services";
+import { BaseChallenge } from "./base.challenge";
 
 type PlatformData = { eliminated: boolean; players: Player[]; platform: TPlatform };
 
