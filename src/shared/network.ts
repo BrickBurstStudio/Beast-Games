@@ -4,11 +4,11 @@ import { BroadcastAction } from "@rbxts/reflex";
 // import BaseItem from "shared/components/Items/BaseItem";
 
 import { Dare } from "server/util/createDare";
+import { Currency } from "./configs/currency";
 import { EquippableItemId, Item } from "./configs/items";
 import { Case, cases } from "./configs/items/cases";
 import { quests } from "./configs/quests";
 import { PlayerData, PlayerQuests, QuestData } from "./store/slices/players/types";
-import { Currency } from "./configs/currency";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -62,10 +62,7 @@ interface ClientEvents {
 
 	animations: {
 		levelUp: (level: number) => void;
-		recieveCurrency: (args: {
-			currency: Currency;
-			amount: number;
-		}) => void;
+		recieveCurrency: (args: { currency: Currency; amount: number }) => void;
 	};
 
 	updateLeaderboards: (args: updateLeaderboardsArgs) => void;

@@ -18,7 +18,7 @@ export class BaseOrderedDataStore {
 		playerMultiplier: boolean = false,
 	) {
 		if (player.UserId < 0)
-			error("Invalid playerID, dont use multitest in studio. (Player1 = -1), (Player2 = -2), etc.");
+			warn("Invalid playerID, dont use multitest in studio. (Player1 = -1), (Player2 = -2), etc.");
 		orderedDataStoreName = orderedDataStoreName + "_" + DataStoreName;
 		this.player = player;
 		this.playerKey = `Player_${player.UserId}`;

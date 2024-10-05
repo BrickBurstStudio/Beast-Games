@@ -17,8 +17,8 @@ export class BriefcaseChallenge extends BaseChallenge {
 	readonly cellPadding = 10;
 	readonly memorizeTime = 15;
 	readonly runTime = 30;
-
 	readonly playerSelections: { [key: Player["UserId"]]: BriefcaseComponent } = {};
+	
 	briefcases: BriefcaseComponent[] = [];
 	revealing = false;
 

@@ -34,6 +34,7 @@ export abstract class BaseChallenge {
 		});
 
 		await this.Main();
+		Events.announcer.announce.broadcast(["The challenge is over!"]);
 		await this.RewardPlayers();
 
 		task.wait(this.socialPeriodDuration);
@@ -49,6 +50,7 @@ export abstract class BaseChallenge {
 		if (!player.Character) return;
 		const character = await getCharacter(player);
 		character.Humanoid.Health = 0;
+		this.players.remove(this.players.findIndex((p) => p === player));
 		task.wait(1);
 		player.SetAttribute("eliminated", true);
 	}

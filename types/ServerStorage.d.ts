@@ -2,6 +2,7 @@ interface ServerStorage extends Instance {
 	__Rojo_SessionLock: ObjectValue;
 	Assets: Folder & {
 		VFX: Folder & {
+			CashStack: MeshPart;
 			LevelUp: Part & {
 				Start: Attachment & {
 					dragon: ParticleEmitter;
@@ -26,11 +27,6 @@ interface ServerStorage extends Instance {
 			};
 		};
 	};
-	RBX_ANIMSAVES: Model & {
-		Rig: ObjectValue & {
-			["Automatic Save"]: KeyframeSequence;
-		};
-	};
 	ChallengeMaps: Folder & {
 		BriefcaseChallenge: Folder & {
 			Briefcases: Model;
@@ -41,8 +37,28 @@ interface ServerStorage extends Instance {
 		};
 		BoulderChallenge: Folder;
 		FlagChallenge: Folder & {
-			Baseplate: Part;
-			StartingLine: Part;
+			ChallengeArea: Model & {
+				StartArea: Model & {
+					Barier: Part;
+					Platform: Part;
+				};
+				EndArea: Model & {
+					Barier: Part;
+					Platform: Part;
+				};
+				Bariers: Model & {
+					LeftBarier: Part;
+					EndBarier: Part;
+					StartBarier: Part;
+					RightBarier: Part;
+				};
+				PlayArea: Part;
+			};
+		};
+	};
+	RBX_ANIMSAVES: Model & {
+		Rig: ObjectValue & {
+			["Automatic Save"]: KeyframeSequence;
 		};
 	};
 }
