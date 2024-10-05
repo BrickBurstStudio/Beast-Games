@@ -2,8 +2,8 @@ export const GUI_PAGES = ["Inventory", "Shop", "Achievements", "Trading", "Setti
 export type GuiPage = (typeof GUI_PAGES)[number];
 
 export const COLORS = {
-	PrimaryBackground: Color3.fromRGB(0, 163, 255),
-	SecondaryBackground: Color3.fromRGB(0, 137, 215),
+	Primary: Color3.fromRGB(0, 163, 255),
+	Secondary: Color3.fromRGB(0, 137, 215),
 
 	Buttons: {
 		Off: Color3.fromRGB(232, 70, 70),

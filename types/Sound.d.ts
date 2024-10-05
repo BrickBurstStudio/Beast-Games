@@ -1,0 +1,2 @@
+type Sound = Sound & {
+}

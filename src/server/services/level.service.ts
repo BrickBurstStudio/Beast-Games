@@ -1,9 +1,11 @@
 import { OnStart, Service } from "@flamework/core";
+import { ServerStorage } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { store } from "server/store";
 import { selectPlayerXP } from "shared/store/selectors/players";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
+import { getCharacter } from "shared/utils/functions/getCharacter";
 import { getLevel } from "shared/utils/functions/getLevel";
 
 @Service()
@@ -19,7 +21,7 @@ export class LevelService implements OnStart {
 				if (currentLevel > previousLevel) {
 					const levelsUp = currentLevel - previousLevel;
 					for (let i = 0; i < levelsUp; i++) {
-						this.levelUpPlayer(player, currentLevel);
+						task.spawn(() => this.levelUpPlayer(player, currentLevel));
 						previousLevel = currentLevel;
 					}
 				}
@@ -27,11 +29,26 @@ export class LevelService implements OnStart {
 		});
 	}
 
-	levelUpPlayer(player: Player, level: number) {
+	async levelUpPlayer(player: Player, level: number) {
+		const vfxDuration = 0.5;
+
 		const orderedPlayerData = new OrderedPlayerData(player);
 		orderedPlayerData.cash.UpdateBy(100_000);
 		orderedPlayerData.gems.UpdateBy(100);
 
 		Events.animations.levelUp(player, level);
+
+		const levelUpVFX = ServerStorage.Assets.VFX.LevelUp.Clone();
+		const character = await getCharacter(player);
+		levelUpVFX.Parent = character;
+		levelUpVFX.Weld.Part1 = character.Torso;
+
+		levelUpVFX.Sound.Play();
+		(levelUpVFX.Start.GetChildren() as ParticleEmitter[]).forEach((v) => (v.Enabled = true));
+		task.wait(vfxDuration);
+		(levelUpVFX.Start.GetChildren() as ParticleEmitter[]).forEach((v) => (v.Enabled = false));
+		task.wait(levelUpVFX.Sound.TimeLength - vfxDuration);
+
+		levelUpVFX.Destroy();
 	}
 }
