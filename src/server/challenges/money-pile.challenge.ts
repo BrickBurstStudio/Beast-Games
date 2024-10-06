@@ -1,6 +1,7 @@
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { CollectionService, Players, ServerStorage } from "@rbxts/services";
 import { BaseChallenge } from "./base.challenge";
+import { Events } from "server/network";
 
 type PlatformData = { eliminated: boolean; players: Player[]; platform: TPlatform };
 
@@ -21,10 +22,12 @@ export class MoneyPileChallenge extends BaseChallenge {
 			if (!data) return;
 			if (data.eliminated) return;
 			data.eliminated = true;
-			print("elminaition");
+			floorConnection.Disconnect();
 			this.EliminatePlatform(data);
 		});
 		this.obliterator.Add(floorConnection, "Disconnect");
+
+		Events.challenges.moneyPileChallenge.growMoney.broadcast();
 
 		task.wait(5000);
 	}

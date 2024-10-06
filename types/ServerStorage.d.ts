@@ -1,5 +1,4 @@
 interface ServerStorage extends Instance {
-	__Rojo_SessionLock: ObjectValue;
 	Assets: Folder & {
 		VFX: Folder & {
 			CashStack: MeshPart;
@@ -33,6 +32,13 @@ interface ServerStorage extends Instance {
 			Baseplate: Part;
 		};
 		MoneyPileChallenge: Folder & {
+			Money: Model & {
+				Collision: Part & {
+					BillboardGui: BillboardGui & {
+						TextLabel: TextLabel;
+					};
+				};
+			};
 			Platforms: Model;
 		};
 		BoulderChallenge: Folder;

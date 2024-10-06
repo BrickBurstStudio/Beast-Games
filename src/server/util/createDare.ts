@@ -1,5 +1,5 @@
 import { Events } from "server/network";
-import { Currency } from "shared/configs/currency";
+import { Dare } from "../../../types/Dare";
 
 export function createDare(dare: Dare, rewardFunc: (player: Player) => void) {
 	let targetsCompleted = 0;
@@ -19,9 +19,3 @@ export function createDare(dare: Dare, rewardFunc: (player: Player) => void) {
 		}
 	};
 }
-export type Dare = {
-	name: string;
-	description: string;
-	reward: Currency | "xp";
-	targets: number;
-};
