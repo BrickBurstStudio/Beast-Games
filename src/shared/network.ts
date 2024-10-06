@@ -3,12 +3,12 @@ import { Networking } from "@flamework/networking";
 import { BroadcastAction } from "@rbxts/reflex";
 // import BaseItem from "shared/components/Items/BaseItem";
 
-import { PlayerData, PlayerQuests, QuestData } from "./store/slices/players/types";
-import { Currency } from "./configs/currency";
-import { Case, cases } from "./configs/items/cases";
-import { EquippableItemId, Item } from "./configs/items";
-import { quests } from "./configs/quests";
 import { Dare } from "../../types/Dare";
+import { Currency } from "./configs/currency";
+import { EquippableItemId, Item } from "./configs/items";
+import { Case, cases } from "./configs/items/cases";
+import { quests } from "./configs/quests";
+import { PlayerData, PlayerQuests, QuestData } from "./store/slices/players/types";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
