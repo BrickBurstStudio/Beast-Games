@@ -32,6 +32,8 @@ export class FlagChallenge extends BaseChallenge {
 			Events.announcer.announce(player, ["You have entered the yellow area! Claim a flag or be eliminated!"]);
 		});
 
+		announceAndWait([`${this.playersToAdvanceTarget} players will advance to the next round.`]);
+
 		while (
 			this.players.size() - this.undecidedPlayers.size() < this.playersToAdvanceTarget &&
 			!this.IsSpaceAvailableForUndecidedPlayers()
@@ -80,8 +82,10 @@ export class FlagChallenge extends BaseChallenge {
 		const endPlatform = this.map.ChallengeArea.EndArea.PrimaryPart!;
 		character.HumanoidRootPart.CFrame = endPlatform.CFrame.add(
 			new Vector3(
-				math.random(-endPlatform.Size.X / 2, endPlatform.Size.X / 2) +
-					this.map.ChallengeArea.EndArea.Barier.Size.X,
+				math.random(
+					-endPlatform.Size.X / 2 + this.map.ChallengeArea.EndArea.Barier.Size.X,
+					endPlatform.Size.X / 2,
+				),
 				endPlatform.Size.Y / 2 + 3,
 				math.random(-endPlatform.Size.Z / 2, endPlatform.Size.Z / 2),
 			),
@@ -143,8 +147,6 @@ export class FlagChallenge extends BaseChallenge {
 					),
 				),
 			).mul(CFrame.Angles(0, math.rad(math.random(0, 180)), math.rad(90)));
-
-			print("Flag spawned");
 		}
 	}
 
@@ -154,12 +156,15 @@ export class FlagChallenge extends BaseChallenge {
 			new Vector3(
 				math.random(
 					-this.map.ChallengeArea.StartArea.Platform.Size.X / 2,
-					this.map.ChallengeArea.StartArea.Platform.Size.X / 2,
-				) - this.map.ChallengeArea.StartArea.Barier.Size.X,
+					this.map.ChallengeArea.StartArea.Platform.Size.X / 2 -
+						this.map.ChallengeArea.StartArea.Barier.Size.X,
+				),
 				this.map.ChallengeArea.StartArea.Platform.Size.Y / 2 + 3,
 				math.random(
-					-this.map.ChallengeArea.StartArea.Platform.Size.Z / 2,
-					this.map.ChallengeArea.StartArea.Platform.Size.Z / 2,
+					-this.map.ChallengeArea.StartArea.Platform.Size.Z / 2 +
+						this.map.ChallengeArea.Bariers.LeftBarier.Size.Z,
+					this.map.ChallengeArea.StartArea.Platform.Size.Z / 2 -
+						this.map.ChallengeArea.Bariers.RightBarier.Size.Z,
 				),
 			),
 		);
