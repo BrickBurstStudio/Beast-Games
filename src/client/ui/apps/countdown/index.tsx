@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import motion from "@rbxts/react-motion";
+import { ReplicatedStorage } from "@rbxts/services";
 import { Events } from "client/network";
 import { px } from "client/ui/utils/usePx";
 
@@ -12,10 +13,14 @@ function useCountdown() {
 	useEffect(() => {
 		const conn = Events.announcer.countdown.connect(({ seconds, description }) => {
 			initialSeconds.current = seconds;
-			setDescription(description);
+			setDescription(description ?? "");
 			setHide(false);
+			ReplicatedStorage.Assets.Sounds.Countdown2.PlaybackSpeed;
 			for (let i = seconds; i >= 0; i--) {
 				setSeconds(i);
+				// if (i <= 5) ReplicatedStorage.Assets.Sounds.Countdown1.Play();
+				ReplicatedStorage.Assets.Sounds.Countdown2.Play();
+				ReplicatedStorage.Assets.Sounds.Countdown2.PlaybackSpeed = math.clamp(i / seconds, 0.1, math.huge);
 				task.wait(1);
 			}
 			setHide(true);

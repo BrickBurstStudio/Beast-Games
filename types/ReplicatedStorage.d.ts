@@ -4,19 +4,20 @@ interface ReplicatedStorage extends Instance {
 		utils: Folder & {
 			["object-utils"]: ModuleScript;
 			functions: Folder & {
-				randomNumbers: ModuleScript;
-				getColor3FromLevel: ModuleScript;
+				tweenUtil: ModuleScript;
+				forEveryPlayer: ModuleScript;
 				objectKeys: ModuleScript;
-				calculateReward: ModuleScript;
+				getLevel: ModuleScript;
+				randomNumbers: ModuleScript;
 				toTitleCase: ModuleScript;
 				getCharacter: ModuleScript;
 				getPlayerByName: ModuleScript;
-				getPlayerMultiplier: ModuleScript;
+				createForcefield: ModuleScript;
+				calculateReward: ModuleScript;
 				getHonorTitle: ModuleScript;
-				tweenUtil: ModuleScript;
 				randomColor: ModuleScript;
-				forEveryPlayer: ModuleScript;
-				getLevel: ModuleScript;
+				getColor3FromLevel: ModuleScript;
+				getPlayerMultiplier: ModuleScript;
 			};
 		};
 		network: ModuleScript;
@@ -41,8 +42,8 @@ interface ReplicatedStorage extends Instance {
 					items: ModuleScript;
 					balance: ModuleScript;
 					playTime: ModuleScript;
-					quests: ModuleScript;
 					types: ModuleScript;
+					quests: ModuleScript;
 					equipped: ModuleScript;
 					loggedIn: ModuleScript;
 				};
@@ -58,21 +59,10 @@ interface ReplicatedStorage extends Instance {
 	};
 	Assets: Folder & {
 		Objects: Folder & {
-			BriefcaseStand: Model & {
-				Part: Part;
-				Primary: Part;
-			};
-			Briefcase: Model & {
+			MediumMoney: Model & {
 				Part: Part & {
-					Mesh: SpecialMesh;
-					BillboardGui: BillboardGui & {
-						TextLabel: TextLabel;
-					};
+					Dollars: NumberValue;
 				};
-			};
-			Box: Model & {
-				ThumbnailCamera: Camera;
-				Cardboard: MeshPart;
 			};
 			Kanye: Model & {
 				Handle: Part & {
@@ -82,9 +72,33 @@ interface ReplicatedStorage extends Instance {
 					AvatarPartScaleType: StringValue;
 				};
 			};
-			MoneyPile: Model & {
+			SmallMoney: Model & {
+				Part: Part & {
+					Dollars: NumberValue;
+				};
+			};
+			LargeMoney: Model & {
+				Part: Part & {
+					Dollars: NumberValue;
+				};
+			};
+			Box: Model & {
+				Cardboard: MeshPart;
+			};
+			Briefcase: Model & {
+				Part: Part & {
+					Mesh: SpecialMesh;
+					BillboardGui: BillboardGui & {
+						TextLabel: TextLabel;
+					};
+				};
+			};
+			Forcefield: Part & {
+				Mesh: SpecialMesh;
+			};
+			BriefcaseStand: Model & {
 				Part: Part;
-				Dollars: NumberValue;
+				Primary: Part;
 			};
 			FlagPole: Model & {
 				Flag: Part;
@@ -100,12 +114,22 @@ interface ReplicatedStorage extends Instance {
 			};
 		};
 		Sounds: Folder & {
-			UnboxRare: Sound;
 			UnboxCommon: Sound;
-			UnboxLegendary: Sound;
+			Countdown2: Sound;
+			Buzz: Sound & {
+				PitchShiftSoundEffect: PitchShiftSoundEffect;
+			};
+			Boom: Sound;
+			Countdown1: Sound;
 			BabyBoy: Sound;
+			UnboxRare: Sound;
+			UnboxLegendary: Sound;
+			Character: Sound;
 		};
 		Gui: Folder & {
+			DollarBGUI: BillboardGui & {
+				TextLabel: TextLabel;
+			};
 			ClaimBGUI: BillboardGui & {
 				TextLabel: TextLabel;
 			};
@@ -212,6 +236,13 @@ interface ReplicatedStorage extends Instance {
 				};
 				["react-roblox"]: ModuleScript;
 				["object-utils"]: ModuleScript;
+				["reverse-array"]: Folder & {
+					out: ModuleScript & {
+						functions: Folder & {
+							ReverseArray: ModuleScript;
+						};
+					};
+				};
 				["react-motion"]: Folder & {
 					node_modules: Folder & {
 						["@rbxts"]: Folder & {
@@ -228,6 +259,25 @@ interface ReplicatedStorage extends Instance {
 						};
 						useAnimation: ModuleScript;
 						motion: ModuleScript;
+					};
+				};
+				testez: Folder & {
+					src: ModuleScript & {
+						TestPlanner: ModuleScript;
+						TestRunner: ModuleScript;
+						TestBootstrap: ModuleScript;
+						TestSession: ModuleScript;
+						LifecycleHooks: ModuleScript;
+						Reporters: Folder & {
+							TextReporter: ModuleScript;
+							TextReporterQuiet: ModuleScript;
+							TeamCityReporter: ModuleScript;
+						};
+						TestPlan: ModuleScript;
+						TestResults: ModuleScript;
+						TestEnum: ModuleScript;
+						Context: ModuleScript;
+						Expectation: ModuleScript;
 					};
 				};
 				["format-number"]: Folder & {

@@ -6,7 +6,7 @@ import { Players, ReplicatedStorage, ServerStorage } from "@rbxts/services";
 import { ClaimComponent } from "server/components/claim-components/claim.component";
 import { FlagPoleComponent } from "server/components/claim-components/flag-pole.component";
 import { Events } from "server/network";
-import { announceAndWait } from "server/util/announceAndWait";
+import { announce } from "server/util/announce";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge } from "./base.challenge";
 
@@ -32,10 +32,15 @@ export class FlagChallenge extends BaseChallenge {
 			Events.announcer.announce(player, ["You have entered the yellow area! Claim a flag or be eliminated!"]);
 		});
 
+<<<<<<< HEAD
 		announceAndWait([`${this.playersToAdvanceTarget} players will advance to the next round.`]);
 
 		while (
 			this.players.size() - this.undecidedPlayers.size() < this.playersToAdvanceTarget &&
+=======
+		while (
+			this.undecidedPlayers.size() > this.playersToAdvanceTarget &&
+>>>>>>> moneypile
 			!this.IsSpaceAvailableForUndecidedPlayers()
 		) {
 			this.SpawnFlags();
@@ -54,13 +59,23 @@ export class FlagChallenge extends BaseChallenge {
 	}
 
 	private IsSpaceAvailableForUndecidedPlayers() {
+<<<<<<< HEAD
+=======
+		print("Players to advance target", this.playersToAdvanceTarget);
+		print("Players size", this.players.size());
+		print("Undecided players size", this.undecidedPlayers.size());
+>>>>>>> moneypile
 		if (
 			this.playersToAdvanceTarget -
 				(this.players.size() - this.undecidedPlayers.size() + this.undecidedPlayers.size()) >=
 			0
 		) {
 			this.undecidedPlayers.forEach((player) => this.MovePlayerToEndArea(player));
+<<<<<<< HEAD
 			announceAndWait(["There is space for everyone left to advance! Congratulations!"]);
+=======
+			announce(["There is space for everyone left to advance! Congratulations!"]);
+>>>>>>> moneypile
 			return true;
 		}
 		return false;
@@ -82,10 +97,15 @@ export class FlagChallenge extends BaseChallenge {
 		const endPlatform = this.map.ChallengeArea.EndArea.PrimaryPart!;
 		character.HumanoidRootPart.CFrame = endPlatform.CFrame.add(
 			new Vector3(
+<<<<<<< HEAD
 				math.random(
 					-endPlatform.Size.X / 2 + this.map.ChallengeArea.EndArea.Barier.Size.X,
 					endPlatform.Size.X / 2,
 				),
+=======
+				math.random(-endPlatform.Size.X / 2, endPlatform.Size.X / 2) +
+					this.map.ChallengeArea.EndArea.Barier.Size.X,
+>>>>>>> moneypile
 				endPlatform.Size.Y / 2 + 3,
 				math.random(-endPlatform.Size.Z / 2, endPlatform.Size.Z / 2),
 			),
@@ -124,7 +144,11 @@ export class FlagChallenge extends BaseChallenge {
 	private SpawnFlags() {
 		const flagsThisRound = math.min(
 			math.random(1, math.floor(Players.GetPlayers().size() / 2)),
+<<<<<<< HEAD
 			this.playersToAdvanceTarget - (this.players.size() - this.undecidedPlayers.size()),
+=======
+			this.undecidedPlayers.size() - this.playersToAdvanceTarget,
+>>>>>>> moneypile
 		);
 
 		for (let i = 0; i < flagsThisRound; i++) {
@@ -156,6 +180,7 @@ export class FlagChallenge extends BaseChallenge {
 			new Vector3(
 				math.random(
 					-this.map.ChallengeArea.StartArea.Platform.Size.X / 2,
+<<<<<<< HEAD
 					this.map.ChallengeArea.StartArea.Platform.Size.X / 2 -
 						this.map.ChallengeArea.StartArea.Barier.Size.X,
 				),
@@ -165,6 +190,14 @@ export class FlagChallenge extends BaseChallenge {
 						this.map.ChallengeArea.Bariers.LeftBarier.Size.Z,
 					this.map.ChallengeArea.StartArea.Platform.Size.Z / 2 -
 						this.map.ChallengeArea.Bariers.RightBarier.Size.Z,
+=======
+					this.map.ChallengeArea.StartArea.Platform.Size.X / 2,
+				) - this.map.ChallengeArea.StartArea.Barier.Size.X,
+				this.map.ChallengeArea.StartArea.Platform.Size.Y / 2 + 3,
+				math.random(
+					-this.map.ChallengeArea.StartArea.Platform.Size.Z / 2,
+					this.map.ChallengeArea.StartArea.Platform.Size.Z / 2,
+>>>>>>> moneypile
 				),
 			),
 		);
