@@ -1,6 +1,8 @@
 import { ServerStorage } from "@rbxts/services";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
+import { store } from "server/store";
+import { Events } from "server/network";
 
 const TeamColors = {
 	0: Color3.fromRGB(255, 0, 0),
@@ -13,8 +15,30 @@ const TeamColors = {
 export class BoulderChallenge extends BaseChallenge {
 	protected readonly map = ServerStorage.ChallengeMaps.BoulderChallenge.Clone();
 
+	// todo: make calculation based on player count
+	private readonly finishGoal = 5;
+
+	private teamProgress: number[] = [0, 0, 0, 0, 0];
+
 	protected async Main() {
-		await this.CleanUp();
+		const connection = Events.challenges.boulderChallenge.pull.connect(async (player) => {
+			this.teamProgress[player.GetAttribute("team") as number]++;
+			if (this.teamProgress[player.GetAttribute("team") as number] >= this.finishGoal) {
+				connection.Disconnect();
+
+				const losingTeam = this.teamProgress.indexOf(math.min(...this.teamProgress));
+				await Promise.all(
+					this.players
+						.filter((player) => player.GetAttribute("team") === losingTeam)
+						.map((player) => this.EliminatePlayer(player)),
+				);
+			}
+		});
+
+		store.setChallenge("Boulder");
+
+		task.wait(5000);
+		this.CleanUp();
 	}
 
 	protected SpawnCharacter({ player, character, i }: SpawnCharacterArgs): void {
@@ -22,10 +46,17 @@ export class BoulderChallenge extends BaseChallenge {
 		character.Humanoid.JumpHeight = 0;
 		// based on i, spawn the character in the correct team
 		const team = i % 5;
+
+		player.SetAttribute("team", team);
+		character.GetChildren().forEach((child) => {
+			if (child.IsA("BasePart")) {
+				child.Color = TeamColors[team as keyof typeof TeamColors];
+			}
+		});
 	}
 
 	protected async CleanUp() {
-		await Promise.all(
+		return Promise.all(
 			this.players.map(async (player) => {
 				const character = await getCharacter(player);
 

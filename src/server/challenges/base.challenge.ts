@@ -22,7 +22,7 @@ export abstract class BaseChallenge {
 
 	public async Start() {
 		BaseChallenge.round++;
-		this.players = Players.GetPlayers();
+		this.players = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
 
 		this.obliterator.Add(this.map, "Destroy");
 		this.map.Parent = Workspace;
@@ -37,7 +37,7 @@ export abstract class BaseChallenge {
 		Events.announcer.announce.broadcast(["The challenge is over!"]);
 		await this.RewardPlayers();
 
-		task.wait(this.socialPeriodDuration);
+		// task.wait(this.socialPeriodDuration);
 		this.obliterator.Cleanup();
 	}
 
