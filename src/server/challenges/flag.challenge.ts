@@ -6,7 +6,7 @@ import { Players, ReplicatedStorage, ServerStorage } from "@rbxts/services";
 import { ClaimComponent } from "server/components/claim-components/claim.component";
 import { FlagPoleComponent } from "server/components/claim-components/flag-pole.component";
 import { Events } from "server/network";
-import { announceAndWait } from "server/util/announceAndWait";
+import { announce } from "server/util/announce";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge } from "./base.challenge";
 
@@ -32,10 +32,8 @@ export class FlagChallenge extends BaseChallenge {
 			Events.announcer.announce(player, ["You have entered the yellow area! Claim a flag or be eliminated!"]);
 		});
 
-		announceAndWait([`${this.playersToAdvanceTarget} players will advance to the next round.`]);
-
 		while (
-			this.players.size() - this.undecidedPlayers.size() < this.playersToAdvanceTarget &&
+			this.undecidedPlayers.size() > this.playersToAdvanceTarget &&
 			!this.IsSpaceAvailableForUndecidedPlayers()
 		) {
 			this.SpawnFlags();
@@ -54,13 +52,16 @@ export class FlagChallenge extends BaseChallenge {
 	}
 
 	private IsSpaceAvailableForUndecidedPlayers() {
+		print("Players to advance target", this.playersToAdvanceTarget);
+		print("Players size", this.players.size());
+		print("Undecided players size", this.undecidedPlayers.size());
 		if (
 			this.playersToAdvanceTarget -
 				(this.players.size() - this.undecidedPlayers.size() + this.undecidedPlayers.size()) >=
 			0
 		) {
 			this.undecidedPlayers.forEach((player) => this.MovePlayerToEndArea(player));
-			announceAndWait(["There is space for everyone left to advance! Congratulations!"]);
+			announce(["There is space for everyone left to advance! Congratulations!"]);
 			return true;
 		}
 		return false;

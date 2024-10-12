@@ -4,7 +4,7 @@ import Make from "@rbxts/make";
 import { ReplicatedStorage, ServerStorage } from "@rbxts/services";
 import { BriefcaseComponent } from "server/components/claim-components/briefcase.component";
 import { Events } from "server/network";
-import { announceAndWait } from "server/util/announceAndWait";
+import { announce } from "server/util/announce";
 import { generatePlayerGrid } from "server/util/generatePlayerGrid";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
@@ -18,7 +18,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 	readonly memorizeTime = 15;
 	readonly runTime = 30;
 	readonly playerSelections: { [key: Player["UserId"]]: BriefcaseComponent } = {};
-	
+
 	briefcases: BriefcaseComponent[] = [];
 	revealing = false;
 
@@ -88,7 +88,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 
 		this.RandomizeCases();
 
-		announceAndWait([
+		announce([
 			`Only ${cases - this.badBriefcases} cases here are safe. ${this.badBriefcases} cases are deadly.`,
 			"Once a case is touched, that player owns that case. It cannot be stolen back.",
 			"If you end up with a red case, you are eliminated.",
@@ -108,7 +108,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 			DateTime.now().UnixTimestamp - t < this.runTime
 		)
 			task.wait();
-		announceAndWait(["It's time to reveal who won, and who will die..."]);
+		announce(["It's time to reveal who won, and who will die..."]);
 		task.wait(3);
 		this.ToggleCases(true);
 		task.wait(5);

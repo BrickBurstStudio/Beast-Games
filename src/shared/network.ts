@@ -3,7 +3,7 @@ import { Networking } from "@flamework/networking";
 import { BroadcastAction } from "@rbxts/reflex";
 // import BaseItem from "shared/components/Items/BaseItem";
 
-import { Dare } from "server/util/createDare";
+import { Dare } from "../../types/Dare";
 import { Currency } from "./configs/currency";
 import { EquippableItemId, Item } from "./configs/items";
 import { Case, cases } from "./configs/items/cases";
@@ -39,8 +39,15 @@ interface ServerFunctions {
 }
 
 interface ClientEvents {
+	challenges: {
+		moneyPileChallenge: {
+			growMoney: () => void;
+			dropMoney: (model: Model) => void;
+		};
+	};
+
 	announcer: {
-		announce: (announcements: string[]) => void;
+		announce: (announcements: string[], richTextReplace?: { [key: string]: string }) => void;
 		countdown: (countdown: Countdown) => void;
 	};
 	quests: {
@@ -77,7 +84,7 @@ interface ClientFunctions {}
 export const GlobalEvents = Networking.createEvent<ServerEvents, ClientEvents>();
 export const GlobalFunctions = Networking.createFunction<ServerFunctions, ClientFunctions>();
 
-type Countdown = {
+export type Countdown = {
 	seconds: number;
-	description: string;
+	description?: string | undefined;
 };
