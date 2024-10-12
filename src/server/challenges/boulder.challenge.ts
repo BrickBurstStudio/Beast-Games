@@ -3,6 +3,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 import { store } from "server/store";
 import { Events } from "server/network";
+import Make from "@rbxts/make";
 
 const TeamColors = {
 	0: Color3.fromRGB(255, 0, 0),
@@ -46,6 +47,15 @@ export class BoulderChallenge extends BaseChallenge {
 		character.Humanoid.JumpHeight = 0;
 		// based on i, spawn the character in the correct team
 		const team = i % 5;
+		const teamAssets = this.map[tostring(team) as keyof typeof this.map] as (typeof this.map)["1"];
+
+		character.HumanoidRootPart.CFrame = teamAssets.Rope.CFrame;
+
+		const weld = Make("WeldConstraint", {
+			Parent: character.HumanoidRootPart,
+			Part0: character.HumanoidRootPart,
+			Part1: teamAssets.Rope,
+		});
 
 		player.SetAttribute("team", team);
 		character.GetChildren().forEach((child) => {
