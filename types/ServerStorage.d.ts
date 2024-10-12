@@ -38,17 +38,20 @@ interface ServerStorage extends Instance {
 		BoulderChallenge: Folder;
 		FlagChallenge: Folder & {
 			ChallengeArea: Model & {
+				StartArea: Model & {
+					Barier: Part;
+					Platform: Part;
+				};
+				EndArea: Model & {
+					Barier: Part;
+					Platform: Part;
+				};
 				Bariers: Model & {
 					LeftBarier: Part;
 					EndBarier: Part;
 					StartBarier: Part;
 					RightBarier: Part;
 				};
-				EndArea: Model & {
-					Barier: Part;
-					Platform: Part;
-				};
-				StartArea: Part;
 				PlayArea: Part;
 			};
 		};
