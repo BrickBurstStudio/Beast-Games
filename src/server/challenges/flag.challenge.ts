@@ -20,7 +20,7 @@ export class FlagChallenge extends BaseChallenge {
 	private playersToAdvanceTarget: number = 0;
 
 	protected async Main() {
-		this.playersToAdvanceTarget = math.floor(Players.GetPlayers().size() * 0.8);
+		this.playersToAdvanceTarget = math.floor(this.players.size() * 0.8);
 		this.undecidedPlayers = [...this.players];
 		this.map.ChallengeArea.StartArea.Barier.Touched.Connect((otherPart) => {
 			if (this.map.ChallengeArea.StartArea.Barier.CanCollide) return;
@@ -33,7 +33,7 @@ export class FlagChallenge extends BaseChallenge {
 		});
 
 		while (
-			this.undecidedPlayers.size() > this.playersToAdvanceTarget &&
+			this.players.size() - this.undecidedPlayers.size() < this.playersToAdvanceTarget &&
 			!this.IsSpaceAvailableForUndecidedPlayers()
 		) {
 			this.SpawnFlags();
@@ -55,11 +55,7 @@ export class FlagChallenge extends BaseChallenge {
 		print("Players to advance target", this.playersToAdvanceTarget);
 		print("Players size", this.players.size());
 		print("Undecided players size", this.undecidedPlayers.size());
-		if (
-			this.playersToAdvanceTarget -
-				(this.players.size() - this.undecidedPlayers.size() + this.undecidedPlayers.size()) >=
-			0
-		) {
+		if (this.playersToAdvanceTarget - this.players.size() >= 0) {
 			this.undecidedPlayers.forEach((player) => this.MovePlayerToEndArea(player));
 			announce(["There is space for everyone left to advance! Congratulations!"]);
 			return true;

@@ -31,14 +31,16 @@ export class BoulderChallenge extends BaseChallenge {
 					this.teamFinishGoals[player.GetAttribute("team") as number] + this.finishGoalPerPlayer;
 			}),
 		);
+
 		this.obliterator.Add(
+			// TODO: Add debounce to combat autoclicking basically they would have a max of like 10 cps or something like that
 			Events.challenges.boulderChallenge.pull.connect(async (player) => {
 				const team = player.GetAttribute("team") as number;
 				// If the team has reached their goal, do nothing
 				if (this.teamProgress[team] >= this.teamFinishGoals[team]) return;
 
 				// Team still playing so increment their progress
-				this.teamProgress[team]++;
+				this.teamProgress[team] += 0.1;
 
 				// Check if the team has finally reached their goal
 				if (this.teamProgress[team] < this.teamFinishGoals[team]) return;
@@ -66,12 +68,13 @@ export class BoulderChallenge extends BaseChallenge {
 			// Slowly decrease the progress for each team
 			for (let i = 0; i < 5; i++) {
 				if (this.teamProgress[i] > 0 && this.teamProgress[i] < this.teamFinishGoals[i]) {
-					this.teamProgress[i] = math.max(0, this.teamProgress[i] - 0.05);
+					this.teamProgress[i] = math.max(0, this.teamProgress[i] - 0.005);
 				}
 			}
 
 			task.wait();
 		}
+
 		this.UpdateBoulderPositions();
 
 		store.setChallenge(undefined);
@@ -100,7 +103,7 @@ export class BoulderChallenge extends BaseChallenge {
 			const boulder = teamAssets.Boulder as Part;
 			const startPos = new Vector3(
 				teamAssets.Boulder.Position.X,
-				teamAssets.Rope.Position.Y,
+				teamAssets.Rope.Position.Y + teamAssets.Boulder.Size.Y / 2,
 				teamAssets.Boulder.Position.Z,
 			);
 			const endPos = startPos.add(new Vector3(0, 50, 0));
