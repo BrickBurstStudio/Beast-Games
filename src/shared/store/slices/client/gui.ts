@@ -1,9 +1,10 @@
 import { createProducer } from "@rbxts/reflex";
-import { GuiPage } from "shared/configs/gui";
+import { ChallengeName, GuiPage } from "shared/configs/gui";
 
 export interface GuiState {
 	guiPage?: GuiPage;
 	toolTip?: ToolTip;
+	challenge?: ChallengeName;
 }
 
 export interface ToolTip {
@@ -21,5 +22,9 @@ export const guiSlice = createProducer(initalState, {
 	setToolTip: (state, tooltip?: ToolTip) => ({
 		...state,
 		toolTip: tooltip,
+	}),
+	setChallenge: (state, challenge?: ChallengeName) => ({
+		...state,
+		challenge: challenge,
 	}),
 });

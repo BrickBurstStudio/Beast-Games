@@ -11,6 +11,7 @@ const controls = {};
 const Story = {
 	summary: "App",
 	react: React,
+	controls,
 	reactRoblox: ReactRoblox,
 	story: () => {
 		usePx();

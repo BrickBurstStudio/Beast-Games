@@ -22,22 +22,24 @@ export abstract class BaseChallenge {
 
 	public async Start() {
 		BaseChallenge.round++;
-		this.players = Players.GetPlayers();
+		this.players = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
 
 		this.obliterator.Add(this.map, "Destroy");
 		this.map.Parent = Workspace;
 		task.wait(this.mapLoadingTime);
 
-		this.players.forEach(async (player, i) => {
-			const character = await getCharacter(player);
-			this.SpawnCharacter({ player, character, i });
-		});
+		await Promise.all(
+			this.players.map(async (player, i) => {
+				const character = await getCharacter(player);
+				this.SpawnCharacter({ player, character, i });
+			}),
+		);
 
 		await this.Main();
 		Events.announcer.announce.broadcast(["The challenge is over!"]);
 		await this.RewardPlayers();
 
-		task.wait(this.socialPeriodDuration);
+		// task.wait(this.socialPeriodDuration);
 		this.obliterator.Cleanup();
 	}
 

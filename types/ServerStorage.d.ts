@@ -1,7 +1,6 @@
 interface ServerStorage extends Instance {
 	__Rojo_SessionLock: ObjectValue;
 	Assets: Folder & {
-		Objects: Folder;
 		VFX: Folder & {
 			CashStack: MeshPart;
 			LevelUp: Part & {
@@ -35,11 +34,36 @@ interface ServerStorage extends Instance {
 		};
 		MoneyPileChallenge: Folder & {
 			Money: Model & {
-				Collision: Part;
+				Collision: Part & {
+					BillboardGui: BillboardGui & {
+						TextLabel: TextLabel;
+					};
+				};
 			};
 			Platforms: Model;
 		};
-		BoulderChallenge: Folder;
+		BoulderChallenge: Folder & {
+			["1"]: Folder & {
+				Rope: Part;
+				Boulder: Part;
+			};
+			["0"]: Folder & {
+				Rope: Part;
+				Boulder: Part;
+			};
+			["3"]: Folder & {
+				Boulder: Part;
+				Rope: Part;
+			};
+			["2"]: Folder & {
+				Boulder: Part;
+				Rope: Part;
+			};
+			["4"]: Folder & {
+				Rope: Part;
+				Boulder: Part;
+			};
+		};
 		FlagChallenge: Folder & {
 			ChallengeArea: Model & {
 				StartArea: Model & {

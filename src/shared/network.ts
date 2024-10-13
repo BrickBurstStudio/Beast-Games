@@ -23,6 +23,11 @@ interface ServerEvents {
 	reflex: {
 		start: () => void;
 	};
+	challenges: {
+		boulderChallenge: {
+			pull: () => void;
+		};
+	};
 }
 
 interface ServerFunctions {
