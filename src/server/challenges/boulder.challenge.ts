@@ -32,6 +32,13 @@ export class BoulderChallenge extends BaseChallenge {
 			}),
 		);
 
+		await Promise.all(
+			this.teamProgress.map((_, team) => {
+				const teamAssets = this.map[tostring(team) as keyof typeof this.map] as (typeof this.map)["1"];
+				teamAssets.Rope.SetAttribute("initialPosition", teamAssets.Rope.Position);
+			}),
+		);
+
 		this.obliterator.Add(
 			// TODO: Add debounce to combat autoclicking basically they would have a max of like 10 cps or something like that
 			Events.challenges.boulderChallenge.pull.connect(async (player) => {
@@ -63,7 +70,7 @@ export class BoulderChallenge extends BaseChallenge {
 
 		while (this.teamsCompleted < this.teamFinishGoals.size() - 1) {
 			// Update the boulder position for each team
-			this.UpdateBoulderPositions();
+			this.UpdateAssetPositions();
 
 			// Slowly decrease the progress for each team
 			for (let i = 0; i < 5; i++) {
@@ -75,7 +82,7 @@ export class BoulderChallenge extends BaseChallenge {
 			task.wait();
 		}
 
-		this.UpdateBoulderPositions();
+		this.UpdateAssetPositions();
 
 		store.setChallenge(undefined);
 		const losingTeam = this.teamProgress.indexOf(math.min(...this.teamProgress));
@@ -93,23 +100,31 @@ export class BoulderChallenge extends BaseChallenge {
 		this.CleanUp();
 	}
 
-	protected UpdateBoulderPositions() {
+	protected UpdateAssetPositions() {
 		for (let team = 0; team < 5; team++) {
 			// This is for redudency incase it goes over the goal
 			if (this.teamProgress[team] > this.teamFinishGoals[team])
 				this.teamProgress[team] = this.teamFinishGoals[team];
 
 			const teamAssets = this.map[tostring(team) as keyof typeof this.map] as (typeof this.map)["1"];
-			const boulder = teamAssets.Boulder as Part;
-			const startPos = new Vector3(
-				teamAssets.Boulder.Position.X,
-				teamAssets.Rope.Position.Y + teamAssets.Boulder.Size.Y / 2,
-				teamAssets.Boulder.Position.Z,
-			);
-			const endPos = startPos.add(new Vector3(0, 50, 0));
-
-			const progress = this.teamProgress[team] / this.teamFinishGoals[team];
-			boulder.Position = startPos.Lerp(endPos, progress);
+			{
+				const boulder = teamAssets.Boulder as Part;
+				const startPos = new Vector3(
+					teamAssets.Boulder.Position.X,
+					teamAssets.Rope.Position.Y - teamAssets.Rope.Size.Y / 2 + teamAssets.Boulder.Size.Y / 2,
+					teamAssets.Boulder.Position.Z,
+				);
+				const endPos = startPos.add(new Vector3(0, 50, 0));
+				const progress = this.teamProgress[team] / this.teamFinishGoals[team];
+				boulder.Position = startPos.Lerp(endPos, progress);
+			}
+			{
+				const rope = teamAssets.Rope as Part;
+				const startPos = teamAssets.Rope.GetAttribute("initialPosition") as Vector3;
+				const endPos = startPos.add(new Vector3(0, 0, -25));
+				const progress = this.teamProgress[team] / this.teamFinishGoals[team];
+				rope.Position = startPos.Lerp(endPos, progress);
+			}
 		}
 	}
 
