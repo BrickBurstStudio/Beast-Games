@@ -28,10 +28,12 @@ export abstract class BaseChallenge {
 		this.map.Parent = Workspace;
 		task.wait(this.mapLoadingTime);
 
-		this.players.forEach(async (player, i) => {
-			const character = await getCharacter(player);
-			this.SpawnCharacter({ player, character, i });
-		});
+		await Promise.all(
+			this.players.map(async (player, i) => {
+				const character = await getCharacter(player);
+				this.SpawnCharacter({ player, character, i });
+			}),
+		);
 
 		await this.Main();
 		Events.announcer.announce.broadcast(["The challenge is over!"]);

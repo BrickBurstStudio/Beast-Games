@@ -1,9 +1,11 @@
+import Make from "@rbxts/make";
 import { ServerStorage } from "@rbxts/services";
 import { Events } from "server/network";
 import { store } from "server/store";
+import { announce } from "server/util/announce";
+import { countdown } from "server/util/countdown";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
-import Make from "@rbxts/make";
 
 const TeamColors = {
 	0: Color3.fromRGB(255, 0, 0),
@@ -16,30 +18,96 @@ const TeamColors = {
 export class BoulderChallenge extends BaseChallenge {
 	protected readonly map = ServerStorage.ChallengeMaps.BoulderChallenge.Clone();
 
-	// todo: make calculation based on player count
-	private readonly finishGoal = 5;
-
+	// TODO: we have to test what a good finish goal for each player is
+	private readonly finishGoalPerPlayer = 3;
 	private teamProgress: number[] = [0, 0, 0, 0, 0];
+	private teamFinishGoals: number[] = [0, 0, 0, 0, 0];
+	private teamsCompleted = 0;
 
 	protected async Main() {
-		const connection = Events.challenges.boulderChallenge.pull.connect(async (player) => {
-			this.teamProgress[player.GetAttribute("team") as number]++;
-			if (this.teamProgress[player.GetAttribute("team") as number] >= this.finishGoal) {
-				connection.Disconnect();
+		await Promise.all(
+			this.players.map(async (player) => {
+				this.teamFinishGoals[player.GetAttribute("team") as number] =
+					this.teamFinishGoals[player.GetAttribute("team") as number] + this.finishGoalPerPlayer;
+			}),
+		);
+		this.obliterator.Add(
+			Events.challenges.boulderChallenge.pull.connect(async (player) => {
+				const team = player.GetAttribute("team") as number;
+				// If the team has reached their goal, do nothing
+				if (this.teamProgress[team] >= this.teamFinishGoals[team]) return;
 
-				const losingTeam = this.teamProgress.indexOf(math.min(...this.teamProgress));
-				await Promise.all(
-					this.players
-						.filter((player) => player.GetAttribute("team") === losingTeam)
-						.map((player) => this.EliminatePlayer(player)),
+				// Team still playing so increment their progress
+				this.teamProgress[team]++;
+
+				// Check if the team has finally reached their goal
+				if (this.teamProgress[team] < this.teamFinishGoals[team]) return;
+				this.teamsCompleted++;
+
+				// Check if all teams have finished
+				if (this.teamsCompleted >= this.teamFinishGoals.size()) return;
+
+				Events.announcer.announce(
+					this.players.filter((p) => (p.GetAttribute("team") as number) === team),
+					[`Congratulations! Your team finished in place number ${this.teamsCompleted}!`],
 				);
-			}
-		});
+			}),
+			"Disconnect",
+		);
 
+		await announce([`The last team to finish pulling the boulder will be eliminated!`]);
+		await countdown({ seconds: 5, description: "Get ready..." });
 		store.setChallenge("Boulder");
 
-		task.wait(5000);
+		while (this.teamsCompleted < this.teamFinishGoals.size() - 1) {
+			// Update the boulder position for each team
+			this.UpdateBoulderPositions();
+
+			// Slowly decrease the progress for each team
+			for (let i = 0; i < 5; i++) {
+				if (this.teamProgress[i] > 0 && this.teamProgress[i] < this.teamFinishGoals[i]) {
+					this.teamProgress[i] = math.max(0, this.teamProgress[i] - 0.05);
+				}
+			}
+
+			task.wait();
+		}
+		this.UpdateBoulderPositions();
+
+		store.setChallenge(undefined);
+		const losingTeam = this.teamProgress.indexOf(math.min(...this.teamProgress));
+
+		await announce([`The team to finish pulling their boulder last is: ${losingTeam}`], {
+			[losingTeam]: `<font color="#${TeamColors[losingTeam as keyof typeof TeamColors].ToHex()}">${losingTeam + 1}</font>`,
+		});
+
+		Promise.all(
+			this.players
+				.filter((player) => player.GetAttribute("team") === losingTeam)
+				.map((player) => this.EliminatePlayer(player)),
+		);
+
 		this.CleanUp();
+	}
+
+	protected UpdateBoulderPositions() {
+		for (let team = 0; team < 5; team++) {
+			// This is for redudency incase it goes over the goal
+			if (this.teamProgress[team] > this.teamFinishGoals[team])
+				this.teamProgress[team] = this.teamFinishGoals[team];
+
+			const teamAssets = this.map[tostring(team) as keyof typeof this.map] as (typeof this.map)["1"];
+			const boulder = teamAssets.Boulder as Part;
+			const startPos = new Vector3(
+				teamAssets.Boulder.Position.X,
+				teamAssets.Rope.Position.Y,
+				teamAssets.Boulder.Position.Z,
+			);
+			const endPos = startPos.add(new Vector3(0, 50, 0));
+
+			const progress = this.teamProgress[team] / this.teamFinishGoals[team];
+			boulder.Position = startPos.Lerp(endPos, progress);
+		}
 	}
 
 	protected SpawnCharacter({ player, character, i }: SpawnCharacterArgs): void {
@@ -48,10 +116,12 @@ export class BoulderChallenge extends BaseChallenge {
 
 		const team = i % 5;
 		const teamAssets = this.map[tostring(team) as keyof typeof this.map] as (typeof this.map)["1"];
+
 		character.HumanoidRootPart.CFrame = teamAssets.Rope.CFrame.mul(
 			new CFrame(teamAssets.Rope.Size.X / 2 - (i - team) * 1.5, 0, (i - team) % 2 === 0 ? -2.5 : 2.5),
 		).mul(CFrame.Angles(0, math.pi / -2, 0));
-		i += 1;
+
+		task.wait(2);
 
 		const weld = Make("WeldConstraint", {
 			Parent: character.HumanoidRootPart,
@@ -60,11 +130,6 @@ export class BoulderChallenge extends BaseChallenge {
 		});
 
 		player.SetAttribute("team", team);
-		character.GetChildren().forEach((child) => {
-			if (child.IsA("BasePart")) {
-				child.Color = TeamColors[team as keyof typeof TeamColors];
-			}
-		});
 	}
 
 	protected async CleanUp() {

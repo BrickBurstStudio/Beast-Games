@@ -10,7 +10,7 @@ export default function BoulderChallenge() {
 				Size={UDim2.fromOffset(px(300), px(50))}
 				TextColor3={Color3.fromRGB(255, 255, 255)}
 				TextSize={px(24)}
-				Position={UDim2.fromScale(0.1, 0.1)}
+				Position={UDim2.fromScale(0.25, 0.5)}
 				AnchorPoint={new Vector2(0.5, 0.5)}
 				BackgroundTransparency={0.5}
 				Event={{

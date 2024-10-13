@@ -7,7 +7,7 @@ import { BoulderChallenge } from "server/challenges/boulder.challenge";
 export class GameService implements OnStart {
 	async onStart() {
 		while (Players.GetPlayers().size() < 1) task.wait();
-		task.wait(0.5);
+		task.wait(2);
 		await new BoulderChallenge().Start();
 	}
 }
