@@ -124,8 +124,6 @@ export class BoulderChallenge extends BaseChallenge {
 			new CFrame(teamAssets.Rope.Size.X / 2 - (i - team) * 1.5, 0, (i - team) % 2 === 0 ? -2.5 : 2.5),
 		).mul(CFrame.Angles(0, math.pi / -2, 0));
 
-		task.wait(2);
-
 		const weld = Make("WeldConstraint", {
 			Parent: character.HumanoidRootPart,
 			Part0: character.HumanoidRootPart,
