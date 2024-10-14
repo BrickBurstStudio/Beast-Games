@@ -16,7 +16,7 @@ export interface ClaimComponentProps {
 })
 export class ClaimComponent<A extends ClaimComponentProps, I extends Model> extends BaseComponent<A, I> {
 	public readonly claimedEvent = Make("BindableEvent", {});
-	private claimBGUI = ReplicatedStorage.Assets.Gui.ClaimBGUI.Clone();
+	protected claimBGUI = ReplicatedStorage.Assets.Gui.ClaimBGUI.Clone();
 
 	static playerClaims: Record<Player["UserId"], boolean> = {};
 

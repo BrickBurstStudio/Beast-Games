@@ -2,7 +2,7 @@ import { Components } from "@flamework/components";
 import { Dependency } from "@flamework/core";
 import Make from "@rbxts/make";
 import { ReplicatedStorage, ServerStorage } from "@rbxts/services";
-import { BriefcaseComponent } from "server/components/claim-components/briefcase.component";
+import { BriefcaseComponent } from "../components/claim-components/briefcase.component";
 import { Events } from "server/network";
 import { announce } from "server/util/announce";
 import { generatePlayerGrid } from "server/util/generatePlayerGrid";

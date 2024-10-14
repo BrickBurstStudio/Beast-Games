@@ -14,6 +14,8 @@ export class MoneyPileComponent
 	implements OnStart
 {
 	onStart() {
-		this.instance;
+		this.claimBGUI.Size = UDim2.fromScale(this.instance.PrimaryPart!.Size.X, this.instance.PrimaryPart!.Size.X);
+		this.claimBGUI.MaxDistance = math.huge;
+		this.claimBGUI.StudsOffset = new Vector3(0, 0, 0);
 	}
 }

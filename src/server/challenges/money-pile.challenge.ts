@@ -1,12 +1,21 @@
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { CollectionService, Players, ReplicatedStorage, ServerStorage, TweenService, Workspace } from "@rbxts/services";
+import {
+	CollectionService,
+	Players,
+	ReplicatedStorage,
+	RunService,
+	ServerStorage,
+	TweenService,
+	Workspace,
+} from "@rbxts/services";
 import { BaseChallenge } from "./base.challenge";
-import { Events } from "server/network";
 import { announce } from "server/util/announce";
 import { countdown } from "server/util/countdown";
-import Make from "@rbxts/make";
 import createForcefield from "shared/utils/functions/createForcefield";
-
+import { FormatStandard } from "@rbxts/format-number";
+import { MoneyPileComponent } from "server/components/claim-components/money-pile.component";
+import { Components } from "@flamework/components";
+import { Dependency } from "@flamework/core";
 type PlatformData = { eliminated: boolean; players: Player[]; platform: TPlatform };
 
 export class MoneyPileChallenge extends BaseChallenge {
@@ -14,58 +23,99 @@ export class MoneyPileChallenge extends BaseChallenge {
 	readonly platforms = this.map.Platforms.GetChildren() as TPlatform[];
 	readonly floorTag = "stadium-floor" as const;
 	private platformData: PlatformData[] = [];
+	private currentMoneyPile: Model | undefined;
+	private currentMoneyPileComponent: MoneyPileComponent | undefined;
+	private forcefields: Part[] = [];
+
+	private components = Dependency<Components>();
 
 	protected async Main() {
-		const forcefields = this.platforms.map((platform) => this.CreateForcefield(platform));
+		this.forcefields = this.platforms.map((platform) => this.CreateForcefield(platform));
+		this.ToggleForcefields(true);
 
 		this.SetupPlatforms();
 		this.SetupFloor();
 
 		await announce([
 			"Right now, there is a barrier preventing you from leaving your platform.",
-
-			// todo: add rich text support for announcer. would be great.
-			"If anyone leaves your platform, everyone on it will be eliminated, including you.",
-		]);
-
-		await countdown({
-			seconds: 5,
-			description: "Removing barrier",
-		});
-
-		forcefields.forEach((forcefield) => forcefield.Destroy());
-		ReplicatedStorage.Assets.Sounds.Boom.Play();
-
-		await announce([
-			"Soon, I will bribe everyone with a series of 3 piles of money.",
-			"They will fall one by one, increasing in value every time.",
-			"The first player to touch a money pile will receive the cash reward.",
-			"HOWEVER...",
-			"If you leave your platform, everyone on it will be eliminated, including yourself.",
-			"Eliminate yourself with everyone on your platform to go for the cash, or stay? You decide.",
+			"A pile of money will spawn in the center.",
+			"The first person to touch the money pile will receive the cash reward.",
+			"However, if you or anyone else on your platform leaves, everyone on your platform will be eliminated.",
+			"Stay on your platform to survive, or eliminate your entire platform to go for the money? You decide.",
 		]);
 
 		// todo: implement second countdown in the actual description text
 
-		Events.challenges.moneyPileChallenge.dropMoney.broadcast(ReplicatedStorage.Assets.Objects.SmallMoney);
+		for (const model of [
+			ReplicatedStorage.Assets.Objects.SmallMoney,
+			ReplicatedStorage.Assets.Objects.MediumMoney,
+			ReplicatedStorage.Assets.Objects.LargeMoney,
+		]) {
+			this.SpawnMoneyPile(model);
 
-		await countdown({
-			seconds: 30,
-		});
+			await countdown({
+				seconds: 5,
+				description: "Removing barrier",
+			});
 
-		Events.challenges.moneyPileChallenge.dropMoney.broadcast(ReplicatedStorage.Assets.Objects.MediumMoney);
+			this.ToggleForcefields(false);
 
-		await countdown({
-			seconds: 30,
-		});
+			await countdown({
+				seconds: 15,
+			});
 
-		Events.challenges.moneyPileChallenge.dropMoney.broadcast(ReplicatedStorage.Assets.Objects.LargeMoney);
+			this.ToggleForcefields(true);
 
-		await countdown({
-			seconds: 30,
-		});
+			if (this.currentMoneyPileComponent?.attributes.owner !== undefined) {
+				await announce([
+					`${this.currentMoneyPileComponent.attributes.owner} has won $${FormatStandard(model.PrimaryPart!.FindFirstChildOfClass("NumberValue")?.Value ?? 0)}!`,
+				]);
+			} else {
+				await announce(["No one has claimed the money pile."]);
+			}
+		}
 
 		task.wait(5000);
+	}
+
+	private ToggleForcefields(toggle: boolean) {
+		this.forcefields.forEach((forcefield) => {
+			forcefield.Transparency = toggle ? 0 : 1;
+			forcefield.GetChildren().forEach((child) => {
+				if (child.IsA("Part")) {
+					child.CanCollide = toggle;
+				}
+			});
+		});
+		if (!toggle) ReplicatedStorage.Assets.Sounds.Boom.Play();
+	}
+
+	private SpawnMoneyPile(model: Model) {
+		this.currentMoneyPile?.Destroy();
+
+		this.currentMoneyPile = model.Clone();
+		this.currentMoneyPile.Parent = Workspace;
+		this.currentMoneyPile.PivotTo(
+			Workspace.Stadium.Center.CFrame.mul(new CFrame(0, model.PrimaryPart!.Size.Y / 2, 0)),
+		);
+
+		const moneyBGUI = ReplicatedStorage.Assets.Gui.DollarBGUI.Clone();
+		moneyBGUI.Parent = this.currentMoneyPile.PrimaryPart;
+		moneyBGUI.StudsOffset = new Vector3(0, this.currentMoneyPile.PrimaryPart!.Size.Y, 0);
+		moneyBGUI.Size = UDim2.fromScale(
+			this.currentMoneyPile.PrimaryPart!.Size.Magnitude,
+			this.currentMoneyPile.PrimaryPart!.Size.Y,
+		);
+		moneyBGUI.TextLabel.Text = `$${FormatStandard(model.PrimaryPart!.FindFirstChildOfClass("NumberValue")?.Value ?? 0)}`;
+
+		this.currentMoneyPileComponent = this.components.getComponent(this.currentMoneyPile, MoneyPileComponent);
+		if (!this.currentMoneyPileComponent) return;
+
+		this.currentMoneyPileComponent.claimedEvent.Event.Connect((player: Player) => {
+			const platform = this.platformData.find((pd) => !!pd.players.find((p) => p === player));
+			if (!platform) return;
+			this.EliminatePlatform(platform);
+		});
 	}
 
 	private SetupPlatforms() {

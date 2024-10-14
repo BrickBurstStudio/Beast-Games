@@ -21,4 +21,5 @@ export const RICH_TEXT_REPLACE = {
 	anyone: `<font color="${RICH_TEXT_COLORS.orange}">replace</font>`,
 	first: `<font color="${RICH_TEXT_COLORS.green}">replace</font>`,
 	bribe: `<font color="${RICH_TEXT_COLORS.green}">replace</font>`,
+	money: `<font color="${RICH_TEXT_COLORS.green}">replace</font>`,
 };
