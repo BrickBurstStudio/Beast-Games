@@ -1,3 +1,6 @@
+export const CHALLENGE_NAMES = ["Boulder", "Flag", "Briefcase", "Moneypile"] as const;
+export type ChallengeName = (typeof CHALLENGE_NAMES)[number];
+
 export const GUI_PAGES = ["Inventory", "Shop", "Achievements", "Trading", "Settings"] as const;
 export type GuiPage = (typeof GUI_PAGES)[number];
 

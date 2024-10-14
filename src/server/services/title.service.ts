@@ -21,7 +21,7 @@ export class TitleService implements OnStart {
 			});
 
 			const honorUnsub = store.subscribe(selectPlayerBalance(tostring(player.UserId), "honor"), (honor) => {
-				titleBGUIClone.Honor.Text = !!honor ? tostring(getHonorTitle(honor)) : "N/A";
+				titleBGUIClone.Honor.Text = honor !== undefined ? tostring(getHonorTitle(honor)) : "N/A";
 			});
 
 			getCharacter(player).then((character) => {

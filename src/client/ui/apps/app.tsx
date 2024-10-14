@@ -12,8 +12,7 @@ import SettingsApp from "./menu/pages/settings";
 import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
 import SpectateApp from "./spectate";
-
-
+import ChallengesApp from "./challenges";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);
@@ -52,7 +51,7 @@ export default function App() {
 			<MenuButtonsApp />
 			<CountdownApp />
 			<AnimateEventsApp />
-			{eliminated && <SpectateApp />}
+			{eliminated ? <SpectateApp /> : <ChallengesApp />}
 			{toolTip && <ToolTip />}
 		</frame>
 	);
