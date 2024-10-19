@@ -36,13 +36,13 @@ export class MoneyPileChallenge extends BaseChallenge {
 		this.SetupPlatforms();
 		this.SetupFloor();
 
-		await announce([
-			"Right now, there is a barrier preventing you from leaving your platform.",
-			"A pile of money will spawn in the center.",
-			"The first person to touch the money pile will receive the cash reward.",
-			"However, if you or anyone else on your platform leaves, everyone on your platform will be eliminated.",
-			"Stay on your platform to survive, or eliminate your entire platform to go for the money? You decide.",
-		]);
+		// await announce([
+		// 	"Right now, there is a barrier preventing you from leaving your platform.",
+		// 	"A pile of money will spawn in the center.",
+		// 	"The first person to touch the money pile will receive the cash reward.",
+		// 	"However, if you or anyone else on your platform leaves, everyone on your platform will be eliminated.",
+		// 	"Stay on your platform to survive, or eliminate your entire platform to go for the money? You decide.",
+		// ]);
 
 		// todo: implement second countdown in the actual description text
 
@@ -80,10 +80,13 @@ export class MoneyPileChallenge extends BaseChallenge {
 
 	private ToggleForcefields(toggle: boolean) {
 		this.forcefields.forEach((forcefield) => {
-			forcefield.Transparency = toggle ? 0 : 1;
+			let shouldToggle = toggle;
+			if (forcefield.Parent?.GetAttribute("eliminated")) shouldToggle = false;
+
+			forcefield.Transparency = shouldToggle ? 0 : 1;
 			forcefield.GetChildren().forEach((child) => {
 				if (child.IsA("Part")) {
-					child.CanCollide = toggle;
+					child.CanCollide = shouldToggle;
 				}
 			});
 		});
@@ -154,6 +157,7 @@ export class MoneyPileChallenge extends BaseChallenge {
 
 	private EliminatePlatform({ platform, players }: PlatformData) {
 		players.forEach((eP) => this.players.remove(this.players.findIndex((p) => p === eP)));
+		platform.SetAttribute("eliminated", true);
 		platform.Lights.Color = Color3.fromRGB(255, 0, 0);
 		platform.Lights.PointLight.Color = Color3.fromRGB(255, 0, 0);
 		(platform.Part.FindFirstChild("Buzz") as Sound)?.Play();
