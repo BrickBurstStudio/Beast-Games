@@ -115,9 +115,9 @@ export class MoneyPileChallenge extends BaseChallenge {
 		if (!this.currentMoneyPileComponent) return;
 
 		this.currentMoneyPileComponent.claimedEvent.Event.Connect((player: Player) => {
-			const platform = this.platformData.find((pd) => !!pd.players.find((p) => p === player));
-			if (!platform) return;
-			this.EliminatePlatform(platform);
+			const index = this.platformData.findIndex((pd) => !!pd.players.find((p) => p === player));
+			if (index === -1) return;
+			this.EliminatePlatform(index);
 		});
 	}
 
@@ -135,12 +135,11 @@ export class MoneyPileChallenge extends BaseChallenge {
 			if (!this.players.find((p) => p.Name === t.Parent?.Name)) return;
 			const player = Players.GetPlayerFromCharacter(t.Parent);
 			if (!player) return;
-			const data = this.platformData.find((pd) => !!pd.players.find((p) => p === player));
-			if (!data) return;
-			if (data.eliminated) return;
-			data.eliminated = true;
+			const index = this.platformData.findIndex((pd) => !!pd.players.find((p) => p === player));
+			if (index === -1) return;
+
 			floorConnection.Disconnect();
-			this.EliminatePlatform(data);
+			this.EliminatePlatform(index);
 		});
 		this.obliterator.Add(floorConnection, "Disconnect");
 	}
@@ -155,7 +154,10 @@ export class MoneyPileChallenge extends BaseChallenge {
 		return forcefield;
 	}
 
-	private EliminatePlatform({ platform, players }: PlatformData) {
+	private EliminatePlatform(index: number) {
+		const { players, platform, eliminated } = this.platformData[index];
+		if (eliminated) return;
+		this.platformData[index].eliminated = true;
 		players.forEach((eP) => this.players.remove(this.players.findIndex((p) => p === eP)));
 		platform.SetAttribute("eliminated", true);
 		platform.Lights.Color = Color3.fromRGB(255, 0, 0);
