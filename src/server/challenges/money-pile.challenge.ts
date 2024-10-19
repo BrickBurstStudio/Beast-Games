@@ -57,12 +57,12 @@ export class MoneyPileChallenge extends BaseChallenge {
 				seconds: 5,
 				description: "Removing barrier",
 			});
-
 			this.ToggleForcefields(false);
 
 			await countdown({
 				seconds: 15,
 			});
+			if (this.GameIsOver()) break;
 
 			this.ToggleForcefields(true);
 
@@ -73,9 +73,17 @@ export class MoneyPileChallenge extends BaseChallenge {
 			} else {
 				await announce(["No one has claimed the money pile."]);
 			}
-		}
 
-		task.wait(5000);
+			if (this.GameIsOver()) break;
+		}
+	}
+
+	private GameIsOver() {
+		if (this.platformData.some((pd) => pd.eliminated)) {
+			this.platformData.forEach((pd) => pd.players.forEach((p) => this.EliminatePlayer(p)));
+			return true;
+		}
+		return false;
 	}
 
 	private ToggleForcefields(toggle: boolean) {
