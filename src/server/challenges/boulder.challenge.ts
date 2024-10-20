@@ -20,8 +20,14 @@ export class BoulderChallenge extends BaseChallenge {
 
 	// TODO: we have to test what a good finish goal for each player is
 	private readonly finishGoalPerPlayer = 3;
+	private readonly maxCPS = 10;
+	private readonly baseClimbRate = 0.001;
 	private teamProgress: number[] = [0, 0, 0, 0, 0];
+	private teamCPS: number[] = [0, 0, 0, 0, 0];
+	private teamClicks: number[] = [0, 0, 0, 0, 0];
+	private lastSecondTime: undefined | number = undefined;
 	private teamFinishGoals: number[] = [0, 0, 0, 0, 0];
+
 	private teamsCompleted = 0;
 
 	protected async Main() {
@@ -43,6 +49,15 @@ export class BoulderChallenge extends BaseChallenge {
 			// TODO: Add debounce to combat autoclicking basically they would have a max of like 10 cps or something like that
 			Events.challenges.boulderChallenge.pull.connect(async (player) => {
 				const team = player.GetAttribute("team") as number;
+				this.teamClicks[team]++;
+
+				if (this.lastSecondTime !== undefined && DateTime.now().UnixTimestamp - this.lastSecondTime >= 1) {
+					const cps = this.teamClicks[team] / (DateTime.now().UnixTimestamp - this.lastSecondTime);
+					this.teamClicks[team] = 0;
+					this.teamCPS[team] = math.clamp(cps, 0, this.maxCPS);
+					this.lastSecondTime = DateTime.now().UnixTimestamp;
+				}
+
 				// If the team has reached their goal, do nothing
 				if (this.teamProgress[team] >= this.teamFinishGoals[team]) return;
 
@@ -64,10 +79,11 @@ export class BoulderChallenge extends BaseChallenge {
 			"Disconnect",
 		);
 
-		await announce([`The last team to finish pulling the boulder will be eliminated!`]);
-		await countdown({ seconds: 5, description: "Get ready..." });
+		// await announce([`The last team to finish pulling the boulder will be eliminated!`]);
+		// await countdown({ seconds: 5, description: "Get ready..." });
 		store.setChallenge("Boulder");
 
+		this.lastSecondTime = DateTime.now().UnixTimestamp;
 		while (this.teamsCompleted < this.teamFinishGoals.size() - 1) {
 			// Update the boulder position for each team
 			this.UpdateAssetPositions();
@@ -115,15 +131,15 @@ export class BoulderChallenge extends BaseChallenge {
 					teamAssets.Boulder.Position.Z,
 				);
 				const endPos = startPos.add(new Vector3(0, 50, 0));
-				const progress = this.teamProgress[team] / this.teamFinishGoals[team];
-				boulder.Position = startPos.Lerp(endPos, progress);
+				const lerpValue = this.baseClimbRate;
+				print(lerpValue);
+				boulder.Position = boulder.Position.Lerp(endPos, lerpValue);
 			}
 			{
 				const rope = teamAssets.Rope as Part;
 				const startPos = teamAssets.Rope.GetAttribute("initialPosition") as Vector3;
 				const endPos = startPos.add(new Vector3(0, 0, -25));
-				const progress = this.teamProgress[team] / this.teamFinishGoals[team];
-				rope.Position = startPos.Lerp(endPos, progress);
+				rope.Position = startPos.Lerp(endPos, 0.1);
 			}
 		}
 	}
