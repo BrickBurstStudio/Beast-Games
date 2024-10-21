@@ -21,10 +21,11 @@ export class BoulderChallenge extends BaseChallenge {
 	// TODO: we have to test what a good finish goal for each player is
 	private readonly finishGoalPerPlayer = 3;
 	private readonly maxCPS = 10;
-	private readonly baseClimbRate = 0.001;
+	private readonly baseClimbRate = 0.0001;
 	private teamProgress: number[] = [0, 0, 0, 0, 0];
 	private teamCPS: number[] = [0, 0, 0, 0, 0];
 	private teamClicks: number[] = [0, 0, 0, 0, 0];
+	private teamsFinished: boolean[] = [false, false, false, false, false];
 	private lastSecondTime: undefined | number = undefined;
 	private teamFinishGoals: number[] = [0, 0, 0, 0, 0];
 
@@ -59,22 +60,22 @@ export class BoulderChallenge extends BaseChallenge {
 				}
 
 				// If the team has reached their goal, do nothing
-				if (this.teamProgress[team] >= this.teamFinishGoals[team]) return;
+				// if (this.teamProgress[team] >= this.teamFinishGoals[team]) return;
 
 				// Team still playing so increment their progress
-				this.teamProgress[team] += 0.1;
+				// this.teamProgress[team] += 0.1;
 
 				// Check if the team has finally reached their goal
-				if (this.teamProgress[team] < this.teamFinishGoals[team]) return;
-				this.teamsCompleted++;
+				// if (this.teamProgress[team] < this.teamFinishGoals[team]) return;
+				// this.teamsCompleted++;
 
 				// Check if all teams have finished
-				if (this.teamsCompleted >= this.teamFinishGoals.size()) return;
+				// if (this.teamsCompleted >= this.teamFinishGoals.size()) return;
 
-				Events.announcer.announce(
-					this.players.filter((p) => (p.GetAttribute("team") as number) === team),
-					[`Congratulations! Your team finished in place number ${this.teamsCompleted}!`],
-				);
+				// Events.announcer.announce(
+				// 	this.players.filter((p) => (p.GetAttribute("team") as number) === team),
+				// 	[`Congratulations! Your team finished in place number ${this.teamsCompleted}!`],
+				// );
 			}),
 			"Disconnect",
 		);
@@ -131,9 +132,15 @@ export class BoulderChallenge extends BaseChallenge {
 					teamAssets.Boulder.Position.Z,
 				);
 				const endPos = startPos.add(new Vector3(0, 50, 0));
-				const lerpValue = this.baseClimbRate;
-				print(lerpValue);
+				const lerpValue = this.baseClimbRate + this.teamCPS[team] * this.baseClimbRate * 2;
 				boulder.Position = boulder.Position.Lerp(endPos, lerpValue);
+				if (boulder.Position.sub(endPos).Magnitude < 3 && !this.teamsFinished[team]) {
+					Events.announcer.announce(
+						this.players.filter((p) => (p.GetAttribute("team") as number) === team),
+						[`Congratulations! Your team finished in place number ${++this.teamsCompleted}!`],
+					);
+					this.teamsFinished[team] = true;
+				}
 			}
 			{
 				const rope = teamAssets.Rope as Part;
