@@ -8,6 +8,7 @@ import { announce } from "server/util/announce";
 import { generatePlayerGrid } from "server/util/generatePlayerGrid";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
+import { countdown } from "server/util/countdown";
 
 export class BriefcaseChallenge extends BaseChallenge {
 	protected readonly map = ServerStorage.ChallengeMaps.BriefcaseChallenge.Clone();
@@ -88,16 +89,11 @@ export class BriefcaseChallenge extends BaseChallenge {
 
 		this.RandomizeCases();
 
-		announce([
+		await announce([
 			`Only ${cases - this.badBriefcases} cases here are safe. ${this.badBriefcases} cases are deadly.`,
-			"Once a case is touched, that player owns that case. It cannot be stolen back.",
-			"If you end up with a red case, you are eliminated.",
-			`Memorize the safe cases! You have ${this.memorizeTime} seconds until you must run for a case.`,
 		]);
-		Events.announcer.announce.broadcast(["(dev: second countdown is supposed to start now, but no implementation"]);
 		this.ToggleCases(true);
-		task.wait(this.memorizeTime);
-		task.wait(5);
+		await countdown({ seconds: this.memorizeTime, description: "Memorize the safe cases!" });
 		this.ToggleCases(false);
 		barrier.Destroy();
 
