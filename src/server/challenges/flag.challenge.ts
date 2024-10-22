@@ -9,11 +9,13 @@ import { Events } from "server/network";
 import { announce } from "server/util/announce";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge } from "./base.challenge";
+import { countdown } from "server/util/countdown";
 
 export class FlagChallenge extends BaseChallenge {
 	protected readonly map = ServerStorage.ChallengeMaps.FlagChallenge.Clone();
 	private readonly flagPoles: FlagPole[] = [];
 	private readonly components = Dependency<Components>();
+	private readonly FIELD_TIME = 30;
 
 	private undecidedPlayers: Player[] = [];
 	private playersInArena: Player[] = [];
@@ -37,13 +39,11 @@ export class FlagChallenge extends BaseChallenge {
 			!this.IsSpaceAvailableForUndecidedPlayers()
 		) {
 			this.SpawnFlags();
-			Events.announcer.countdown.broadcast({
-				description: "Once you enter the yellow area, you must claim a flag or be eliminated!",
-				seconds: 5,
-			});
-			task.wait(5);
+			await announce(["Once you enter the yellow area, you must claim a flag or be eliminated!"]);
 			this.map.ChallengeArea.StartArea.Barier.CanCollide = false;
-			this.YieldForAllSpawnedFlagsToBeClaimed();
+			countdown({ seconds: this.FIELD_TIME, description: "SECONDS LEFT!" });
+			this.YieldGameRound();
+			Events.announcer.clearCountdown.broadcast();
 			await this.MovePlayersWithClaimedFlagToEndArea();
 			await this.RemovePlayersInArena();
 			this.map.ChallengeArea.StartArea.Barier.CanCollide = true;
@@ -103,9 +103,10 @@ export class FlagChallenge extends BaseChallenge {
 		);
 	}
 
-	private YieldForAllSpawnedFlagsToBeClaimed() {
+	private YieldGameRound() {
 		// TODO: Refactor this to use `onAttributeChanged` instead of a while loop for performance reasons
-		while (this.flagPoles.size() > 0) {
+		const startTime = DateTime.now().UnixTimestamp;
+		while (this.flagPoles.size() > 0 && DateTime.now().UnixTimestamp - startTime < this.FIELD_TIME) {
 			for (const flag of this.flagPoles) {
 				const flagComponent = this.components.getComponent<FlagPoleComponent>(flag);
 				if (!flagComponent) continue;
