@@ -36,13 +36,13 @@ export class MoneyPileChallenge extends BaseChallenge {
 		this.SetupPlatforms();
 		this.SetupFloor();
 
-		await announce([
-			"Right now, there is a barrier preventing you from leaving your platform.",
-			"A pile of money will spawn in the center.",
-			"The first person to touch the money pile will receive the cash reward.",
-			"However, if you or anyone else on your platform leaves, everyone on your platform will be eliminated.",
-			"Stay on your platform to survive, or eliminate your entire platform to go for the money? You decide.",
-		]);
+		// await announce([
+		// 	"Right now, there is a barrier preventing you from leaving your platform.",
+		// 	"A pile of money will spawn in the center.",
+		// 	"The first person to touch the money pile will receive the cash reward.",
+		// 	"However, if you or anyone else on your platform leaves, everyone on your platform will be eliminated.",
+		// 	"Stay on your platform to survive, or eliminate your entire platform to go for the money? You decide.",
+		// ]);
 
 		// todo: implement second countdown in the actual description text
 
@@ -57,12 +57,12 @@ export class MoneyPileChallenge extends BaseChallenge {
 				seconds: 5,
 				description: "Removing barrier",
 			});
-
 			this.ToggleForcefields(false);
 
 			await countdown({
 				seconds: 15,
 			});
+			if (this.GameIsOver()) break;
 
 			this.ToggleForcefields(true);
 
@@ -73,17 +73,28 @@ export class MoneyPileChallenge extends BaseChallenge {
 			} else {
 				await announce(["No one has claimed the money pile."]);
 			}
-		}
 
-		task.wait(5000);
+			if (this.GameIsOver()) break;
+		}
+	}
+
+	private GameIsOver() {
+		if (this.platformData.some((pd) => pd.eliminated)) {
+			this.platformData.forEach((pd) => pd.players.forEach((p) => this.EliminatePlayer(p)));
+			return true;
+		}
+		return false;
 	}
 
 	private ToggleForcefields(toggle: boolean) {
 		this.forcefields.forEach((forcefield) => {
-			forcefield.Transparency = toggle ? 0 : 1;
+			let shouldToggle = toggle;
+			if (forcefield.Parent?.GetAttribute("eliminated")) shouldToggle = false;
+
+			forcefield.Transparency = shouldToggle ? 0 : 1;
 			forcefield.GetChildren().forEach((child) => {
 				if (child.IsA("Part")) {
-					child.CanCollide = toggle;
+					child.CanCollide = shouldToggle;
 				}
 			});
 		});
@@ -112,9 +123,9 @@ export class MoneyPileChallenge extends BaseChallenge {
 		if (!this.currentMoneyPileComponent) return;
 
 		this.currentMoneyPileComponent.claimedEvent.Event.Connect((player: Player) => {
-			const platform = this.platformData.find((pd) => !!pd.players.find((p) => p === player));
-			if (!platform) return;
-			this.EliminatePlatform(platform);
+			const index = this.platformData.findIndex((pd) => !!pd.players.find((p) => p === player));
+			if (index === -1) return;
+			this.EliminatePlatform(index);
 		});
 	}
 
@@ -132,12 +143,11 @@ export class MoneyPileChallenge extends BaseChallenge {
 			if (!this.players.find((p) => p.Name === t.Parent?.Name)) return;
 			const player = Players.GetPlayerFromCharacter(t.Parent);
 			if (!player) return;
-			const data = this.platformData.find((pd) => !!pd.players.find((p) => p === player));
-			if (!data) return;
-			if (data.eliminated) return;
-			data.eliminated = true;
+			const index = this.platformData.findIndex((pd) => !!pd.players.find((p) => p === player));
+			if (index === -1) return;
+
 			floorConnection.Disconnect();
-			this.EliminatePlatform(data);
+			this.EliminatePlatform(index);
 		});
 		this.obliterator.Add(floorConnection, "Disconnect");
 	}
@@ -152,8 +162,12 @@ export class MoneyPileChallenge extends BaseChallenge {
 		return forcefield;
 	}
 
-	private EliminatePlatform({ platform, players }: PlatformData) {
+	private EliminatePlatform(index: number) {
+		const { players, platform, eliminated } = this.platformData[index];
+		if (eliminated) return;
+		this.platformData[index].eliminated = true;
 		players.forEach((eP) => this.players.remove(this.players.findIndex((p) => p === eP)));
+		platform.SetAttribute("eliminated", true);
 		platform.Lights.Color = Color3.fromRGB(255, 0, 0);
 		platform.Lights.PointLight.Color = Color3.fromRGB(255, 0, 0);
 		(platform.Part.FindFirstChild("Buzz") as Sound)?.Play();

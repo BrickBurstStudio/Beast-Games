@@ -54,6 +54,7 @@ interface ClientEvents {
 	announcer: {
 		announce: (announcements: string[], richTextReplace?: { [key: string]: string }) => void;
 		countdown: (countdown: Countdown) => void;
+		clearCountdown: () => void;
 	};
 	quests: {
 		addQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
