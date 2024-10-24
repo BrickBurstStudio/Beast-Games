@@ -19,6 +19,7 @@ export const defaultPlayerData: PlayerData = {
 	xp: 0,
 	wins: 0,
 	playTime: 0,
+	actions: [],
 };
 
 export const defaultProfileData = { ...defaultPlayerData, quests: "{}" };

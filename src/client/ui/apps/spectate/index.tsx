@@ -21,6 +21,7 @@ function useSpectate() {
 				(p, i) => !p.GetAttribute("eliminated") && (direction === 1 ? i > index : i < index),
 			);
 			setIndex(newIndex === -1 ? Players.GetPlayers().findIndex((p) => !p.GetAttribute("eliminated")) : newIndex);
+			
 		},
 		player,
 	] as const;

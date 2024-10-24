@@ -1,5 +1,7 @@
 import { OnStart, Service } from "@flamework/core";
 import { MarketplaceService, Players, Workspace } from "@rbxts/services";
+import { store } from "server/store";
+import { ActionId, deviousLicks, divine } from "shared/configs/action";
 
 @Service()
 export class ProductService implements OnStart {
@@ -23,6 +25,9 @@ export class ProductService implements OnStart {
 		const player = Players.GetPlayerByUserId(receiptInfo.PlayerId);
 
 		if (player) {
+			if ([...divine, ...deviousLicks].some((action) => action.id === receiptInfo.ProductId))
+				store.addActionTicket(tostring(player.UserId), receiptInfo.ProductId as ActionId);
+
 			const handler = this.handlers[tostring(receiptInfo.ProductId) as unknown as keyof typeof this.handlers];
 			if (handler)
 				try {
@@ -35,7 +40,10 @@ export class ProductService implements OnStart {
 		return Enum.ProductPurchaseDecision.NotProcessedYet;
 	}
 
-	public static PromptPurchase(player: Player, devProductName: keyof typeof ProductService.devProducts) {
-		MarketplaceService.PromptProductPurchase(player, ProductService.devProducts[devProductName]);
+	public static PromptPurchase(
+		player: Player,
+		productId: ActionId | (typeof ProductService.devProducts)[keyof typeof ProductService.devProducts],
+	) {
+		MarketplaceService.PromptProductPurchase(player, productId);
 	}
 }

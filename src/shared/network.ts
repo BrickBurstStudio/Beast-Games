@@ -9,6 +9,7 @@ import { EquippableItemId, Item } from "./configs/items";
 import { Case, cases } from "./configs/items/cases";
 import { quests } from "./configs/quests";
 import { PlayerData, PlayerQuests, QuestData } from "./store/slices/players/types";
+import { ActionId, deviousLicks, divine } from "./configs/action";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -28,6 +29,7 @@ interface ServerEvents {
 			pull: () => void;
 		};
 	};
+	useAction: (args: { actionId: ActionId; toPlayer: Player }) => void;
 }
 
 interface ServerFunctions {

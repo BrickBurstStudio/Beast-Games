@@ -1,3 +1,4 @@
+import { ActionId } from "shared/configs/action";
 import { Currency } from "shared/configs/currency";
 import { EquippableItemId, EquippableItemType, ItemId, ItemType } from "shared/configs/items";
 import { quests } from "shared/configs/quests";
@@ -11,6 +12,7 @@ export interface PlayerData {
 	wins: number;
 	playTime: number;
 	quests: PlayerQuests;
+	actions: ActionId[];
 }
 
 export interface ProfileData extends Omit<PlayerData, "quests"> {
