@@ -12,7 +12,6 @@ export class OrderedPlayerData {
 	wins: BaseOrderedDataStore;
 	playTime: BaseOrderedDataStore;
 	cash: BaseOrderedDataStore;
-	gems: BaseOrderedDataStore;
 	honor: BaseOrderedDataStore;
 
 	constructor(player: Player) {
@@ -23,9 +22,6 @@ export class OrderedPlayerData {
 		});
 		this.wins = new BaseOrderedDataStore(player, "wins", (amount) =>
 			store.incrementWins(tostring(player.UserId), amount),
-		);
-		this.gems = new BaseOrderedDataStore(player, "gems", (amount) =>
-			store.changeBalance(tostring(player.UserId), "gems", amount),
 		);
 		this.cash = new BaseOrderedDataStore(player, "cash", (amount) =>
 			store.changeBalance(tostring(player.UserId), "cash", amount),

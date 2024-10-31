@@ -50,7 +50,6 @@ export class PlayerDataService implements OnInit {
 			balance: {
 				...profile.Data.balance,
 				cash: orderedPlayerData.cash.Get(),
-				gems: orderedPlayerData.gems.Get(),
 				honor: orderedPlayerData.honor.Get(),
 			},
 			quests: HttpService.JSONDecode(profile.Data.quests) as PlayerQuests,
@@ -79,10 +78,6 @@ export class PlayerDataService implements OnInit {
 		cash.Name = "💰 Cash";
 		cash.Value = initialBalance?.cash ?? 0;
 
-		const gems = new Instance("NumberValue", leaderstats);
-		gems.Name = "💎 Gems";
-		gems.Value = initialBalance?.gems ?? 0;
-
 		const honor = new Instance("NumberValue", leaderstats);
 		honor.Name = "🏆 Honor";
 		honor.Value = initialBalance?.honor ?? 0;
@@ -91,7 +86,6 @@ export class PlayerDataService implements OnInit {
 			print("Updating leaderstats", save);
 			if (!save) return;
 			cash.Value = save.cash;
-			gems.Value = save.gems;
 			honor.Value = save.honor;
 		});
 	}

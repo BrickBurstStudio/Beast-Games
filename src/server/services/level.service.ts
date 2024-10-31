@@ -34,7 +34,6 @@ export class LevelService implements OnStart {
 
 		const orderedPlayerData = new OrderedPlayerData(player);
 		orderedPlayerData.cash.UpdateBy(100_000);
-		orderedPlayerData.gems.UpdateBy(100);
 
 		Events.animations.levelUp(player, level);
 

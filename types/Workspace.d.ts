@@ -14,13 +14,6 @@ interface Workspace extends Model {
 			};
 			LeftPole: Model;
 		};
-		gems: Model & {
-			RightPole: Model;
-			Middle: Model & {
-				Face: Part;
-			};
-			LeftPole: Model;
-		};
 		wins: Model & {
 			RightPole: Model;
 			Middle: Model & {

@@ -61,12 +61,10 @@ export abstract class BaseChallenge {
 		await Promise.all(
 			this.players.map(async (player) => {
 				const cashReward = calculateReward(BaseChallenge.round, 10_000, 1.1);
-				const gemReward = calculateReward(BaseChallenge.round, 1, 1.1);
 				const xpReward = calculateReward(BaseChallenge.round, 10, 1.1);
 
 				const orderedPlayerData = new OrderedPlayerData(player);
 				orderedPlayerData.cash.UpdateBy(cashReward);
-				orderedPlayerData.gems.UpdateBy(gemReward);
 				orderedPlayerData.xp.UpdateBy(xpReward);
 			}),
 		);
