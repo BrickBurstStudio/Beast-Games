@@ -12,7 +12,6 @@ export const defaultPlayerData: PlayerData = {
 	balance: {
 		cash: 0,
 		gems: 0,
-		honor: 0,
 	},
 	quests: {},
 	items: [],

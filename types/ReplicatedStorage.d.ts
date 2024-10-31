@@ -14,7 +14,6 @@ interface ReplicatedStorage extends Instance {
 				getPlayerByName: ModuleScript;
 				createForcefield: ModuleScript;
 				calculateReward: ModuleScript;
-				getHonorTitle: ModuleScript;
 				randomColor: ModuleScript;
 				getColor3FromLevel: ModuleScript;
 				getPlayerMultiplier: ModuleScript;
