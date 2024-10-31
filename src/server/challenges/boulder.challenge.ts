@@ -16,6 +16,7 @@ const TeamColors = {
 };
 
 export class BoulderChallenge extends BaseChallenge {
+	protected readonly challengeName = "Boulder";
 	protected readonly map = ServerStorage.ChallengeMaps.BoulderChallenge.Clone();
 
 	// TODO: we have to test what a good finish goal for each player is
