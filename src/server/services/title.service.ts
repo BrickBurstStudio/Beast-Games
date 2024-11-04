@@ -4,7 +4,6 @@ import { store } from "server/store";
 import { selectPlayerBalance, selectPlayerXP } from "shared/store/selectors/players";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
-import { getHonorTitle } from "shared/utils/functions/getHonorTitle";
 import { getLevel } from "shared/utils/functions/getLevel";
 
 @Service()
@@ -20,10 +19,6 @@ export class TitleService implements OnStart {
 				titleBGUIClone.Frame.Level.Text = !!xp ? tostring(getLevel(xp)) : "N/A";
 			});
 
-			const honorUnsub = store.subscribe(selectPlayerBalance(tostring(player.UserId), "honor"), (honor) => {
-				titleBGUIClone.Honor.Text = honor !== undefined ? tostring(getHonorTitle(honor)) : "N/A";
-			});
-
 			getCharacter(player).then((character) => {
 				if (!character) return;
 				titleBGUIClone.Parent = character.Head;
@@ -34,7 +29,6 @@ export class TitleService implements OnStart {
 
 			return () => {
 				xpUnsub();
-				honorUnsub();
 			};
 		});
 	}

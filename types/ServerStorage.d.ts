@@ -23,7 +23,6 @@ interface ServerStorage extends Instance {
 					DisplayName: TextLabel;
 				};
 				Username: TextLabel;
-				Honor: TextLabel;
 			};
 		};
 	};

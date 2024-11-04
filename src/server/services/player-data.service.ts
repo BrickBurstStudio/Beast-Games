@@ -50,7 +50,6 @@ export class PlayerDataService implements OnInit {
 			balance: {
 				...profile.Data.balance,
 				cash: orderedPlayerData.cash.Get(),
-				honor: orderedPlayerData.honor.Get(),
 			},
 		});
 		this.createLeaderstats(player);
@@ -76,15 +75,10 @@ export class PlayerDataService implements OnInit {
 		cash.Name = "💰 Cash";
 		cash.Value = initialBalance?.cash ?? 0;
 
-		const honor = new Instance("NumberValue", leaderstats);
-		honor.Name = "🏆 Honor";
-		honor.Value = initialBalance?.honor ?? 0;
-
 		return store.subscribe(selectPlayerBalances(tostring(player.UserId)), (save) => {
 			print("Updating leaderstats", save);
 			if (!save) return;
 			cash.Value = save.cash;
-			honor.Value = save.honor;
 		});
 	}
 

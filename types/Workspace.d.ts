@@ -7,7 +7,6 @@ interface Workspace extends Model {
 			};
 			LeftPole: Model;
 		};
-		honor: Model & {
 			RightPole: Model;
 			Middle: Model & {
 				Face: Part;

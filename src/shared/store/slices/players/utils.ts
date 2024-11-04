@@ -11,7 +11,6 @@ export const defaultPlayerData: PlayerData = {
 	},
 	balance: {
 		cash: 0,
-		honor: 0,
 	},
 	items: [],
 	xp: 0,
