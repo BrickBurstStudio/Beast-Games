@@ -3,8 +3,8 @@ import { useSelector } from "@rbxts/react-reflex";
 import { Players, UserInputService } from "@rbxts/services";
 import { selectGuiPage, selectToolTip } from "shared/store/selectors/client";
 import AnimateEventsApp from "./animateEvents";
-import AnnouncerApp from "./announcer";
-import CountdownApp from "./countdown";
+import AnnouncerApp from "./announce/announcer";
+import CountdownApp from "./announce/countdown";
 import MenuButtonsApp from "./menu/buttons";
 import AchievementsApp from "./menu/pages/achievements";
 import InventoryApp from "./menu/pages/inventory";
@@ -13,6 +13,7 @@ import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
 import SpectateApp from "./spectate";
 import ChallengesApp from "./challenges";
+import AnnounceApp from "./announce";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);
@@ -46,10 +47,9 @@ export default function App() {
 		<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
 			{/* <RhthymApp /> */}
 			{/* <SprintApp /> */}
-			<AnnouncerApp />
 			<CurrentPage />
+			<AnnounceApp />
 			<MenuButtonsApp />
-			<CountdownApp />
 			<AnimateEventsApp />
 			{eliminated ? <SpectateApp /> : <ChallengesApp />}
 			{toolTip && <ToolTip />}
