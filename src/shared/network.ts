@@ -15,7 +15,6 @@ type updateLeaderboardsArgs = {
 	playTime: { key: string; value: number }[];
 	wins: { key: string; value: number }[];
 	cash: { key: string; value: number }[];
-	gems: { key: string; value: number }[];
 	honor: { key: string; value: number }[];
 };
 
