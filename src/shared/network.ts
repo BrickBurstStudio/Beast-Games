@@ -4,19 +4,17 @@ import { BroadcastAction } from "@rbxts/reflex";
 // import BaseItem from "shared/components/Items/BaseItem";
 
 import { Dare } from "../../types/Dare";
+import { ActionId } from "./configs/action";
 import { Currency } from "./configs/currency";
 import { EquippableItemId, Item } from "./configs/items";
 import { Case, cases } from "./configs/items/cases";
-import { quests } from "./configs/quests";
-import { PlayerData, PlayerQuests, QuestData } from "./store/slices/players/types";
-import { ActionId, deviousLicks, divine } from "./configs/action";
+import { PlayerData } from "./store/slices/players/types";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
 	playTime: { key: string; value: number }[];
 	wins: { key: string; value: number }[];
 	cash: { key: string; value: number }[];
-	gems: { key: string; value: number }[];
 };
 
 interface ServerEvents {
@@ -54,15 +52,11 @@ interface ClientEvents {
 
 	announcer: {
 		announce: (announcements: string[], richTextReplace?: { [key: string]: string }) => void;
+		announceRules: (args: { challengeName: string; rules: string[] }) => void;
 		countdown: (countdown: Countdown) => void;
 		clearCountdown: () => void;
 	};
-	quests: {
-		addQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
-		removeQuest: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
-		incrementTarget: (quest: (typeof quests)[number]["id"], questData: QuestData) => void;
-		initQuests: (quests: PlayerQuests) => void;
-	};
+
 	reflex: {
 		dispatch: (actions: Array<BroadcastAction>) => void;
 		hydrate: (actions: PlayerData) => void;

@@ -2,13 +2,13 @@
 import { OnInit, Service } from "@flamework/core";
 import ProfileService from "@rbxts/profileservice";
 import { Profile } from "@rbxts/profileservice/globals";
-import { HttpService, Players, RunService } from "@rbxts/services";
+import { Players, RunService } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 
 import { store } from "server/store";
 import { selectPlayerBalances, selectPlayerData } from "shared/store/selectors/players";
-import { PlayerData, PlayerQuests, ProfileData, QuestData } from "shared/store/slices/players/types";
-import { defaultPlayerData, defaultProfileData } from "shared/store/slices/players/utils";
+import { PlayerData } from "shared/store/slices/players/types";
+import { defaultPlayerData } from "shared/store/slices/players/utils";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
 const KEY_TEMPLATE = "%d_Data";
@@ -18,8 +18,8 @@ if (RunService.IsStudio()) DataStoreName = "Testing";
 
 @Service({})
 export class PlayerDataService implements OnInit {
-	private profileStore = ProfileService.GetProfileStore(DataStoreName, defaultProfileData);
-	private profiles = new Map<Player, Profile<ProfileData>>();
+	private profileStore = ProfileService.GetProfileStore(DataStoreName, defaultPlayerData);
+	private profiles = new Map<Player, Profile<PlayerData>>();
 
 	onInit() {
 		forEveryPlayer(
@@ -50,17 +50,14 @@ export class PlayerDataService implements OnInit {
 			balance: {
 				...profile.Data.balance,
 				cash: orderedPlayerData.cash.Get(),
-				gems: orderedPlayerData.gems.Get(),
 			},
-			quests: HttpService.JSONDecode(profile.Data.quests) as PlayerQuests,
 		});
 		this.createLeaderstats(player);
 
 		const unsubscribe = store.subscribe(selectPlayerData(tostring(player.UserId)), (save) => {
-			if (save) {
-				const jsonQuests = HttpService.JSONEncode(save.quests);
-				profile.Data = { ...save, quests: jsonQuests };
-			}
+			if (!save) return;
+
+			profile.Data = save;
 		});
 		Players.PlayerRemoving.Connect((playerBeingRemoved) => {
 			if (player === playerBeingRemoved) unsubscribe();
@@ -78,15 +75,10 @@ export class PlayerDataService implements OnInit {
 		cash.Name = "💰 Cash";
 		cash.Value = initialBalance?.cash ?? 0;
 
-		const gems = new Instance("NumberValue", leaderstats);
-		gems.Name = "💎 Gems";
-		gems.Value = initialBalance?.gems ?? 0;
-
 		return store.subscribe(selectPlayerBalances(tostring(player.UserId)), (save) => {
 			print("Updating leaderstats", save);
 			if (!save) return;
 			cash.Value = save.cash;
-			gems.Value = save.gems;
 		});
 	}
 

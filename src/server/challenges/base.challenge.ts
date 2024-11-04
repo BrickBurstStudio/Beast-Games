@@ -3,7 +3,9 @@ import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
+import { announce } from "server/util/announce";
 import { calculateReward } from "shared/utils/functions/calculateReward";
+import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
 export type SpawnCharacterArgs = {
@@ -17,11 +19,13 @@ export abstract class BaseChallenge {
 	private readonly mapLoadingTime = 2;
 	protected readonly obliterator = new Janitor();
 	protected abstract readonly map: Folder;
+	protected abstract readonly challengeName: string;
 	protected players: Player[] = [];
 	static round = 0;
 
 	public async Start() {
 		BaseChallenge.round++;
+
 		this.players = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
 
 		this.obliterator.Add(this.map, "Destroy");
@@ -31,9 +35,12 @@ export abstract class BaseChallenge {
 		await Promise.all(
 			this.players.map(async (player, i) => {
 				const character = await getCharacter(player);
+				character.Humanoid.WalkSpeed = 0;
 				this.SpawnCharacter({ player, character, i });
 			}),
 		);
+
+		await this.ExplainRulesAndStart();
 
 		await this.Main();
 		Events.announcer.announce.broadcast(["The challenge is over!"]);
@@ -46,6 +53,26 @@ export abstract class BaseChallenge {
 	protected abstract Main(): Promise<void>;
 
 	protected abstract SpawnCharacter({ player, character, i }: SpawnCharacterArgs): void;
+
+	protected async ExplainRulesAndStart() {
+		Events.announcer.announceRules.broadcast({
+			challengeName: this.challengeName,
+			rules: [
+				"You will be assigned a random team.",
+				"You must work with your team to pull the boulder to the finish line.",
+				"The last team to cross the finish line will be eliminated!",
+			],
+		});
+
+		Events.announcer.countdown.broadcast({ seconds: 3, description: "Get Ready!" });
+
+		await Promise.all(
+			this.players.map(async (player) => {
+				const character = await getCharacter(player);
+				character.Humanoid.WalkSpeed = 16;
+			}),
+		);
+	}
 
 	protected async EliminatePlayer(player: Player) {
 		if (!Players.GetChildren().includes(player)) return;
@@ -61,12 +88,10 @@ export abstract class BaseChallenge {
 		await Promise.all(
 			this.players.map(async (player) => {
 				const cashReward = calculateReward(BaseChallenge.round, 10_000, 1.1);
-				const gemReward = calculateReward(BaseChallenge.round, 1, 1.1);
 				const xpReward = calculateReward(BaseChallenge.round, 10, 1.1);
 
 				const orderedPlayerData = new OrderedPlayerData(player);
 				orderedPlayerData.cash.UpdateBy(cashReward);
-				orderedPlayerData.gems.UpdateBy(gemReward);
 				orderedPlayerData.xp.UpdateBy(xpReward);
 			}),
 		);

@@ -28,7 +28,6 @@ interface ReplicatedStorage extends Instance {
 			};
 			currency: ModuleScript;
 			announcer: ModuleScript;
-			quests: ModuleScript;
 			gui: ModuleScript;
 		};
 		components: Folder;
@@ -42,7 +41,6 @@ interface ReplicatedStorage extends Instance {
 					balance: ModuleScript;
 					playTime: ModuleScript;
 					types: ModuleScript;
-					quests: ModuleScript;
 					equipped: ModuleScript;
 					loggedIn: ModuleScript;
 				};

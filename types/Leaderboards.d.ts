@@ -4,5 +4,4 @@ type Leaderboards = Folder & {
 	wins: Leaderboard;
 
 	cash: Leaderboard;
-	gems: Leaderboard;
 };

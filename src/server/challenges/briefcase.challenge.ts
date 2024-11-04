@@ -11,6 +11,7 @@ import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 import { countdown } from "server/util/countdown";
 
 export class BriefcaseChallenge extends BaseChallenge {
+	protected readonly challengeName = "Briefcase";
 	protected readonly map = ServerStorage.ChallengeMaps.BriefcaseChallenge.Clone();
 	readonly components = Dependency<Components>();
 	readonly badBriefcases = 50;

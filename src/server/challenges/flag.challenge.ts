@@ -12,6 +12,7 @@ import { BaseChallenge } from "./base.challenge";
 import { countdown } from "server/util/countdown";
 
 export class FlagChallenge extends BaseChallenge {
+	protected readonly challengeName = "Flag";
 	protected readonly map = ServerStorage.ChallengeMaps.FlagChallenge.Clone();
 	private readonly flagPoles: FlagPole[] = [];
 	private readonly components = Dependency<Components>();

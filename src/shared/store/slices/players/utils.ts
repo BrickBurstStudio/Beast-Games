@@ -1,4 +1,4 @@
-import { PlayerData, ProfileData } from "./types";
+import { PlayerData } from "./types";
 
 export const defaultPlayerData: PlayerData = {
 	equipped: {
@@ -11,14 +11,10 @@ export const defaultPlayerData: PlayerData = {
 	},
 	balance: {
 		cash: 0,
-		gems: 0,
 	},
-	quests: {},
 	items: [],
 	xp: 0,
 	wins: 0,
 	playTime: 0,
 	actions: [],
 };
-
-export const defaultProfileData = { ...defaultPlayerData, quests: "{}" };
