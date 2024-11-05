@@ -2,13 +2,12 @@ import { Components } from "@flamework/components";
 import { Dependency } from "@flamework/core";
 import Make from "@rbxts/make";
 import { ReplicatedStorage, ServerStorage } from "@rbxts/services";
-import { BriefcaseComponent } from "../components/claim-components/briefcase.component";
-import { Events } from "server/network";
 import { announce } from "server/util/announce";
+import { countdown } from "server/util/countdown";
 import { generatePlayerGrid } from "server/util/generatePlayerGrid";
 import { getCharacter } from "shared/utils/functions/getCharacter";
+import { BriefcaseComponent } from "../components/claim-components/briefcase.component";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
-import { countdown } from "server/util/countdown";
 
 export class BriefcaseChallenge extends BaseChallenge {
 	protected readonly challengeName = "Briefcase";
@@ -101,7 +100,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 		// todo: wait until time
 		const t = DateTime.now().UnixTimestamp;
 		while (
-			!this.players.every((p) => p.UserId in this.playerSelections) &&
+			!this.playersInChallenge.every((p) => p.UserId in this.playerSelections) &&
 			DateTime.now().UnixTimestamp - t < this.runTime
 		)
 			task.wait();
@@ -130,7 +129,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 	}
 
 	private EliminatePlayers() {
-		this.players.forEach((p) => {
+		this.playersInChallenge.forEach((p) => {
 			if (this.playerSelections[p.UserId]) {
 				if (!this.playerSelections[p.UserId].attributes.safe) this.EliminatePlayer(p);
 			} else {
