@@ -1,24 +1,23 @@
+import { Components } from "@flamework/components";
+import { Dependency } from "@flamework/core";
+import { FormatStandard } from "@rbxts/format-number";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import {
-	CollectionService,
-	Players,
-	ReplicatedStorage,
-	RunService,
-	ServerStorage,
-	TweenService,
-	Workspace,
-} from "@rbxts/services";
-import { BaseChallenge } from "./base.challenge";
+import { CollectionService, Players, ReplicatedStorage, ServerStorage, Workspace } from "@rbxts/services";
+import { MoneyPileComponent } from "server/components/claim-components/money-pile.component";
 import { announce } from "server/util/announce";
 import { countdown } from "server/util/countdown";
 import createForcefield from "shared/utils/functions/createForcefield";
-import { FormatStandard } from "@rbxts/format-number";
-import { MoneyPileComponent } from "server/components/claim-components/money-pile.component";
-import { Components } from "@flamework/components";
-import { Dependency } from "@flamework/core";
+import { BaseChallenge } from "./base.challenge";
 type PlatformData = { eliminated: boolean; players: Player[]; platform: TPlatform };
 
 export class MoneyPileChallenge extends BaseChallenge {
+	protected readonly challengeName = "Money Pile";
+	protected readonly rules = [
+		"You will be assigned a random platform.",
+		"The platform with the least amount of players will be eliminated!",
+		"If there is a tie, both platforms will be eliminated!",
+	];
+
 	protected readonly map = ServerStorage.ChallengeMaps.MoneyPileChallenge.Clone();
 	readonly platforms = this.map.Platforms.GetChildren() as TPlatform[];
 	readonly floorTag = "stadium-floor" as const;
@@ -140,7 +139,7 @@ export class MoneyPileChallenge extends BaseChallenge {
 		const [floor] = CollectionService.GetTagged(this.floorTag) as Part[];
 		const floorConnection = floor.Touched.Connect((t) => {
 			if (!t.Parent?.FindFirstChildOfClass("Humanoid")) return;
-			if (!this.players.find((p) => p.Name === t.Parent?.Name)) return;
+			if (!this.playersInChallenge.find((p) => p.Name === t.Parent?.Name)) return;
 			const player = Players.GetPlayerFromCharacter(t.Parent);
 			if (!player) return;
 			const index = this.platformData.findIndex((pd) => !!pd.players.find((p) => p === player));
@@ -166,7 +165,7 @@ export class MoneyPileChallenge extends BaseChallenge {
 		const { players, platform, eliminated } = this.platformData[index];
 		if (eliminated) return;
 		this.platformData[index].eliminated = true;
-		players.forEach((eP) => this.players.remove(this.players.findIndex((p) => p === eP)));
+		players.forEach((eP) => this.playersInChallenge.remove(this.playersInChallenge.findIndex((p) => p === eP)));
 		platform.SetAttribute("eliminated", true);
 		platform.Lights.Color = Color3.fromRGB(255, 0, 0);
 		platform.Lights.PointLight.Color = Color3.fromRGB(255, 0, 0);

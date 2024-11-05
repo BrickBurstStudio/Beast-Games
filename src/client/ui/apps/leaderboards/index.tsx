@@ -41,16 +41,6 @@ const LEADERBOARDS: LeaderboardProps[] = [
 		name: "Cash",
 		leaderboardModel: leaderboardsFolder.cash,
 	},
-	{
-		datastoreName: "gems",
-		name: "Gems",
-		leaderboardModel: leaderboardsFolder.gems,
-	},
-	{
-		datastoreName: "honor",
-		name: "Honor",
-		leaderboardModel: leaderboardsFolder.honor,
-	},
 ];
 
 export default function setupLeaderboards() {
