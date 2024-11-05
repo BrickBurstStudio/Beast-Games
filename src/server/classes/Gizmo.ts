@@ -1,32 +1,22 @@
 import { Janitor } from "@rbxts/janitor";
 import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { gizmos } from "server/config/gizmos";
 
-export type GizmoProps = {
-	owner: Player;
-	name: string;
-	tool: Tool;
-	idle?: Animation;
-	activate?: Animation;
-	equip?: Animation;
-};
+export abstract class Gizmo {
+	/* -------------------------------- Abstract -------------------------------- */
+	abstract name: string;
+	abstract tool: Tool;
+	abstract activated(): void;
 
-export default class Gizmo {
-	private readonly props: GizmoProps;
-	private readonly obliterator: Janitor = new Janitor();
-	private tool: Tool;
+	/* ---------------------------------- Class --------------------------------- */
+	protected owner: Player;
+	protected obliterator = new Janitor();
 
-	constructor(props: GizmoProps) {
-		if (props.tool.PrimaryPart === undefined) throw `Gizmo tool ${props.name} has no primary part`;
-		if (props.owner.Character === undefined) throw `Gizmo owner ${props.owner.Name} has no character`;
-
-		this.props = props;
-		this.tool = props.tool.Clone();
-		this.setup();
+	constructor(owner: Player) {
+		this.owner = owner;
 	}
 
-	setup() {
+	private setupAttachments() {
 		const primary = this.tool.PrimaryPart!;
 		this.tool
 			.GetChildren()
@@ -35,32 +25,46 @@ export default class Gizmo {
 				const oldCFrame = part.CFrame;
 
 				const motor = Make("Motor6D", {
-					Parent: primary,
 					Part0: primary,
 					Part1: part,
 				});
 
-				motor.C0 = oldCFrame.ToObjectSpace(primary.CFrame);
-				part.Parent = primary;
+				motor.C0 = primary.CFrame.Inverse();
+				motor.C1 = part.CFrame.Inverse();
+
+				motor.Parent = primary;
 				part.Anchored = false;
 			});
 
 		Make("Motor6D", {
 			Parent: this.tool,
-			Part0: (this.props.owner.Character as CharacterRigR6)["Right Arm"],
+			Part0: (this.owner.Character as CharacterRigR6)["Right Arm"],
 			Part1: this.tool.PrimaryPart!,
 		});
 
 		primary.Anchored = false;
 		this.obliterator.Add(this.tool);
-		this.tool.Parent = this.props.owner.Character;
+		this.tool.Parent = this.owner.Character;
 	}
 
-	destroy() {
-		this.obliterator.Cleanup();
+	private setupEvents() {
+		this.tool.Activated.Connect(() => this.activated());
 	}
 
-	static give(player: Player, gizmoName: keyof typeof gizmos) {
-		return new Gizmo({ ...gizmos[gizmoName], owner: player });
+	private setupTool() {
+		this.tool.RequiresHandle = false;
+		this.tool.CanBeDropped = false;
+		this.tool.ManualActivationOnly = false;
+	}
+
+	private setup() {
+		this.setupAttachments();
+		this.setupEvents();
+		this.setupTool();
+		return this;
+	}
+
+	static give(owner: Player, gizmo: new (owner: Player) => Gizmo) {
+		return new gizmo(owner).setup();
 	}
 }
