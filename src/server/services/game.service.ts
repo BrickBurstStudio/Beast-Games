@@ -4,17 +4,15 @@ import { FlagChallenge } from "server/challenges/flag.challenge";
 import { MoneyPileChallenge } from "server/challenges/money-pile.challenge";
 import { ProductService } from "./product.service";
 import { Events } from "server/network";
+import { ExampleGizmo } from "server/classes/gizmos/ExampleGizmo";
+import { Gizmo } from "server/classes/Gizmo";
 
 @Service()
 export class GameService implements OnStart {
 	async onStart() {
 		while (Players.GetPlayers().size() < 1) task.wait();
 		task.wait(2);
-		// await new FlagChallenge().Start();
-		ProductService.PromptPurchase(Players.GetPlayers()[0], 2320616747);
-		task.wait(8);
-		print("purchased");
 
-		Events.useAction.predict(Players.GetPlayers()[0], { actionId: 2320616747, toPlayer: Players.GetPlayers()[0] });
+		Gizmo.give(Players.GetPlayers()[0], ExampleGizmo);
 	}
 }
