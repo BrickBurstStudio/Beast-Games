@@ -17,6 +17,11 @@ const TeamColors = {
 
 export class BoulderChallenge extends BaseChallenge {
 	protected readonly challengeName = "Boulder";
+	protected readonly rules = [
+		"You will be assigned a random team.",
+		"You must work with your team to pull the boulder to the finish line.",
+		"The last team to cross the finish line will be eliminated!",
+	];
 	protected readonly map = ServerStorage.ChallengeMaps.BoulderChallenge.Clone();
 
 	// TODO: we have to test what a good finish goal for each player is

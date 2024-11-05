@@ -20,6 +20,7 @@ export abstract class BaseChallenge {
 	protected readonly obliterator = new Janitor();
 	protected abstract readonly map: Folder;
 	protected abstract readonly challengeName: string;
+	protected abstract readonly rules: string[];
 	protected players: Player[] = [];
 	static round = 0;
 
@@ -57,11 +58,7 @@ export abstract class BaseChallenge {
 	protected async ExplainRulesAndStart() {
 		Events.announcer.announceRules.broadcast({
 			challengeName: this.challengeName,
-			rules: [
-				"You will be assigned a random team.",
-				"You must work with your team to pull the boulder to the finish line.",
-				"The last team to cross the finish line will be eliminated!",
-			],
+			rules: this.rules,
 		});
 
 		Events.announcer.countdown.broadcast({ seconds: 3, description: "Get Ready!" });

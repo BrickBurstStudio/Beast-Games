@@ -20,6 +20,12 @@ type PlatformData = { eliminated: boolean; players: Player[]; platform: TPlatfor
 
 export class MoneyPileChallenge extends BaseChallenge {
 	protected readonly challengeName = "Money Pile";
+	protected readonly rules = [
+		"You will be assigned a random platform.",
+		"The platform with the least amount of players will be eliminated!",
+		"If there is a tie, both platforms will be eliminated!",
+	];
+
 	protected readonly map = ServerStorage.ChallengeMaps.MoneyPileChallenge.Clone();
 	readonly platforms = this.map.Platforms.GetChildren() as TPlatform[];
 	readonly floorTag = "stadium-floor" as const;

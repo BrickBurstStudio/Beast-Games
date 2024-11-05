@@ -13,6 +13,12 @@ import { countdown } from "server/util/countdown";
 
 export class FlagChallenge extends BaseChallenge {
 	protected readonly challengeName = "Flag";
+	protected readonly rules = [
+		"You will be playing against 1 random player.",
+		"You must claim the flag and bring it back to your base to win!",
+		"By the end of the round the player with the least amount of flags will be eliminated!",
+		"If there is a tie, both players will be eliminated!",
+	];
 	protected readonly map = ServerStorage.ChallengeMaps.FlagChallenge.Clone();
 	private readonly flagPoles: FlagPole[] = [];
 	private readonly components = Dependency<Components>();
