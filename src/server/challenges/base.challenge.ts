@@ -3,9 +3,7 @@ import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
-import { announce } from "server/util/announce";
 import { calculateReward } from "shared/utils/functions/calculateReward";
-import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
 export type SpawnCharacterArgs = {
@@ -15,25 +13,25 @@ export type SpawnCharacterArgs = {
 };
 
 export abstract class BaseChallenge {
-	private readonly socialPeriodDuration = 30;
-	private readonly mapLoadingTime = 2;
+	private readonly mapLoadingTime = 1;
 	protected readonly obliterator = new Janitor();
 	protected abstract readonly map: Folder;
 	protected abstract readonly challengeName: string;
-	protected players: Player[] = [];
+	protected playersInChallenge: Player[] = [];
 	static round = 0;
 
 	public async Start() {
 		BaseChallenge.round++;
+		Events.animations.startChallenge.broadcast();
 
-		this.players = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
+		this.playersInChallenge = Players.GetPlayers().filter((player) => (player.GetAttribute("lives") as number) > 0);
 
 		this.obliterator.Add(this.map, "Destroy");
 		this.map.Parent = Workspace;
 		task.wait(this.mapLoadingTime);
 
 		await Promise.all(
-			this.players.map(async (player, i) => {
+			this.playersInChallenge.map(async (player, i) => {
 				const character = await getCharacter(player);
 				character.Humanoid.WalkSpeed = 0;
 				this.SpawnCharacter({ player, character, i });
@@ -46,7 +44,7 @@ export abstract class BaseChallenge {
 		Events.announcer.announce.broadcast(["The challenge is over!"]);
 		await this.RewardPlayers();
 
-		// task.wait(this.socialPeriodDuration);
+		Events.animations.endChallenge.broadcast();
 		this.obliterator.Cleanup();
 	}
 
@@ -67,7 +65,7 @@ export abstract class BaseChallenge {
 		Events.announcer.countdown.broadcast({ seconds: 3, description: "Get Ready!" });
 
 		await Promise.all(
-			this.players.map(async (player) => {
+			this.playersInChallenge.map(async (player) => {
 				const character = await getCharacter(player);
 				character.Humanoid.WalkSpeed = 16;
 			}),
@@ -79,14 +77,14 @@ export abstract class BaseChallenge {
 		if (!player.Character) return;
 		const character = await getCharacter(player);
 		character.Humanoid.Health = 0;
-		this.players.remove(this.players.findIndex((p) => p === player));
+		this.playersInChallenge.remove(this.playersInChallenge.findIndex((p) => p === player));
 		task.wait(1);
-		player.SetAttribute("eliminated", true);
+		player.SetAttribute("lives", (player.GetAttribute("lives") as number) - 1);
 	}
 
 	private async RewardPlayers() {
 		await Promise.all(
-			this.players.map(async (player) => {
+			this.playersInChallenge.map(async (player) => {
 				const cashReward = calculateReward(BaseChallenge.round, 10_000, 1.1);
 				const xpReward = calculateReward(BaseChallenge.round, 10, 1.1);
 

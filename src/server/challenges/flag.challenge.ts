@@ -23,8 +23,8 @@ export class FlagChallenge extends BaseChallenge {
 	private playersToAdvanceTarget: number = 0;
 
 	protected async Main() {
-		this.playersToAdvanceTarget = math.floor(this.players.size() * 0.8);
-		this.undecidedPlayers = [...this.players];
+		this.playersToAdvanceTarget = math.floor(this.playersInChallenge.size() * 0.8);
+		this.undecidedPlayers = [...this.playersInChallenge];
 		this.map.ChallengeArea.StartArea.Barier.Touched.Connect((otherPart) => {
 			if (this.map.ChallengeArea.StartArea.Barier.CanCollide) return;
 			const player = Players.GetPlayerFromCharacter(otherPart.Parent!);
@@ -36,7 +36,7 @@ export class FlagChallenge extends BaseChallenge {
 		});
 
 		while (
-			this.players.size() - this.undecidedPlayers.size() < this.playersToAdvanceTarget &&
+			this.playersInChallenge.size() - this.undecidedPlayers.size() < this.playersToAdvanceTarget &&
 			!this.IsSpaceAvailableForUndecidedPlayers()
 		) {
 			this.SpawnFlags();
@@ -54,9 +54,9 @@ export class FlagChallenge extends BaseChallenge {
 
 	private IsSpaceAvailableForUndecidedPlayers() {
 		print("Players to advance target", this.playersToAdvanceTarget);
-		print("Players size", this.players.size());
+		print("Players size", this.playersInChallenge.size());
 		print("Undecided players size", this.undecidedPlayers.size());
-		if (this.playersToAdvanceTarget - this.players.size() >= 0) {
+		if (this.playersToAdvanceTarget - this.playersInChallenge.size() >= 0) {
 			this.undecidedPlayers.forEach((player) => this.MovePlayerToEndArea(player));
 			announce(["There is space for everyone left to advance! Congratulations!"]);
 			return true;
@@ -123,7 +123,7 @@ export class FlagChallenge extends BaseChallenge {
 	private SpawnFlags() {
 		const flagsThisRound = math.min(
 			math.random(1, math.floor(Players.GetPlayers().size() / 2)),
-			this.playersToAdvanceTarget - (this.players.size() - this.undecidedPlayers.size()),
+			this.playersToAdvanceTarget - (this.playersInChallenge.size() - this.undecidedPlayers.size()),
 		);
 
 		for (let i = 0; i < flagsThisRound; i++) {

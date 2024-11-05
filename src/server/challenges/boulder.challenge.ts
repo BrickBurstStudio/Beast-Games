@@ -3,7 +3,6 @@ import { ServerStorage } from "@rbxts/services";
 import { Events } from "server/network";
 import { store } from "server/store";
 import { announce } from "server/util/announce";
-import { countdown } from "server/util/countdown";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 
@@ -34,7 +33,7 @@ export class BoulderChallenge extends BaseChallenge {
 
 	protected async Main() {
 		await Promise.all(
-			this.players.map(async (player) => {
+			this.playersInChallenge.map(async (player) => {
 				this.teamFinishGoals[player.GetAttribute("team") as number] =
 					this.teamFinishGoals[player.GetAttribute("team") as number] + this.finishGoalPerPlayer;
 			}),
@@ -110,7 +109,7 @@ export class BoulderChallenge extends BaseChallenge {
 		});
 
 		Promise.all(
-			this.players
+			this.playersInChallenge
 				.filter((player) => player.GetAttribute("team") === losingTeam)
 				.map((player) => this.EliminatePlayer(player)),
 		);
@@ -137,7 +136,7 @@ export class BoulderChallenge extends BaseChallenge {
 				boulder.Position = boulder.Position.Lerp(endPos, lerpValue);
 				if (boulder.Position.sub(endPos).Magnitude < 3 && !this.teamsFinished[team]) {
 					Events.announcer.announce(
-						this.players.filter((p) => (p.GetAttribute("team") as number) === team),
+						this.playersInChallenge.filter((p) => (p.GetAttribute("team") as number) === team),
 						[`Congratulations! Your team finished in place number ${++this.teamsCompleted}!`],
 					);
 					this.teamsFinished[team] = true;
@@ -174,7 +173,7 @@ export class BoulderChallenge extends BaseChallenge {
 
 	protected async CleanUp() {
 		return Promise.all(
-			this.players.map(async (player) => {
+			this.playersInChallenge.map(async (player) => {
 				const character = await getCharacter(player);
 
 				character.Humanoid.WalkSpeed = 16;
