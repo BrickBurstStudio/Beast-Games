@@ -7,7 +7,6 @@ interface ReplicatedStorage extends Instance {
 				randomNumbers: ModuleScript;
 				getColor3FromLevel: ModuleScript;
 				objectKeys: ModuleScript;
-				getHonorTitle: ModuleScript;
 				tweenUtil: ModuleScript;
 				toTitleCase: ModuleScript;
 				calculateReward: ModuleScript;
@@ -30,7 +29,6 @@ interface ReplicatedStorage extends Instance {
 			currency: ModuleScript;
 			action: ModuleScript;
 			announcer: ModuleScript;
-			quests: ModuleScript;
 			gui: ModuleScript;
 		};
 		store: ModuleScript & {
@@ -42,7 +40,6 @@ interface ReplicatedStorage extends Instance {
 					items: ModuleScript;
 					balance: ModuleScript;
 					playTime: ModuleScript;
-					quests: ModuleScript;
 					xp: ModuleScript;
 					types: ModuleScript;
 					equipped: ModuleScript;
@@ -61,13 +58,17 @@ interface ReplicatedStorage extends Instance {
 	};
 	Assets: Folder & {
 		Sounds: Folder & {
-			Boom: Sound;
-			Countdown1: Sound;
+			UnboxCommon: Sound;
 			Countdown2: Sound;
-			Character: Sound;
 			Buzz: Sound & {
 				PitchShiftSoundEffect: PitchShiftSoundEffect;
 			};
+			Character: Sound;
+			Countdown1: Sound;
+			BabyBoy: Sound;
+			UnboxRare: Sound;
+			UnboxLegendary: Sound;
+			Boom: Sound;
 		};
 		Accessory: Accessory & {
 			Handle: Part & {
@@ -77,6 +78,7 @@ interface ReplicatedStorage extends Instance {
 			};
 		};
 		Animations: Folder & {
+			PugilActivated: Animation;
 			PugilIdle: Animation;
 		};
 		Objects: Folder & {

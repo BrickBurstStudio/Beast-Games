@@ -80,6 +80,11 @@ interface ClientEvents {
 	createChallenge: (name: string) => void;
 
 	animateUnboxing: (args: { targetPlayer: Player; caseObject: Case; item: Item }) => void;
+
+	animationController: {
+		play: (animation: Animation) => void;
+		stop: (animation: Animation) => void;
+	};
 }
 
 interface ClientFunctions {}

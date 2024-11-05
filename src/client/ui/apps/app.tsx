@@ -32,7 +32,7 @@ export default function App() {
 	const toolTip = useSelector(selectToolTip);
 
 	const [eliminated, setEliminated] = React.useState(false);
-	const [blackScreenActive, setBlackScreenActive] = React.useState(true);
+	const [blackScreenActive, setBlackScreenActive] = React.useState(false);
 
 	useEffect(() => {
 		const player = Players.LocalPlayer;

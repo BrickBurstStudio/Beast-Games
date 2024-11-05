@@ -1,6 +1,7 @@
 import { Janitor } from "@rbxts/janitor";
 import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
+import { Events } from "server/network";
 
 export abstract class Gizmo {
 	/* -------------------------------- Abstract -------------------------------- */
@@ -8,6 +9,7 @@ export abstract class Gizmo {
 	abstract tool: Tool;
 	abstract animations: Partial<{
 		idle: Animation;
+		activated: Animation;
 	}>;
 	abstract activated(): void;
 
@@ -51,7 +53,14 @@ export abstract class Gizmo {
 	}
 
 	private setupEvents() {
-		this.tool.Activated.Connect(() => this.activated());
+		this.tool.Activated.Connect(() => {
+			if (this.animations.activated) Events.animationController.play(this.owner, this.animations.activated);
+			this.activated();
+		});
+
+		this.tool.Equipped.Connect(() => {
+			if (this.animations.idle) Events.animationController.play(this.owner, this.animations.idle);
+		});
 	}
 
 	private setupTool() {
@@ -64,6 +73,8 @@ export abstract class Gizmo {
 		this.setupAttachments();
 		this.setupEvents();
 		this.setupTool();
+
+		if (this.animations.idle) Events.animationController.play(this.owner, this.animations.idle);
 		return this;
 	}
 

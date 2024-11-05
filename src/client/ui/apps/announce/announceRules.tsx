@@ -8,14 +8,10 @@ import { setTimeout } from "@rbxts/set-timeout";
 const padding = 50;
 
 export default function AnnounceRules() {
-	const [rules, setRules] = useState<string[]>([
-		"You can only use the tools provided.",
-		"You can only use the tools provided.",
-		"You can only use the tools provided.",
-	]);
+	const [rules, setRules] = useState<string[]>([]);
 	const [challengeName, setChallengeName] = useState("BOULDER PULL");
 
-	const [hide, setHide] = useState(false);
+	const [hide, setHide] = useState(true);
 
 	useEffect(() => {
 		Events.announcer.announceRules.connect(({ challengeName, rules }) => {
