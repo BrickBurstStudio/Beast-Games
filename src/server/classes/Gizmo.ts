@@ -6,6 +6,9 @@ export abstract class Gizmo {
 	/* -------------------------------- Abstract -------------------------------- */
 	abstract name: string;
 	abstract tool: Tool;
+	abstract animations: Partial<{
+		idle: Animation;
+	}>;
 	abstract activated(): void;
 
 	/* ---------------------------------- Class --------------------------------- */

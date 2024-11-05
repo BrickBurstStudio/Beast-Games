@@ -1,7 +1,8 @@
-import { ServerStorage } from "@rbxts/services";
+import { ReplicatedStorage, ServerStorage } from "@rbxts/services";
 import { Gizmo } from "../Gizmo";
 
 export class Pugil extends Gizmo {
+	animations = { idle: ReplicatedStorage.Assets.Animations.PugilIdle };
 	name = "Pugil";
 	tool = ServerStorage.Assets.Gizmos.Pugil;
 
