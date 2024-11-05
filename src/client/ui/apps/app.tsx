@@ -14,6 +14,8 @@ import TradingApp from "./menu/pages/trading";
 import SpectateApp from "./spectate";
 import ChallengesApp from "./challenges";
 import AnnounceApp from "./announce";
+import { Events } from "client/network";
+import motion from "@rbxts/react-motion";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);
@@ -30,16 +32,26 @@ export default function App() {
 	const toolTip = useSelector(selectToolTip);
 
 	const [eliminated, setEliminated] = React.useState(false);
+	const [blackScreenActive, setBlackScreenActive] = React.useState(true);
 
 	useEffect(() => {
 		const player = Players.LocalPlayer;
 
-		const connection = player.GetAttributeChangedSignal("eliminated").Connect(() => {
-			print("eliminated changed");
-			setEliminated(player.GetAttribute("eliminated") === true);
-		});
+		const connections = [
+			player.GetAttributeChangedSignal("lives").Connect(() => {
+				setEliminated(player.GetAttribute("lives") === 0);
+			}),
+
+			Events.animations.startChallenge.connect(() => {
+				setBlackScreenActive(false);
+			}),
+
+			Events.animations.endChallenge.connect(() => {
+				setBlackScreenActive(true);
+			}),
+		];
 		return () => {
-			connection.Disconnect();
+			connections.forEach((c) => c.Disconnect());
 		};
 	}, []);
 
@@ -53,6 +65,14 @@ export default function App() {
 			<AnimateEventsApp />
 			{eliminated ? <SpectateApp /> : <ChallengesApp />}
 			{toolTip && <ToolTip />}
+			<motion.frame
+				transition={{ duration: 1 }}
+				animate={{
+					BackgroundTransparency: blackScreenActive ? 0 : 1,
+				}}
+				Size={UDim2.fromScale(1, 1)}
+				BackgroundColor3={Color3.fromRGB(0, 0, 0)}
+			/>
 		</frame>
 	);
 }
