@@ -18,7 +18,6 @@ export class AnimationController implements OnInit {
 		});
 
 		Events.animationController.play.connect((animation) => {
-			print(animation);
 			this.tracks.get(animation)?.Play();
 		});
 

@@ -1,12 +1,14 @@
 import { Janitor } from "@rbxts/janitor";
 import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { debounce } from "@rbxts/set-timeout";
+import { debounce, Debounced } from "@rbxts/set-timeout";
 import { Events } from "server/network";
-export abstract class Gizmo {
-	/* ------------------------------ Configurable ------------------------------ */
-	protected ACTIVATED_INTERVAL = 0.5;
 
+type GizmoConfigs = {
+	activatedInterval?: number;
+};
+
+export abstract class Gizmo {
 	/* -------------------------------- Abstract -------------------------------- */
 	abstract name: string;
 	abstract tool: Tool;
@@ -19,10 +21,15 @@ export abstract class Gizmo {
 	/* ---------------------------------- Class --------------------------------- */
 	protected owner: Player;
 	protected obliterator = new Janitor();
-	private activatedDebounce;
+	protected readonly activatedDebounce: Debounced<() => void>;
 
-	constructor(owner: Player) {
+	/* ------------------------------ Configurable ------------------------------ */
+	// Default values here
+	protected ACTIVATED_INTERVAL = 0.5;
+
+	constructor(owner: Player, configs: GizmoConfigs = {}) {
 		this.owner = owner;
+		this.ACTIVATED_INTERVAL = configs.activatedInterval ?? this.ACTIVATED_INTERVAL;
 
 		this.activatedDebounce = debounce(
 			() => {
@@ -40,8 +47,6 @@ export abstract class Gizmo {
 			.GetChildren()
 			.filter((c): c is BasePart => c.IsA("BasePart") && c !== primary)
 			.forEach((part) => {
-				const oldCFrame = part.CFrame;
-
 				const motor = Make("Motor6D", {
 					Part0: primary,
 					Part1: part,
@@ -83,7 +88,9 @@ export abstract class Gizmo {
 		this.tool.ManualActivationOnly = false;
 
 		this.tool.GetChildren().forEach((child) => {
-			if (child.IsA("BasePart")) child.CanCollide = false;
+			if (!child.IsA("BasePart")) return;
+			child.Massless = true;
+			child.CanCollide = false;
 		});
 	}
 

@@ -7,12 +7,14 @@ interface ReplicatedStorage extends Instance {
 				randomNumbers: ModuleScript;
 				getColor3FromLevel: ModuleScript;
 				objectKeys: ModuleScript;
+				spawnSound: ModuleScript;
+				getPlayerByName: ModuleScript;
 				tweenUtil: ModuleScript;
 				toTitleCase: ModuleScript;
 				calculateReward: ModuleScript;
 				getPlayerMultiplier: ModuleScript;
 				createForcefield: ModuleScript;
-				getPlayerByName: ModuleScript;
+				isCharacterPart: ModuleScript;
 				getCharacter: ModuleScript;
 				randomColor: ModuleScript;
 				forEveryPlayer: ModuleScript;
@@ -63,10 +65,12 @@ interface ReplicatedStorage extends Instance {
 			Buzz: Sound & {
 				PitchShiftSoundEffect: PitchShiftSoundEffect;
 			};
+			PugilHit: Sound;
 			Character: Sound;
 			Countdown1: Sound;
 			BabyBoy: Sound;
 			UnboxRare: Sound;
+			PugilSwing: Sound;
 			UnboxLegendary: Sound;
 			Boom: Sound;
 		};
