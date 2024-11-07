@@ -24,7 +24,7 @@ export class BoulderChallenge extends BaseChallenge {
 	protected readonly map = ServerStorage.ChallengeMaps.BoulderChallenge.Clone();
 
 	// TODO: we have to test what a good finish goal for each player is
-	private readonly finishGoalPerPlayer = 3;
+	private readonly finishGoalPerPlayer = 1;
 	private readonly maxCPS = 10;
 	private readonly baseClimbRate = 0.0001;
 	private teamProgress: number[] = [0, 0, 0, 0, 0];
