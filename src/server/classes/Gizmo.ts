@@ -1,9 +1,12 @@
 import { Janitor } from "@rbxts/janitor";
 import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
+import { debounce } from "@rbxts/set-timeout";
 import { Events } from "server/network";
-
 export abstract class Gizmo {
+	/* ------------------------------ Configurable ------------------------------ */
+	protected ACTIVATED_INTERVAL = 0.5;
+
 	/* -------------------------------- Abstract -------------------------------- */
 	abstract name: string;
 	abstract tool: Tool;
@@ -16,9 +19,19 @@ export abstract class Gizmo {
 	/* ---------------------------------- Class --------------------------------- */
 	protected owner: Player;
 	protected obliterator = new Janitor();
+	private activatedDebounce;
 
 	constructor(owner: Player) {
 		this.owner = owner;
+
+		this.activatedDebounce = debounce(
+			() => {
+				if (this.animations.activated) Events.animationController.play(this.owner, this.animations.activated);
+				this.activated();
+			},
+			this.ACTIVATED_INTERVAL,
+			{ leading: true, trailing: false },
+		);
 	}
 
 	private setupAttachments() {
@@ -53,13 +66,14 @@ export abstract class Gizmo {
 	}
 
 	private setupEvents() {
-		this.tool.Activated.Connect(() => {
-			if (this.animations.activated) Events.animationController.play(this.owner, this.animations.activated);
-			this.activated();
-		});
+		this.tool.Activated.Connect(() => this.activatedDebounce());
 
 		this.tool.Equipped.Connect(() => {
 			if (this.animations.idle) Events.animationController.play(this.owner, this.animations.idle);
+		});
+
+		this.tool.Unequipped.Connect(() => {
+			if (this.animations.idle) Events.animationController.stop(this.owner, this.animations.idle);
 		});
 	}
 
@@ -67,6 +81,10 @@ export abstract class Gizmo {
 		this.tool.RequiresHandle = false;
 		this.tool.CanBeDropped = false;
 		this.tool.ManualActivationOnly = false;
+
+		this.tool.GetChildren().forEach((child) => {
+			if (child.IsA("BasePart")) child.CanCollide = false;
+		});
 	}
 
 	private setup() {
