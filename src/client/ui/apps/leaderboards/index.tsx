@@ -47,7 +47,7 @@ export default function setupLeaderboards() {
 	LEADERBOARDS.forEach((leaderboard) => {
 		const leaderboardName = leaderboard.name || leaderboard.datastoreName;
 
-		const leaderboardPart = leaderboard.leaderboardModel.Middle.Face;
+		const leaderboardPart = leaderboard.leaderboardModel.Middle.WaitForChild("Face") as BasePart;
 
 		// TODO: make this a react component, like what we did with ScreenGui
 		const leaderboardGui = new Instance("SurfaceGui", Players.LocalPlayer.WaitForChild("PlayerGui"));
