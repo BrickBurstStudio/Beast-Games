@@ -4,19 +4,21 @@ interface ReplicatedStorage extends Instance {
 		utils: Folder & {
 			["object-utils"]: ModuleScript;
 			functions: Folder & {
-				tweenUtil: ModuleScript;
-				forEveryPlayer: ModuleScript;
-				objectKeys: ModuleScript;
-				getLevel: ModuleScript;
 				randomNumbers: ModuleScript;
-				toTitleCase: ModuleScript;
-				getCharacter: ModuleScript;
-				getPlayerByName: ModuleScript;
-				createForcefield: ModuleScript;
-				calculateReward: ModuleScript;
-				randomColor: ModuleScript;
 				getColor3FromLevel: ModuleScript;
+				objectKeys: ModuleScript;
+				spawnSound: ModuleScript;
+				getPlayerByName: ModuleScript;
+				tweenUtil: ModuleScript;
+				toTitleCase: ModuleScript;
+				calculateReward: ModuleScript;
 				getPlayerMultiplier: ModuleScript;
+				createForcefield: ModuleScript;
+				isCharacterPart: ModuleScript;
+				getCharacter: ModuleScript;
+				randomColor: ModuleScript;
+				forEveryPlayer: ModuleScript;
+				getLevel: ModuleScript;
 			};
 		};
 		network: ModuleScript;
@@ -27,19 +29,20 @@ interface ReplicatedStorage extends Instance {
 				emotes: ModuleScript;
 			};
 			currency: ModuleScript;
+			action: ModuleScript;
 			announcer: ModuleScript;
 			gui: ModuleScript;
 		};
-		components: Folder;
 		store: ModuleScript & {
 			slices: Folder & {
 				players: ModuleScript & {
 					utils: ModuleScript;
 					wins: ModuleScript;
-					xp: ModuleScript;
+					actionTickets: ModuleScript;
 					items: ModuleScript;
 					balance: ModuleScript;
 					playTime: ModuleScript;
+					xp: ModuleScript;
 					types: ModuleScript;
 					equipped: ModuleScript;
 					loggedIn: ModuleScript;
@@ -53,8 +56,35 @@ interface ReplicatedStorage extends Instance {
 				client: ModuleScript;
 			};
 		};
+		components: Folder;
 	};
 	Assets: Folder & {
+		Sounds: Folder & {
+			UnboxCommon: Sound;
+			Countdown2: Sound;
+			Buzz: Sound & {
+				PitchShiftSoundEffect: PitchShiftSoundEffect;
+			};
+			PugilHit: Sound;
+			Character: Sound;
+			Countdown1: Sound;
+			BabyBoy: Sound;
+			UnboxRare: Sound;
+			PugilSwing: Sound;
+			UnboxLegendary: Sound;
+			Boom: Sound;
+		};
+		Accessory: Accessory & {
+			Handle: Part & {
+				HatAttachment: Attachment;
+				Mesh: SpecialMesh;
+				TouchInterest: TouchTransmitter;
+			};
+		};
+		Animations: Folder & {
+			PugilActivated: Animation;
+			PugilIdle: Animation;
+		};
 		Objects: Folder & {
 			MediumMoney: Model & {
 				Part: Part & {
@@ -102,26 +132,6 @@ interface ReplicatedStorage extends Instance {
 				WeldConstraint: WeldConstraint;
 				Pole: Part;
 			};
-		};
-		Accessory: Accessory & {
-			Handle: Part & {
-				HatAttachment: Attachment;
-				Mesh: SpecialMesh;
-				TouchInterest: TouchTransmitter;
-			};
-		};
-		Sounds: Folder & {
-			UnboxCommon: Sound;
-			Countdown2: Sound;
-			Buzz: Sound & {
-				PitchShiftSoundEffect: PitchShiftSoundEffect;
-			};
-			Boom: Sound;
-			Countdown1: Sound;
-			BabyBoy: Sound;
-			UnboxRare: Sound;
-			UnboxLegendary: Sound;
-			Character: Sound;
 		};
 		Gui: Folder & {
 			DollarBGUI: BillboardGui & {
@@ -230,6 +240,10 @@ interface ReplicatedStorage extends Instance {
 						ControlTypings: Folder;
 						Typing: Folder;
 					};
+				};
+				RegExp: ModuleScript & {
+					RegEx: ModuleScript;
+					["Regexp.global"]: ModuleScript;
 				};
 				["react-roblox"]: ModuleScript;
 				["object-utils"]: ModuleScript;

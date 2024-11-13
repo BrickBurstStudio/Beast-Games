@@ -1,66 +1,109 @@
 import { Janitor } from "@rbxts/janitor";
 import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { gizmos } from "server/config/gizmos";
+import { debounce, Debounced } from "@rbxts/set-timeout";
+import { Events } from "server/network";
 
-export type GizmoProps = {
-	owner: Player;
-	name: string;
-	tool: Tool;
-	idle?: Animation;
-	activate?: Animation;
-	equip?: Animation;
+type GizmoConfigs = {
+	activatedInterval?: number;
 };
 
-export default class Gizmo {
-	private readonly props: GizmoProps;
-	private readonly obliterator: Janitor = new Janitor();
-	private tool: Tool;
+export abstract class Gizmo {
+	/* -------------------------------- Abstract -------------------------------- */
+	abstract name: string;
+	abstract tool: Tool;
+	abstract animations: Partial<{
+		idle: Animation;
+		activated: Animation;
+	}>;
+	abstract activated(): void;
 
-	constructor(props: GizmoProps) {
-		if (props.tool.PrimaryPart === undefined) throw `Gizmo tool ${props.name} has no primary part`;
-		if (props.owner.Character === undefined) throw `Gizmo owner ${props.owner.Name} has no character`;
+	/* ---------------------------------- Class --------------------------------- */
+	protected owner: Player;
+	protected obliterator = new Janitor();
+	protected readonly activatedDebounce: Debounced<() => void>;
 
-		this.props = props;
-		this.tool = props.tool.Clone();
-		this.setup();
+	/* ------------------------------ Configurable ------------------------------ */
+	// Default values here
+	protected ACTIVATED_INTERVAL = 0.5;
+
+	constructor(owner: Player, configs: GizmoConfigs = {}) {
+		this.owner = owner;
+		this.ACTIVATED_INTERVAL = configs.activatedInterval ?? this.ACTIVATED_INTERVAL;
+
+		this.activatedDebounce = debounce(
+			() => {
+				if (this.animations.activated) Events.animationController.play(this.owner, this.animations.activated);
+				this.activated();
+			},
+			this.ACTIVATED_INTERVAL,
+			{ leading: true, trailing: false },
+		);
 	}
 
-	setup() {
+	private setupAttachments() {
 		const primary = this.tool.PrimaryPart!;
 		this.tool
 			.GetChildren()
 			.filter((c): c is BasePart => c.IsA("BasePart") && c !== primary)
 			.forEach((part) => {
-				const oldCFrame = part.CFrame;
-
 				const motor = Make("Motor6D", {
-					Parent: primary,
 					Part0: primary,
 					Part1: part,
 				});
 
-				motor.C0 = oldCFrame.ToObjectSpace(primary.CFrame);
-				part.Parent = primary;
+				motor.C0 = primary.CFrame.Inverse();
+				motor.C1 = part.CFrame.Inverse();
+
+				motor.Parent = primary;
 				part.Anchored = false;
 			});
 
 		Make("Motor6D", {
 			Parent: this.tool,
-			Part0: (this.props.owner.Character as CharacterRigR6)["Right Arm"],
+			Part0: (this.owner.Character as CharacterRigR6)["Right Arm"],
 			Part1: this.tool.PrimaryPart!,
 		});
 
 		primary.Anchored = false;
 		this.obliterator.Add(this.tool);
-		this.tool.Parent = this.props.owner.Character;
+		this.tool.Parent = this.owner.Character;
 	}
 
-	destroy() {
-		this.obliterator.Cleanup();
+	private setupEvents() {
+		this.tool.Activated.Connect(() => this.activatedDebounce());
+
+		this.tool.Equipped.Connect(() => {
+			if (this.animations.idle) Events.animationController.play(this.owner, this.animations.idle);
+		});
+
+		this.tool.Unequipped.Connect(() => {
+			if (this.animations.idle) Events.animationController.stop(this.owner, this.animations.idle);
+		});
 	}
 
-	static give(player: Player, gizmoName: keyof typeof gizmos) {
-		return new Gizmo({ ...gizmos[gizmoName], owner: player });
+	private setupTool() {
+		this.tool.RequiresHandle = false;
+		this.tool.CanBeDropped = false;
+		this.tool.ManualActivationOnly = false;
+
+		this.tool.GetChildren().forEach((child) => {
+			if (!child.IsA("BasePart")) return;
+			child.Massless = true;
+			child.CanCollide = false;
+		});
+	}
+
+	private setup() {
+		this.setupAttachments();
+		this.setupEvents();
+		this.setupTool();
+
+		if (this.animations.idle) Events.animationController.play(this.owner, this.animations.idle);
+		return this;
+	}
+
+	static give(owner: Player, gizmo: new (owner: Player) => Gizmo) {
+		return new gizmo(owner).setup();
 	}
 }

@@ -2,7 +2,9 @@ interface ServerStorage extends Instance {
 	Assets: Folder & {
 		Gizmos: Folder & {
 			Pugil: Tool & {
+				Side1: UnionOperation;
 				Base: UnionOperation;
+				Side2: UnionOperation;
 			};
 			ExampleGizmo: Tool & {
 				Base: Part;
@@ -36,11 +38,7 @@ interface ServerStorage extends Instance {
 	};
 	__Rojo_SessionLock: ObjectValue;
 	Tool: Tool;
-	RBX_ANIMSAVES: Model & {
-		Rig: ObjectValue & {
-			["Automatic Save"]: KeyframeSequence;
-		};
-	};
+	RBX_ANIMSAVES: Model;
 	ChallengeMaps: Folder & {
 		BriefcaseChallenge: Folder & {
 			Briefcases: Model;
