@@ -42,13 +42,7 @@ export default function App() {
 				setEliminated(player.GetAttribute("lives") === 0);
 			}),
 
-			Events.animations.startChallenge.connect(() => {
-				setBlackScreenActive(false);
-			}),
-
-			Events.animations.endChallenge.connect(() => {
-				setBlackScreenActive(true);
-			}),
+			Events.animations.setBlackFade.connect(setBlackScreenActive),
 		];
 		return () => {
 			connections.forEach((c) => c.Disconnect());
@@ -66,7 +60,10 @@ export default function App() {
 			{eliminated ? <SpectateApp /> : <ChallengesApp />}
 			{toolTip && <ToolTip />}
 			<motion.frame
-				transition={{ duration: 1 }}
+				transition={{ duration: 0.25 }}
+				initial={{
+					BackgroundTransparency: 1,
+				}}
 				animate={{
 					BackgroundTransparency: blackScreenActive ? 0 : 1,
 				}}
