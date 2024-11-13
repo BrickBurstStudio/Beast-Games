@@ -44,9 +44,6 @@ interface ServerStorage extends Instance {
 			Briefcases: Model;
 			Baseplate: Part;
 		};
-		MoneyPileChallenge: Folder & {
-			Platforms: Model;
-		};
 		BoulderChallenge: Folder & {
 			["1"]: Folder & {
 				Rope: Part;
@@ -68,6 +65,12 @@ interface ServerStorage extends Instance {
 				Rope: Part;
 				Boulder: Part;
 			};
+		};
+		MoneyPileChallenge: Folder & {
+			Platforms: Model;
+		};
+		PugilChallenge: Folder & {
+			Spawns: Folder;
 		};
 		FlagChallenge: Folder & {
 			ChallengeArea: Model & {
