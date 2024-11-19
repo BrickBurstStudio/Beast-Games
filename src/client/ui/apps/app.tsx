@@ -34,19 +34,15 @@ export default function App() {
 	const [blackScreenActive, setBlackScreenActive] = React.useState(false);
 
 	useEffect(() => {
-		const connections = [
-			Events.animations.startChallenge.connect(() => {
-				setBlackScreenActive(false);
-			}),
-
-			Events.animations.endChallenge.connect(() => {
-				setBlackScreenActive(true);
-			}),
-		];
+		const connections = [Events.animations.setBlackFade.connect(setBlackScreenActive)];
 		return () => {
 			connections.forEach((c) => c.Disconnect());
 		};
 	}, []);
+
+	useEffect(() => {
+		if (spectating) setBlackScreenActive(false);
+	}, [spectating]);
 
 	return (
 		<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
@@ -59,7 +55,7 @@ export default function App() {
 			{spectating ? <SpectateApp /> : <ChallengesApp />}
 			{toolTip && <ToolTip />}
 			<motion.frame
-				transition={{ duration: 1 }}
+				transition={{ duration: 0.25 }}
 				animate={{
 					BackgroundTransparency: blackScreenActive ? 0 : 1,
 				}}
