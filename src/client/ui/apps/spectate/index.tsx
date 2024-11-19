@@ -1,27 +1,21 @@
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import React, { useEffect, useState } from "@rbxts/react";
+import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { reverseArray } from "@rbxts/reverse-array";
 import { Players, RunService, Workspace } from "@rbxts/services";
 import { px } from "client/ui/utils/usePx";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
 function useSpectate() {
-	const [index, setIndex] = useState(0);
+	const index = useRef(0);
 	const [player, setPlayer] = useState<Player>();
-
-	useEffect(() => {
-		const player = Players.GetPlayers()[index];
-		Workspace.CurrentCamera!.CameraSubject = (player.Character as CharacterRigR6)?.Head;
-		setPlayer(player);
-	}, [index]);
 
 	return [
 		(direction: 1 | -1) => {
-			const newIndex = Players.GetPlayers().findIndex(
-				(p, i) => !p.GetAttribute("eliminated") && (direction === 1 ? i > index : i < index),
-			);
-			setIndex(newIndex === -1 ? Players.GetPlayers().findIndex((p) => !p.GetAttribute("eliminated")) : newIndex);
-			
+			index.current += direction;
+			const spectatablePlayers = Players.GetPlayers().filter((p) => p.Character !== undefined);
+			const player = spectatablePlayers[index.current % spectatablePlayers.size()];
+			Workspace.CurrentCamera!.CameraSubject = (player.Character as CharacterRigR6)?.Head;
+			setPlayer(player);
 		},
 		player,
 	] as const;
@@ -32,13 +26,17 @@ export default function SpectateApp() {
 
 	return (
 		<frame
-			BackgroundTransparency={0}
+			BackgroundTransparency={1}
+			BackgroundColor3={Color3.fromRGB(255, 255, 255)}
+			AnchorPoint={new Vector2(0.5, 1)}
+			Position={new UDim2(0, px(250), 0.95, 0)}
+			// Size={UDim2.fromOffset(px(200), px(200))}
 			AutomaticSize={"XY"}
-			Position={new UDim2(0.95, 0, 1, 0)}
-			AnchorPoint={new Vector2(1, 1)}
 		>
 			<uilistlayout FillDirection={"Horizontal"} />
 			<textbutton
+				BackgroundTransparency={1}
+				TextScaled
 				Text={"<"}
 				Size={new UDim2(0, px(100), 0, px(100))}
 				Event={{
@@ -47,8 +45,15 @@ export default function SpectateApp() {
 					},
 				}}
 			/>
-			<textlabel Text={player?.Name ?? "N/A"} Size={new UDim2(0, px(100), 0, px(100))} />
+			<textlabel
+				TextScaled
+				BackgroundTransparency={1}
+				Text={player?.Name ?? "N/A"}
+				Size={new UDim2(0, px(200), 0, px(100))}
+			/>
 			<textbutton
+				BackgroundTransparency={1}
+				TextScaled
 				Text={">"}
 				Size={new UDim2(0, px(100), 0, px(100))}
 				Event={{
