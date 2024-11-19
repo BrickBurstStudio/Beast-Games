@@ -1,7 +1,7 @@
 import React, { useEffect } from "@rbxts/react";
 import { useSelector } from "@rbxts/react-reflex";
 import { Players, UserInputService } from "@rbxts/services";
-import { selectGuiPage, selectToolTip } from "shared/store/selectors/client";
+import { selectGuiPage, selectSpectating, selectToolTip } from "shared/store/selectors/client";
 import AnimateEventsApp from "./animateEvents";
 import AnnouncerApp from "./announce/announcer";
 import CountdownApp from "./announce/countdown";
@@ -30,19 +30,18 @@ export default function App() {
 	}
 
 	const toolTip = useSelector(selectToolTip);
-
-	const [eliminated, setEliminated] = React.useState(false);
+	const spectating = useSelector(selectSpectating);
 	const [blackScreenActive, setBlackScreenActive] = React.useState(false);
 
 	useEffect(() => {
-		const player = Players.LocalPlayer;
-
 		const connections = [
-			player.GetAttributeChangedSignal("lives").Connect(() => {
-				setEliminated(player.GetAttribute("lives") === 0);
+			Events.animations.startChallenge.connect(() => {
+				setBlackScreenActive(false);
 			}),
 
-			Events.animations.setBlackFade.connect(setBlackScreenActive),
+			Events.animations.endChallenge.connect(() => {
+				setBlackScreenActive(true);
+			}),
 		];
 		return () => {
 			connections.forEach((c) => c.Disconnect());
@@ -57,16 +56,14 @@ export default function App() {
 			<AnnounceApp />
 			<MenuButtonsApp />
 			<AnimateEventsApp />
-			{eliminated ? <SpectateApp /> : <ChallengesApp />}
+			{spectating ? <SpectateApp /> : <ChallengesApp />}
 			{toolTip && <ToolTip />}
 			<motion.frame
-				transition={{ duration: 0.25 }}
-				initial={{
-					BackgroundTransparency: 1,
-				}}
+				transition={{ duration: 1 }}
 				animate={{
 					BackgroundTransparency: blackScreenActive ? 0 : 1,
 				}}
+				initial={{ BackgroundTransparency: 1 }}
 				Size={UDim2.fromScale(1, 1)}
 				BackgroundColor3={Color3.fromRGB(0, 0, 0)}
 			/>
