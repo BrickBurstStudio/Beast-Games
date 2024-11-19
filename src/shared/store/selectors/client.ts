@@ -10,4 +10,8 @@ export const selectChallenge = (state: SharedState) => {
 
 export const selectToolTip = (state: SharedState) => {
 	return state.client.gui.toolTip;
-}
+};
+
+export const selectSpectating = (state: SharedState) => {
+	return state.client.gui.spectating;
+};

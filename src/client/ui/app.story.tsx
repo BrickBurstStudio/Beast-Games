@@ -5,6 +5,7 @@ import { store } from "client/store";
 import { defaultPlayerData } from "shared/store/slices/players/utils";
 import App from "./apps/app";
 import { usePx } from "./utils/usePx";
+import SpectateApp from "./apps/spectate";
 
 const controls = {};
 

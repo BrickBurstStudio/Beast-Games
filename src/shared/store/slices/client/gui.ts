@@ -5,6 +5,7 @@ export interface GuiState {
 	guiPage?: GuiPage;
 	toolTip?: ToolTip;
 	challenge?: ChallengeName;
+	spectating?: boolean;
 }
 
 export interface ToolTip {
@@ -26,5 +27,9 @@ export const guiSlice = createProducer(initalState, {
 	setChallenge: (state, challenge?: ChallengeName) => ({
 		...state,
 		challenge: challenge,
+	}),
+	setSpectating: (state, spectating?: boolean) => ({
+		...state,
+		spectating: spectating,
 	}),
 });
