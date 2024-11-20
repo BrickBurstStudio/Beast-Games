@@ -2,16 +2,12 @@ import Make from "@rbxts/make";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 
 const BARRIER_THICKNESS = 0.2;
-const AXIS = ["X", "Y", "Z"] as const;
 
 type ForcefieldOptions = {
 	cframe: CFrame;
 	size: Vector3;
 	color: Vector3;
 };
-
-export default function createForcefield(options: ForcefieldOptions): Part;
-export default function createForcefield(part: Part): Part;
 
 export default function createForcefield(arg: ForcefieldOptions | Part) {
 	let cframe: CFrame;
