@@ -27,6 +27,8 @@ interface ServerEvents {
 		};
 	};
 	useAction: (args: { actionId: ActionId; toPlayer: Player }) => void;
+
+	exitQueue: () => void;
 }
 
 interface ServerFunctions {

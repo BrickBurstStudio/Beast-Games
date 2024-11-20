@@ -16,6 +16,8 @@ import ChallengesApp from "./challenges";
 import AnnounceApp from "./announce";
 import { Events } from "client/network";
 import motion from "@rbxts/react-motion";
+import Queue from "./queue";
+import QueueApp from "./queue";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);
@@ -58,6 +60,7 @@ export default function App() {
 			<AnimateEventsApp />
 			{spectating ? <SpectateApp /> : <ChallengesApp />}
 			{toolTip && <ToolTip />}
+			<QueueApp />
 			<motion.frame
 				transition={{ duration: 1 }}
 				animate={{
