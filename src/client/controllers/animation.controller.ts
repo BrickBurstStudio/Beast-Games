@@ -1,4 +1,5 @@
 import { Controller, OnStart } from "@flamework/core";
+import Log from "@rbxts/log";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, ReplicatedStorage } from "@rbxts/services";
 import { Events } from "client/network";
@@ -9,6 +10,11 @@ export class AnimationController implements OnStart {
 	public tracks: Map<Animation, AnimationTrack> = new Map();
 
 	async onStart() {
+		if (Players.LocalPlayer.Character !== undefined) {
+			const character = await getCharacter(Players.LocalPlayer);
+			this.loadTracks(character);
+		}
+
 		Players.LocalPlayer.CharacterAdded.Connect(async () => {
 			const character = await getCharacter(Players.LocalPlayer);
 			this.loadTracks(character);
@@ -24,7 +30,6 @@ export class AnimationController implements OnStart {
 	}
 
 	private loadTracks(character: CharacterRigR6) {
-		print("loading tracks for ", character);
 		const animations = ReplicatedStorage.Assets.Animations.GetChildren() as Animation[];
 		for (const animation of animations) {
 			this.tracks.set(animation, character.Humanoid.Animator.LoadAnimation(animation));

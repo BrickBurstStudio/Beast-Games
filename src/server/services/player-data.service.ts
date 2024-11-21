@@ -65,7 +65,6 @@ export class PlayerDataService implements OnInit {
 	}
 
 	private createLeaderstats(player: Player) {
-		print("Creating leaderstats for", player.Name);
 		const leaderstats = new Instance("Folder", player);
 		leaderstats.Name = "leaderstats";
 
@@ -76,7 +75,6 @@ export class PlayerDataService implements OnInit {
 		cash.Value = initialBalance?.cash ?? 0;
 
 		return store.subscribe(selectPlayerBalances(tostring(player.UserId)), (save) => {
-			print("Updating leaderstats", save);
 			if (!save) return;
 			cash.Value = save.cash;
 		});

@@ -155,7 +155,7 @@ export class FlagChallenge extends BaseChallenge {
 		}
 	}
 
-	protected SpawnCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
+	protected SetupCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
 		// spawn player anywhere inside x and z bounds of `StartSide`
 		character.HumanoidRootPart.CFrame = this.map.ChallengeArea.StartArea.Platform.CFrame.add(
 			new Vector3(

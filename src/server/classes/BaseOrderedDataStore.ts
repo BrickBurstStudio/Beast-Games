@@ -93,8 +93,8 @@ export class BaseOrderedDataStore {
 		maxRetryAttempts: number = 4,
 	): T | void {
 		if (playerID) {
-			if (!Players.GetPlayerByUserId(playerID)) return print(playerID + " has left");
-			if (tries >= maxRetryAttempts) return print("Max retries reached");
+			if (!Players.GetPlayerByUserId(playerID)) return; //print(playerID + " has left");
+			if (tries >= maxRetryAttempts) return; //print("Max retries reached");
 		}
 
 		BaseOrderedDataStore.YieldRequestBudget(requestType);

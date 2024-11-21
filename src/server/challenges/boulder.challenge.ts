@@ -156,7 +156,7 @@ export class BoulderChallenge extends BaseChallenge {
 		}
 	}
 
-	protected SpawnCharacter({ player, character, i }: SpawnCharacterArgs): void {
+	protected SetupCharacter({ player, character, i }: SpawnCharacterArgs): void {
 		character.Humanoid.WalkSpeed = 0;
 		character.Humanoid.JumpHeight = 0;
 

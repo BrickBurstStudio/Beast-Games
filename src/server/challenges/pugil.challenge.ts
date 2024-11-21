@@ -33,7 +33,7 @@ export class PugilChallenge extends BaseChallenge {
 
 		while (!this.finished) task.wait();
 	}
-	protected SpawnCharacter({ player, character, i }: SpawnCharacterArgs): void {
+	protected SetupCharacter({ player, character, i }: SpawnCharacterArgs): void {
 		const team = this.teams[i % this.teams.size()];
 		team.players.push(player);
 		character.PivotTo(team.spawn.CFrame);

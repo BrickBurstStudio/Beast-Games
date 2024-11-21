@@ -23,3 +23,9 @@ export const RICH_TEXT_REPLACE = {
 	bribe: `<font color="${RICH_TEXT_COLORS.green}">replace</font>`,
 	money: `<font color="${RICH_TEXT_COLORS.green}">replace</font>`,
 };
+
+export const RULES_CONFIGS = {
+	animationTime: 1,
+	timeBetweenRules: 3,
+	timeAfterRules: 2,
+} as const;

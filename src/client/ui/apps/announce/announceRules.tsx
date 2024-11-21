@@ -3,7 +3,7 @@ import { motion } from "@rbxts/react-motion/out/motion";
 import { px } from "client/ui/utils/usePx";
 import { Events } from "client/network";
 import { COLORS } from "shared/configs/gui";
-import { setTimeout } from "@rbxts/set-timeout";
+import { RULES_CONFIGS } from "shared/configs/announcer";
 
 const padding = 50;
 
@@ -18,7 +18,7 @@ export default function AnnounceRules() {
 			setRules(rules);
 			setChallengeName(challengeName.upper());
 			setHide(false);
-			task.wait(rules.size() * 3);
+			task.wait(rules.size() * RULES_CONFIGS.timeBetweenRules + RULES_CONFIGS.timeAfterRules);
 			setHide(true);
 		});
 	}, []);
@@ -31,7 +31,7 @@ export default function AnnounceRules() {
 			Position={UDim2.fromScale(-1.5, 0.5)}
 			AnchorPoint={new Vector2(0.5, 0.5)}
 			transition={{
-				duration: 1,
+				duration: RULES_CONFIGS.animationTime,
 				easingStyle: Enum.EasingStyle.Cubic,
 				easingDirection: Enum.EasingDirection.InOut,
 			}}

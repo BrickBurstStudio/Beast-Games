@@ -1,4 +1,4 @@
-import { FormatCompact } from "@rbxts/format-number";
+import { FormatCompact, FormatStandard } from "@rbxts/format-number";
 import React, { useEffect, useState } from "@rbxts/react";
 import { Events } from "client/network";
 import { LeaderboardProps } from ".";
@@ -20,7 +20,7 @@ export default function Leaderboard(props: LeaderboardProps) {
 						const numberValue = tonumber(props.convertValue ? props.convertValue(value) : value);
 						return {
 							key: key.split("_")[1],
-							value: numberValue !== undefined ? FormatCompact(numberValue) : value,
+							value: numberValue !== undefined ? FormatStandard(numberValue) : value,
 						};
 					}),
 			);

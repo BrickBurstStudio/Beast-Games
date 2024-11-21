@@ -71,6 +71,16 @@ interface ServerStorage extends Instance {
 				Boulder: Part;
 			};
 		};
+		GoldRushChallenge: Folder & {
+			Claims: Model & {
+				Highlight: Highlight;
+			};
+			Underglow: Model;
+			Obby: Model;
+			Spawns: Folder & {
+				Part: Part;
+			};
+		};
 		MoneyPileChallenge: Folder & {
 			Platforms: Model;
 		};

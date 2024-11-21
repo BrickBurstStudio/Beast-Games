@@ -9,6 +9,7 @@ export class SpectateController implements OnStart {
 	async onStart() {
 		this.SetupSpectate();
 		Players.LocalPlayer.CharacterAdded.Connect(async () => {
+			store.setSpectating(false);
 			this.SetupSpectate();
 		});
 	}
@@ -18,6 +19,7 @@ export class SpectateController implements OnStart {
 			(Players.LocalPlayer.Character as CharacterRigR6) ?? (await getCharacter(Players.LocalPlayer));
 		character.Humanoid.Died.Connect(() => {
 			task.wait(4);
+			if (Players.LocalPlayer.Character !== undefined) return;
 			store.setSpectating(true);
 		});
 	}

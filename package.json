@@ -30,7 +30,6 @@
 		"io-serve": "^1.1.2",
 		"prettier": "^3.3.3",
 		"rbxts-build": "^2.4.0",
-		"rbxts-transform-debug": "^2.2.0",
 		"rbxts-transformer-flamework": "^1.2.3",
 		"roblox-ts": "^3.0.0",
 		"typescript": "^5.5.3"
@@ -42,6 +41,7 @@
 		"@rbxts/cmdr": "^1.12.1",
 		"@rbxts/format-number": "^3.0.9-b3",
 		"@rbxts/janitor": "^1.17.0-ts.1",
+		"@rbxts/log": "^0.6.3",
 		"@rbxts/make": "^1.0.6",
 		"@rbxts/object-utils": "^1.0.4",
 		"@rbxts/profileservice": "^1.4.2",
@@ -54,9 +54,11 @@
 		"@rbxts/regexp": "^0.2.1-ts.4",
 		"@rbxts/remap": "^0.2.2",
 		"@rbxts/reverse-array": "^1.0.3",
+		"@rbxts/roact": "^3.0.1",
 		"@rbxts/services": "^1.5.5",
 		"@rbxts/set-timeout": "^1.1.2",
 		"@rbxts/ui-labs": "^2.2.0-ts.1",
-		"@rbxts/vide": "^0.4.5"
+		"@rbxts/vide": "^0.4.5",
+		"rbxts-transform-env": "^3.0.0"
 	}
 }
