@@ -8,6 +8,7 @@ function useCountdown() {
 	const [description, setDescription] = useState("");
 	const [seconds, setSeconds] = useState<number>(0);
 	const [hide, setHide] = useState(true);
+	const [showGo, setShowGo] = useState(false);
 	const initialSeconds = useRef<number | undefined>(undefined);
 	const countdownLoop = useRef<thread | undefined>(undefined);
 
@@ -19,10 +20,11 @@ function useCountdown() {
 			}
 			setHide(true);
 			setDescription("");
+			setShowGo(false);
 			initialSeconds.current = undefined;
 		});
 
-		const conn = Events.announcer.countdown.connect(({ seconds, description }) => {
+		const conn = Events.announcer.countdown.connect(({ seconds, description, showGo = true }) => {
 			if (countdownLoop.current) {
 				task.cancel(countdownLoop.current);
 			}
@@ -30,17 +32,27 @@ function useCountdown() {
 			initialSeconds.current = seconds;
 			setDescription(description ?? "");
 			setHide(false);
+			setShowGo(false);
 
 			countdownLoop.current = task.spawn(() => {
 				for (let i = math.floor(seconds); i >= 0; i--) {
 					if (initialSeconds.current === undefined) break;
 					setSeconds(i);
 					ReplicatedStorage.Assets.Sounds.Countdown2.Play();
-					ReplicatedStorage.Assets.Sounds.Countdown2.PlaybackSpeed = math.clamp(i / initialSeconds.current, 0.1, math.huge);
+					ReplicatedStorage.Assets.Sounds.Countdown2.PlaybackSpeed = math.clamp(
+						i / initialSeconds.current,
+						0.1,
+						math.huge,
+					);
+					task.wait(1);
+				}
+				if (showGo) {
+					setShowGo(true);
 					task.wait(1);
 				}
 				setHide(true);
 				task.wait(0.5);
+				setShowGo(false);
 				setDescription("");
 				countdownLoop.current = undefined;
 			});
@@ -55,11 +67,11 @@ function useCountdown() {
 		};
 	}, []);
 
-	return { initialSeconds, seconds, description, hide };
+	return { initialSeconds, seconds, description, hide, showGo };
 }
 
 export default function CountdownApp() {
-	let { initialSeconds, seconds, description, hide } = useCountdown();
+	let { initialSeconds, seconds, description, hide, showGo } = useCountdown();
 
 	return (
 		<motion.frame
@@ -75,6 +87,7 @@ export default function CountdownApp() {
 			AutomaticSize={"XY"}
 		>
 			<uilistlayout HorizontalAlignment={"Center"} />
+
 			<motion.textlabel
 				animate={{
 					TextColor3: Color3.fromRGB(
@@ -90,6 +103,7 @@ export default function CountdownApp() {
 				TextWrapped
 				TextScaled
 				RichText
+				Visible={!showGo}
 			/>
 			<textlabel
 				BackgroundTransparency={1}
@@ -97,7 +111,26 @@ export default function CountdownApp() {
 				Text={description}
 				TextColor3={Color3.fromRGB(255, 255, 255)}
 				TextScaled
+				Visible={!showGo}
 			/>
+
+			{showGo && (
+				<motion.textlabel
+					initial={{ TextTransparency: 1, Size: UDim2.fromOffset(px(200), px(200)) }}
+					animate={{ TextTransparency: 0, Size: UDim2.fromOffset(px(250), px(250)) }}
+					Text="GO!"
+					Font={"Jura"}
+					BackgroundTransparency={1}
+					TextColor3={Color3.fromRGB(0, 255, 0)}
+					TextScaled
+					RichText
+					transition={{
+						duration: 0.2,
+						easingStyle: Enum.EasingStyle.Back,
+						easingDirection: Enum.EasingDirection.Out,
+					}}
+				/>
+			)}
 		</motion.frame>
 	);
 }

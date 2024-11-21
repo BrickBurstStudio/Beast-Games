@@ -99,4 +99,5 @@ export const GlobalFunctions = Networking.createFunction<ServerFunctions, Client
 export type Countdown = {
 	seconds: number;
 	description?: string | undefined;
+	showGo?: boolean;
 };
