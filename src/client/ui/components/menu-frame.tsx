@@ -2,6 +2,7 @@ import React, { ReactNode } from "@rbxts/react";
 import { store } from "client/store";
 import { BORDER_THICKNESS, COLORS } from "shared/configs/gui";
 import { px } from "../utils/usePx";
+import ImageButton from "./image-button";
 
 type MenuFrameProps = {
 	square?: boolean;
@@ -41,21 +42,16 @@ export default function MenuFrame(props: MenuFrameProps) {
 					<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS)} />
 				</textlabel>
 				{/* x button */}
-				<imagebutton
-					Size={UDim2.fromOffset(px(headerElementSize), px(headerElementSize))}
-					Position={new UDim2(1, 0, 0, 0)}
-					AnchorPoint={new Vector2(0.5, 0.5)}
-					BackgroundColor3={Color3.fromRGB(255, 0, 0)}
-					Image="rbxassetid://2195446979"
-					BorderSizePixel={0}
-					Event={{
-						MouseButton1Click: () => {
-							store.setGuiPage(undefined);
-						},
+				<ImageButton
+					backgroundColor3={Color3.fromRGB(255, 0, 0)}
+					size={UDim2.fromOffset(px(headerElementSize), px(headerElementSize))}
+					position={new UDim2(1, 0, 0, 0)}
+					anchorPoint={new Vector2(0.5, 0.5)}
+					image="rbxassetid://2195446979"
+					onClick={() => {
+						store.setGuiPage(undefined);
 					}}
-				>
-					<uicorner CornerRadius={new UDim(0, px(10))} />
-				</imagebutton>
+				/>
 			</frame>
 			<scrollingframe
 				BackgroundTransparency={1}

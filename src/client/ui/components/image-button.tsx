@@ -11,14 +11,15 @@ type ImageButtonProps = {
 	size?: UDim2;
 	anchorPoint?: Vector2;
 	toolTip?: ToolTip;
+	backgroundColor3?: Color3;
 };
 
 export default function ImageButton(props: ImageButtonProps) {
-	const { image, onClick, position, size, anchorPoint } = props;
+	const { image, onClick, position, size, anchorPoint, backgroundColor3 } = props;
 
 	return (
 		<imagebutton
-			BackgroundColor3={COLORS.Primary}
+			BackgroundColor3={backgroundColor3 ?? COLORS.Primary}
 			BackgroundTransparency={0}
 			Position={position}
 			Size={size}
@@ -40,7 +41,7 @@ export default function ImageButton(props: ImageButtonProps) {
 			<imagelabel
 				Image={image}
 				BackgroundTransparency={1}
-				Size={UDim2.fromScale(0.8, 0.8)}
+				Size={UDim2.fromScale(0.75, 0.75)}
 				Position={UDim2.fromScale(0.5, 0.5)}
 				AnchorPoint={new Vector2(0.5, 0.5)}
 			/>
