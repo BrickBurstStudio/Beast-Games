@@ -1,4 +1,5 @@
 interface ServerStorage extends Instance {
+	__Rojo_SessionLock: ObjectValue;
 	Assets: Folder & {
 		Gizmos: Folder & {
 			Pugil: Tool & {
@@ -41,9 +42,6 @@ interface ServerStorage extends Instance {
 			};
 		};
 	};
-	__Rojo_SessionLock: ObjectValue;
-	Tool: Tool;
-	RBX_ANIMSAVES: Model;
 	ChallengeMaps: Folder & {
 		BriefcaseChallenge: Folder & {
 			Briefcases: Model;
@@ -73,6 +71,9 @@ interface ServerStorage extends Instance {
 		};
 		GoldRushChallenge: Folder & {
 			Claims: Model & {
+				GreenClaim: Model & {
+					Part: Part;
+				};
 				Highlight: Highlight;
 			};
 			Underglow: Model;
@@ -113,4 +114,5 @@ interface ServerStorage extends Instance {
 			};
 		};
 	};
+	RBX_ANIMSAVES: Model;
 }
