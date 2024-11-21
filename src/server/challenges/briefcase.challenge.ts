@@ -29,7 +29,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 	revealing = false;
 
 	protected async Main() {
-		const cases = 130 + this.badBriefcases;
+		const cases = this.playersInChallenge.size() + this.badBriefcases;
 		const grid = generatePlayerGrid(cases, 10);
 		const largestY = this.GetLargestSubarray(grid)!;
 		const gridCenterXOffset = grid.size() * (this.cellPadding / 2) - this.cellPadding / 2;

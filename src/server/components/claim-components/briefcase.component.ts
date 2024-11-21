@@ -41,7 +41,7 @@ export class BriefcaseComponent
 			}
 			if (mode === "selected") {
 				this.instance.Part.BrickColor = new BrickColor("White");
-				this.instance.Part.BillboardGui.TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255);
+				this.instance.Part.BillboardGui.TextLabel.TextColor3 = this.selectedColor;
 				this.instance.Part.BillboardGui.TextLabel.Text = "?";
 				this.attributes.touchEnabled = false;
 			}
