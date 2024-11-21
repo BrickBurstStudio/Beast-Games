@@ -3,6 +3,7 @@ import Log from "@rbxts/log";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, RunService, StarterGui, TeleportService } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
+import { BaseChallenge } from "server/challenges/base.challenge";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
@@ -30,7 +31,9 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		await new PugilChallenge().Start();
+		for (const challenge of [PugilChallenge, BriefcaseChallenge]) {
+			await new challenge().Start();
+		}
 	}
 
 	yieldPlayers() {
