@@ -2,6 +2,7 @@ import { OnStart, Service } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
+import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
 import { Events } from "server/network";
@@ -25,7 +26,7 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [BriefcaseChallenge]) {
+		for (const challenge of [BoulderChallenge]) {
 			await new challenge().Start();
 		}
 	}
