@@ -1,0 +1,2 @@
+export const LOBBY_PLACE_ID = 18966837053;
+export const MAIN_PLACE_ID = 71381832138507;

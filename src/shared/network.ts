@@ -87,6 +87,8 @@ interface ClientEvents {
 		play: (animation: Animation) => void;
 		stop: (animation: Animation) => void;
 	};
+
+	updateQueue: (playersInQueue: number) => void;
 }
 
 interface ClientFunctions {}

@@ -5,6 +5,7 @@ import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { Gizmo } from "server/classes/Gizmo";
 import { Pugil } from "server/classes/gizmos/Pugil";
 import { Events } from "server/network";
+import { MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
@@ -13,6 +14,7 @@ export class GameService implements OnStart {
 	public static DESTROY_CHARACTER_DELAY = 3;
 
 	async onStart() {
+		if (game.PlaceId !== MAIN_PLACE_ID) return;
 		this.setupReset();
 		this.setupDestroyCharacterOnDeath();
 

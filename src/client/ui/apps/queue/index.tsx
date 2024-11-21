@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Players } from "@rbxts/services";
 import { Events } from "client/network";
+import { px } from "client/ui/utils/usePx";
+import { QUEUE_CONFIG } from "shared/configs/queue";
 
 export default function QueueApp() {
 	const [inQueue, setInQueue] = useState(false);
+	const [playersInQueue, setPlayersInQueue] = useState(0);
+	const MIN_PLAYERS = QUEUE_CONFIG.MIN_PLAYERS;
 
 	useEffect(() => {
 		const player = Players.LocalPlayer;
@@ -12,13 +16,20 @@ export default function QueueApp() {
 		setInQueue(!!player.GetAttribute("inQueue"));
 		
 		// Listen for changes
-		const conn = player.AttributeChanged.Connect((attribute) => {
-			if (attribute === "inQueue") {
-				setInQueue(!!player.GetAttribute("inQueue"));
-			}
-		});
+		const connections = [
+			player.AttributeChanged.Connect((attribute) => {
+				if (attribute === "inQueue") {
+					setInQueue(!!player.GetAttribute("inQueue"));
+				}
+			}),
+			
+			// Listen for queue updates
+			Events.updateQueue.connect((count) => {
+				setPlayersInQueue(count);
+			})
+		];
 
-		return () => conn.Disconnect();
+		return () => connections.forEach(conn => conn.Disconnect());
 	}, []);
 
 	if (!inQueue) return <></>;
@@ -27,9 +38,9 @@ export default function QueueApp() {
 		<frame BackgroundTransparency={1} Size={UDim2.fromScale(1, 1)}>
 			<textbutton
 				Text="EXIT"
-				Size={UDim2.fromOffset(400, 100)}
-				Position={UDim2.fromScale(0.5, 0.95)}
-				AnchorPoint={new Vector2(0.5, 1)}
+				Size={UDim2.fromOffset(px(400), px(100))}
+				Position={UDim2.fromScale(0.5, 0.70)}
+				AnchorPoint={new Vector2(0.5, 0)}
 				BackgroundColor3={Color3.fromRGB(232, 70, 70)}
 				TextColor3={Color3.fromRGB(255, 255, 255)}
 				TextScaled={true}
@@ -47,6 +58,30 @@ export default function QueueApp() {
 					Color={Color3.fromHSV(0, 0, 0.2)}
 				/>
 			</textbutton>
+
+			<textlabel
+				Text={`Players in queue: ${playersInQueue}`}
+				Size={UDim2.fromOffset(px(400), px(50))}
+				Position={UDim2.fromScale(0.5, 0.60)}
+				AnchorPoint={new Vector2(0.5, 0)}
+				BackgroundTransparency={1}
+				TextColor3={Color3.fromRGB(255, 255, 255)}
+				TextScaled={true}
+				Font={"Jura"}
+			/>
+
+			{playersInQueue < MIN_PLAYERS && (
+				<textlabel
+					Text={`Waiting for a minimum of ${MIN_PLAYERS} players before starting the game...`}
+					Size={UDim2.fromOffset(px(600), px(50))}
+					Position={UDim2.fromScale(0.5, 0.50)}
+					AnchorPoint={new Vector2(0.5, 0)}
+					BackgroundTransparency={1}
+					TextColor3={Color3.fromRGB(255, 255, 255)}
+					TextScaled={true}
+					Font={"Jura"}
+				/>
+			)}
 		</frame>
 	);
 }

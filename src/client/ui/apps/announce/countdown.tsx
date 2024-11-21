@@ -9,32 +9,47 @@ function useCountdown() {
 	const [seconds, setSeconds] = useState<number>(0);
 	const [hide, setHide] = useState(true);
 	const initialSeconds = useRef<number | undefined>(undefined);
+	const countdownLoop = useRef<thread | undefined>(undefined);
 
 	useEffect(() => {
 		const clearConn = Events.announcer.clearCountdown.connect(() => {
+			if (countdownLoop.current) {
+				task.cancel(countdownLoop.current);
+				countdownLoop.current = undefined;
+			}
 			setHide(true);
 			setDescription("");
 			initialSeconds.current = undefined;
 		});
 
 		const conn = Events.announcer.countdown.connect(({ seconds, description }) => {
+			if (countdownLoop.current) {
+				task.cancel(countdownLoop.current);
+			}
+
 			initialSeconds.current = seconds;
 			setDescription(description ?? "");
 			setHide(false);
-			ReplicatedStorage.Assets.Sounds.Countdown2.PlaybackSpeed;
-			for (let i = seconds; i >= 0; i--) {
-				if (initialSeconds.current === undefined) break;
-				setSeconds(i);
-				ReplicatedStorage.Assets.Sounds.Countdown2.Play();
-				ReplicatedStorage.Assets.Sounds.Countdown2.PlaybackSpeed = math.clamp(i / seconds, 0.1, math.huge);
-				task.wait(1);
-			}
-			setHide(true);
-			task.wait(0.5);
-			setDescription("");
+
+			countdownLoop.current = task.spawn(() => {
+				for (let i = math.floor(seconds); i >= 0; i--) {
+					if (initialSeconds.current === undefined) break;
+					setSeconds(i);
+					ReplicatedStorage.Assets.Sounds.Countdown2.Play();
+					ReplicatedStorage.Assets.Sounds.Countdown2.PlaybackSpeed = math.clamp(i / initialSeconds.current, 0.1, math.huge);
+					task.wait(1);
+				}
+				setHide(true);
+				task.wait(0.5);
+				setDescription("");
+				countdownLoop.current = undefined;
+			});
 		});
 
 		return () => {
+			if (countdownLoop.current) {
+				task.cancel(countdownLoop.current);
+			}
 			conn.Disconnect();
 			clearConn.Disconnect();
 		};
