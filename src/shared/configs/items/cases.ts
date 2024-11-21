@@ -5,7 +5,7 @@ export type Case = {
 	price: number;
 	// TODO: type guard this to only allow items that are defined in the items array
 	items: Item["id"][];
-	type: | "emote" | "cosmetic";
+	type: "emote" | "cosmetic";
 } & Item;
 
 export const cases = [
