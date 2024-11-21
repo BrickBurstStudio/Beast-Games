@@ -6,7 +6,7 @@ export type GuiPage = (typeof GUI_PAGES)[number];
 
 export const COLORS = {
 	Primary: Color3.fromRGB(0, 163, 255),
-	Secondary: Color3.fromRGB(0, 137, 215),
+	Secondary: Color3.fromRGB(0, 107, 171),
 
 	Buttons: {
 		Off: Color3.fromRGB(232, 70, 70),
