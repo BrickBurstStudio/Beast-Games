@@ -10,7 +10,9 @@ import { BORDER_THICKNESS, COLORS } from "shared/configs/gui";
 import { EquippableItemId, ItemId, items } from "shared/configs/items";
 import { cases } from "shared/configs/items/cases";
 import { selectPlayerItems } from "shared/store/selectors/players";
+import { BUTTONS } from "../buttons";
 
+const inventoryButton = BUTTONS.find((button) => button.name === "Inventory")!;
 export default function InventoryApp() {
 	const inventory = useSelector(selectPlayerItems(tostring(Players.LocalPlayer.UserId))) ?? [
 		"emote_1",
@@ -59,24 +61,21 @@ export default function InventoryApp() {
 					{itemMapObjects.map((itemMapObject) => {
 						const item = items.get(itemMapObject.id);
 						return (
-							<frame BackgroundTransparency={0}>
-								<ImageButton
-									key={itemMapObject.id}
-									image={""}
-									onClick={() => {
-										store.setGuiPage(undefined);
-										if (isCase)
-											Functions.inventory.openCase(
-												itemMapObject.id as (typeof cases)[number]["id"],
-											);
-										else Functions.inventory.equip(itemMapObject.id as EquippableItemId);
-									}}
-									toolTip={{
-										header: item?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
-										body: `Click To ${isCase ? "Open" : "Equip"}`,
-									}}
-									size={UDim2.fromScale(1, 1)}
-								/>
+							<ImageButton
+								key={itemMapObject.id}
+								image={"rbxassetid://6031094678"}
+								onClick={() => {
+									store.setGuiPage(undefined);
+									if (isCase)
+										Functions.inventory.openCase(itemMapObject.id as (typeof cases)[number]["id"]);
+									else Functions.inventory.equip(itemMapObject.id as EquippableItemId);
+								}}
+								toolTip={{
+									header: item?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
+									body: `Click To ${isCase ? "Open" : "Equip"}`,
+								}}
+								size={UDim2.fromScale(1, 1)}
+							>
 								{itemMapObject.quantity > 1 && (
 									<textlabel
 										Text={tostring(itemMapObject.quantity)}
@@ -91,7 +90,7 @@ export default function InventoryApp() {
 										<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS * 0.75)} />
 									</textlabel>
 								)}
-							</frame>
+							</ImageButton>
 						);
 					})}
 				</frame>
@@ -102,8 +101,8 @@ export default function InventoryApp() {
 	return (
 		<MenuFrame
 			header={{
-				icon: "rbxassetid://",
-				title: "Inventory",
+				icon: inventoryButton.icon,
+				title: inventoryButton.name,
 			}}
 		>
 			<uilistlayout FillDirection={Enum.FillDirection.Vertical} />

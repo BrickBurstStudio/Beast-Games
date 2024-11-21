@@ -4,10 +4,11 @@ import ImageButton from "client/ui/components/image-button";
 import { px } from "client/ui/utils/usePx";
 import { GuiPage } from "shared/configs/gui";
 
-const BUTTONS: { name: GuiPage; icon: string }[] = [
+export const BUTTONS: { name: GuiPage; icon: string }[] = [
 	{ name: "Inventory", icon: "rbxassetid://6035056487" },
 	{ name: "Shop", icon: "rbxassetid://6031265976" },
-];
+] as const;
+
 const BUTTON_SIZE = 80;
 const PADDING_SIZE = BUTTON_SIZE / 8;
 
