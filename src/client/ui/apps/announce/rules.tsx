@@ -27,7 +27,7 @@ export default function AnnounceRules() {
 
 	return (
 		<motion.frame
-			animate={{ Position: !hide ? UDim2.fromScale(-1.5, 0.5) : UDim2.fromScale(0.5, 0.5) }}
+			animate={{ Position: hide ? UDim2.fromScale(-1.5, 0.5) : UDim2.fromScale(0.5, 0.5) }}
 			BackgroundTransparency={1}
 			Size={UDim2.fromScale(0.5, 0.7)}
 			Position={UDim2.fromScale(-1.5, 0.5)}
