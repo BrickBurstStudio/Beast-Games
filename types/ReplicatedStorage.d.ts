@@ -2,13 +2,14 @@ interface ReplicatedStorage extends Instance {
 	TS: Folder & {
 		module: ModuleScript;
 		utils: Folder & {
+			log: ModuleScript;
 			["object-utils"]: ModuleScript;
 			functions: Folder & {
 				randomNumbers: ModuleScript;
 				getColor3FromLevel: ModuleScript;
 				objectKeys: ModuleScript;
-				spawnSound: ModuleScript;
 				getPlayerByName: ModuleScript;
+				spawnSound: ModuleScript;
 				tweenUtil: ModuleScript;
 				toTitleCase: ModuleScript;
 				calculateReward: ModuleScript;
@@ -31,6 +32,8 @@ interface ReplicatedStorage extends Instance {
 			currency: ModuleScript;
 			action: ModuleScript;
 			announcer: ModuleScript;
+			queue: ModuleScript;
+			places: ModuleScript;
 			gui: ModuleScript;
 		};
 		store: ModuleScript & {
@@ -65,6 +68,7 @@ interface ReplicatedStorage extends Instance {
 			Buzz: Sound & {
 				PitchShiftSoundEffect: PitchShiftSoundEffect;
 			};
+			["GO!!!"]: Sound;
 			PugilHit: Sound;
 			Character: Sound;
 			Countdown1: Sound;
@@ -246,6 +250,70 @@ interface ReplicatedStorage extends Instance {
 					["Regexp.global"]: ModuleScript;
 				};
 				["react-roblox"]: ModuleScript;
+				roact: Folder & {
+					src: ModuleScript & {
+						createSpy: ModuleScript;
+						createSignal: ModuleScript;
+						oneChild: ModuleScript;
+						Component: ModuleScript;
+						createElement: ModuleScript;
+						createReconciler: ModuleScript;
+						GlobalConfig: ModuleScript;
+						strict: ModuleScript;
+						createRef: ModuleScript;
+						Type: ModuleScript;
+						Portal: ModuleScript;
+						Symbol: ModuleScript;
+						PropMarkers: Folder & {
+							Ref: ModuleScript;
+							Change: ModuleScript;
+							Children: ModuleScript;
+							Event: ModuleScript;
+						};
+						ComponentLifecyclePhase: ModuleScript;
+						Config: ModuleScript;
+						assign: ModuleScript;
+						assertDeepEqual: ModuleScript;
+						getDefaultInstanceProperty: ModuleScript;
+						Binding: ModuleScript;
+						NoopRenderer: ModuleScript;
+						forwardRef: ModuleScript;
+						ts: ModuleScript;
+						internalAssert: ModuleScript;
+						createReconcilerCompat: ModuleScript;
+						createFragment: ModuleScript;
+						RobloxRenderer: ModuleScript;
+						PureComponent: ModuleScript;
+						invalidSetStateMessages: ModuleScript;
+						ElementKind: ModuleScript;
+						createContext: ModuleScript;
+						Logging: ModuleScript;
+						ElementUtils: ModuleScript;
+						SingleEventManager: ModuleScript;
+						None: ModuleScript;
+					};
+				};
+				["message-templates"]: Folder & {
+					out: ModuleScript & {
+						MessageTemplateRenderer: ModuleScript;
+						PlainTextMessageTemplateRenderer: ModuleScript;
+						RbxSerializer: ModuleScript;
+						MessageTemplate: ModuleScript;
+						MessageTemplateToken: ModuleScript;
+						MessageTemplateParser: ModuleScript;
+					};
+				};
+				log: Folder & {
+					out: ModuleScript & {
+						Core: ModuleScript & {
+							LogEventCallbackSink: ModuleScript;
+							LogEventPropertyEnricher: ModuleScript;
+							LogEventRobloxOutputSink: ModuleScript;
+						};
+						Configuration: ModuleScript;
+						Logger: ModuleScript;
+					};
+				};
 				["object-utils"]: ModuleScript;
 				["reverse-array"]: Folder & {
 					out: ModuleScript & {

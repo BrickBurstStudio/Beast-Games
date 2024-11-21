@@ -48,6 +48,8 @@ function useCountdown() {
 				}
 				if (showGo) {
 					setShowGo(true);
+					task.wait(0.25);
+					ReplicatedStorage.Assets.Sounds["GO!!!"].Play();
 					task.wait(1);
 				}
 				setHide(true);
