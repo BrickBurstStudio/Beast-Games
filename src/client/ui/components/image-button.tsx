@@ -12,10 +12,11 @@ type ImageButtonProps = {
 	anchorPoint?: Vector2;
 	toolTip?: ToolTip;
 	backgroundColor3?: Color3;
+	children?: React.ReactNode;
 };
 
 export default function ImageButton(props: ImageButtonProps) {
-	const { image, onClick, position, size, anchorPoint, backgroundColor3 } = props;
+	const { image, onClick, position, size, anchorPoint, backgroundColor3, children } = props;
 
 	return (
 		<imagebutton
@@ -37,6 +38,7 @@ export default function ImageButton(props: ImageButtonProps) {
 				},
 			}}
 		>
+			{children}
 			<uicorner CornerRadius={new UDim(0, px(10))} />
 			<imagelabel
 				Image={image}
