@@ -51,7 +51,7 @@ export abstract class BaseChallenge {
 
 	protected abstract Main(): Promise<void>;
 
-	protected abstract SpawnCharacter({ player, character, i }: SpawnCharacterArgs): void;
+	protected abstract SetupCharacter({ player, character, i }: SpawnCharacterArgs): void;
 
 	/* ---------------------------- Player Management --------------------------- */
 
@@ -65,7 +65,7 @@ export abstract class BaseChallenge {
 				const character = await getCharacter(player);
 				character.Humanoid.WalkSpeed = 0;
 				character.Humanoid.JumpPower = 0;
-				this.SpawnCharacter({ player, character, i });
+				this.SetupCharacter({ player, character, i });
 			}),
 		);
 	}

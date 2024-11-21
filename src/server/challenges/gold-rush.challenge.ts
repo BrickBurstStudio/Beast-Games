@@ -21,7 +21,7 @@ export class GoldRushChallenge extends BaseChallenge {
 
 	protected async Main() {}
 
-	protected SpawnCharacter({ character, i }: SpawnCharacterArgs): void {
+	protected SetupCharacter({ character, i }: SpawnCharacterArgs): void {
 		const children = this.map.Spawns.GetChildren() as BasePart[];
 		character.PivotTo(children[i % children.size()].CFrame);
 	}
