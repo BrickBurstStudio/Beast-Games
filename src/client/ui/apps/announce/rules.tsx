@@ -49,28 +49,24 @@ export default function AnnounceRules() {
 				Text={challengeName}
 				Font={Enum.Font.SourceSansBold}
 				TextColor3={COLORS.White}
-				BackgroundTransparency={1}
+				BackgroundTransparency={0}
+				BackgroundColor3={COLORS.Primary}
 				TextScaled
 				RichText
 				Size={new UDim2(1, 0, 0, px(75))}
 			>
 				<uicorner CornerRadius={new UDim(1, 0)} />
-				<uigradient 
-					Color={new ColorSequence([
-						new ColorSequenceKeypoint(0, COLORS.Primary),
-						new ColorSequenceKeypoint(1, COLORS.Secondary)
-					])}
-					Rotation={45}
-				/>
 			</textlabel>
 
 			<frame Size={UDim2.fromScale(1, 1)}>
 				<uicorner CornerRadius={new UDim(0.1, 0)} />
-				<uigradient 
-					Color={new ColorSequence([
-						new ColorSequenceKeypoint(0, COLORS.Primary),
-						new ColorSequenceKeypoint(1, COLORS.Secondary)
-					])}
+				<uigradient
+					Color={
+						new ColorSequence([
+							new ColorSequenceKeypoint(0, COLORS.Primary),
+							new ColorSequenceKeypoint(1, COLORS.Secondary),
+						])
+					}
 					Rotation={45}
 				/>
 				<uilistlayout
@@ -97,8 +93,8 @@ export default function AnnounceRules() {
 						ZIndex={100}
 						Size={new UDim2(1, 0, 0, 50)}
 						TextScaled
-						initial={{ Transparency: 1 }}
-						animate={{ Transparency: 0 }}
+						initial={{ Transparency: 1, BackgroundTransparency: 0 }}
+						animate={{ Transparency: 0, BackgroundTransparency: 1 }}
 						transition={{
 							duration: 1,
 							delay: i * 2 + 1,

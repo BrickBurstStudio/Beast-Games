@@ -1,4 +1,5 @@
 import { Janitor } from "@rbxts/janitor";
+import Log from "@rbxts/log";
 import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { CollectionService, Players, Workspace } from "@rbxts/services";
@@ -41,6 +42,7 @@ export abstract class BaseChallenge {
 		await this.enablePlayerMovement();
 
 		await this.Main();
+		Log.Info(`${this.challengeName} has ended.`);
 		await this.rewardPlayers();
 
 		Events.animations.setBlackFade.broadcast(true);
@@ -71,26 +73,25 @@ export abstract class BaseChallenge {
 	}
 
 	private setupPlayerEvents(player: Player) {
+		const playerOut = () => {
+			this.playersInChallenge.remove(this.playersInChallenge.findIndex((p) => p === player));
+			this.contestantDiedOrLeft.Fire(player);
+		};
+
 		player.CharacterAdded.Connect(async () => {
 			const character = await getCharacter(player);
-			character.Humanoid.Died.Connect(() => this.contestantDiedOrLeft.Fire(player));
+			character.Humanoid.Died.Connect(playerOut);
 		});
 
 		const conn = Players.PlayerRemoving.Connect((player) => {
-			this.contestantDiedOrLeft.Fire(player);
+			playerOut();
 			conn.Disconnect();
 		});
 		this.obliterator.Add(conn, "Disconnect");
 	}
 
 	protected async EliminatePlayer(player: Player) {
-		if (!Players.GetChildren().includes(player)) return;
-		if (!player.Character) return;
-		const character = await getCharacter(player);
-		character.Humanoid.Health = 0;
-		this.playersInChallenge.remove(this.playersInChallenge.findIndex((p) => p === player));
-		task.wait(1);
-		player.SetAttribute("eliminated", true);
+		throw "DEPRECATED";
 	}
 
 	/* ------------------------------ Map Control ----------------------------- */
