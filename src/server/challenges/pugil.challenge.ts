@@ -11,6 +11,9 @@ export class PugilChallenge extends BaseChallenge {
 	protected floor = false;
 	private finished = false;
 
+	// for more efficient hit validation
+	private playerToTeam: Map<Player, Team> = new Map();
+
 	private teams: Team[] = (this.map.Spawns.GetChildren() as BasePart[]).map(
 		(spawn) => ({ spawn, players: [] }) as Team,
 	);
@@ -40,7 +43,14 @@ export class PugilChallenge extends BaseChallenge {
 		circleBGUI.Parent = character.FindFirstChild("Head");
 		this.obliterator.Add(circleBGUI);
 
-		Gizmo.give(player, Pugil);
+		this.playerToTeam.set(player, team);
+
+		const pugil = Gizmo.give(player, Pugil);
+		pugil.setHitValidator((character) => {
+			const hitPlayer = Players.GetPlayerFromCharacter(character);
+			if (!hitPlayer) return false;
+			return this.playerToTeam.get(hitPlayer) !== team;
+		});
 	}
 }
 

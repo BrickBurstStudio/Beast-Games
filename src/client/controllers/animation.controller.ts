@@ -9,12 +9,9 @@ export class AnimationController implements OnStart {
 	public tracks: Map<Animation, AnimationTrack> = new Map();
 
 	async onStart() {
-		const character = await getCharacter(Players.LocalPlayer);
-		this.loadTracks(character);
-
-		Players.LocalPlayer.CharacterAdded.Connect((character) => {
-			const char = character as CharacterRigR6;
-			this.loadTracks(char);
+		Players.LocalPlayer.CharacterAdded.Connect(async () => {
+			const character = await getCharacter(Players.LocalPlayer);
+			this.loadTracks(character);
 		});
 
 		Events.animationController.play.connect((animation) => {
@@ -27,6 +24,7 @@ export class AnimationController implements OnStart {
 	}
 
 	private loadTracks(character: CharacterRigR6) {
+		print("loading tracks for ", character);
 		const animations = ReplicatedStorage.Assets.Animations.GetChildren() as Animation[];
 		for (const animation of animations) {
 			this.tracks.set(animation, character.Humanoid.Animator.LoadAnimation(animation));
