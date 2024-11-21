@@ -39,10 +39,9 @@ export abstract class BaseChallenge {
 
 		Events.animations.setBlackFade.broadcast(false);
 		await this.doUISequence();
-		await this.enablePlayerMovement();
 
+		await this.enablePlayerMovement();
 		await this.Main();
-		Log.Info(`${this.challengeName} has ended.`);
 		await this.rewardPlayers();
 
 		Events.animations.setBlackFade.broadcast(true);

@@ -15,10 +15,6 @@ export class GreenClaimComponent
 	>
 	implements OnStart
 {
-	private readonly safeColor = Color3.fromRGB(0, 255, 0);
-	private readonly unsafeColor = Color3.fromRGB(255, 0, 0);
-	private readonly selectedColor = Color3.fromRGB(255, 255, 255);
-
 	onStart() {
 		this.claimBGUI.MaxDistance = math.huge;
 	}

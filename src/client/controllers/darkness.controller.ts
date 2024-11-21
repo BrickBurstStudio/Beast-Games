@@ -13,7 +13,7 @@ export class DarknessController implements OnStart {
 
 			hitbox.Touched.Connect((hit) => {
 				const player = Players.GetPlayerFromCharacter(hit.Parent);
-				if (!player && player !== Players.LocalPlayer) return;
+				if (!player || player !== Players.LocalPlayer) return;
 
 				if (touched) return;
 				touched = true;
