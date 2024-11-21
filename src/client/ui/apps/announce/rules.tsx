@@ -11,7 +11,7 @@ export default function AnnounceRules() {
 	const [rules, setRules] = useState<string[]>(["Default Rule 1", "Default Rule 2", "Default Rule 3"]);
 	const [challengeName, setChallengeName] = useState("Default Title");
 
-	const [hide, setHide] = useState(true);
+	const [hide, setHide] = useState(false);
 
 	useEffect(() => {
 		const conn = Events.announcer.announceRules.connect(({ challengeName, rules }) => {
