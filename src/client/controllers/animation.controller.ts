@@ -1,14 +1,14 @@
-import { Controller, OnInit } from "@flamework/core";
+import { Controller, OnStart } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, ReplicatedStorage } from "@rbxts/services";
 import { Events } from "client/network";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
 @Controller()
-export class AnimationController implements OnInit {
+export class AnimationController implements OnStart {
 	public tracks: Map<Animation, AnimationTrack> = new Map();
 
-	async onInit() {
+	async onStart() {
 		const character = await getCharacter(Players.LocalPlayer);
 		this.loadTracks(character);
 

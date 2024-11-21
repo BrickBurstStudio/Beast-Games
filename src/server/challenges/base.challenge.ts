@@ -1,4 +1,5 @@
 import { Janitor } from "@rbxts/janitor";
+import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { CollectionService, Players, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
@@ -24,6 +25,7 @@ export abstract class BaseChallenge {
 	protected abstract readonly rules: string[];
 	protected playersInChallenge: Player[] = [];
 	protected floor = true;
+	protected contestantDiedOrLeft = new Instance("BindableEvent");
 	static round = 0;
 
 	public async Start() {
@@ -39,6 +41,17 @@ export abstract class BaseChallenge {
 
 		await Promise.all(
 			this.playersInChallenge.map(async (player, i) => {
+				player.CharacterAdded.Connect(async () => {
+					const character = await getCharacter(player);
+					character.Humanoid.Died.Connect(() => this.contestantDiedOrLeft.Fire(player));
+				});
+				const conn = Players.PlayerRemoving.Connect((player) => {
+					this.contestantDiedOrLeft.Fire(player);
+					conn.Disconnect();
+				});
+				this.obliterator.Add(conn, "Disconnect");
+
+				player.LoadCharacter();
 				const character = await getCharacter(player);
 				character.Humanoid.WalkSpeed = 0;
 				this.SpawnCharacter({ player, character, i });

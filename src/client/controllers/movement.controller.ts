@@ -39,26 +39,26 @@ export class MovementController implements OnStart {
 	constructor(private sprintController: SprintController) {}
 
 	onStart() {
-		void this.SetupTracks();
-		Players.LocalPlayer.CharacterAdded.Connect((character) => {
-			void this.SetupTracks();
-			this.lastCharacterReference = character as CharacterRigR6;
-		});
-		ContextActionService.BindAction(
-			this.diveActionName,
-			(...args) => this.PerformDive(...args),
-			true,
-			Enum.KeyCode.E,
-			Enum.KeyCode.ButtonY,
-		);
-		ContextActionService.BindAction(
-			this.sprintActionName,
-			(...args) => this.ToggleSprint(...args),
-			true,
-			Enum.KeyCode.LeftShift,
-			Enum.KeyCode.X,
-		);
-		this.SetupStaminaRegeneration();
+		// void this.SetupTracks();
+		// Players.LocalPlayer.CharacterAdded.Connect((character) => {
+		// 	void this.SetupTracks();
+		// 	this.lastCharacterReference = character as CharacterRigR6;
+		// });
+		// ContextActionService.BindAction(
+		// 	this.diveActionName,
+		// 	(...args) => this.PerformDive(...args),
+		// 	true,
+		// 	Enum.KeyCode.E,
+		// 	Enum.KeyCode.ButtonY,
+		// );
+		// ContextActionService.BindAction(
+		// 	this.sprintActionName,
+		// 	(...args) => this.ToggleSprint(...args),
+		// 	true,
+		// 	Enum.KeyCode.LeftShift,
+		// 	Enum.KeyCode.X,
+		// );
+		// this.SetupStaminaRegeneration();
 	}
 
 	private async ToggleSprint(_actionName: string, inputState: Enum.UserInputState, _inputObject: InputObject) {

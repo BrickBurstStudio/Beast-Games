@@ -1,11 +1,13 @@
-import { Controller, OnStart } from "@flamework/core";
+import { Controller, OnInit, OnStart } from "@flamework/core";
 import { FormatCompact, FormatStandard } from "@rbxts/format-number";
-import { ReplicatedStorage, Workspace } from "@rbxts/services";
+import { ReplicatedStorage, StarterGui, Workspace } from "@rbxts/services";
 import { Events } from "client/network";
 import { tweenScale, tweenNumber } from "shared/utils/functions/tweenUtil";
 
 @Controller()
 export class GeneralController implements OnStart {
+	// ! To Disable Reset Button: Delete 'DisableReset' local script in Roblox Studio
+
 	onStart() {
 		let lastModel: Model | undefined;
 		Events.challenges.moneyPileChallenge.dropMoney.connect(async (model) => {

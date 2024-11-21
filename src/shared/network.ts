@@ -27,6 +27,7 @@ interface ServerEvents {
 		};
 	};
 	useAction: (args: { actionId: ActionId; toPlayer: Player }) => void;
+	reset: () => void;
 }
 
 interface ServerFunctions {

@@ -13,7 +13,7 @@ export class Pugil extends Gizmo {
 		activated: ReplicatedStorage.Assets.Animations.PugilActivated,
 	};
 	name = "Pugil";
-	tool = ServerStorage.Assets.Gizmos.Pugil;
+	tool = ServerStorage.Assets.Gizmos.Pugil.Clone();
 
 	/* ---------------------------------- Class --------------------------------- */
 	private hitDebounce: Debounced<(character: CharacterRigR6) => void>;
