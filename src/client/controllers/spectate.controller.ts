@@ -9,6 +9,7 @@ export class SpectateController implements OnStart {
 	async onStart() {
 		this.SetupSpectate();
 		Players.LocalPlayer.CharacterAdded.Connect(async () => {
+			store.setSpectating(false);
 			this.SetupSpectate();
 		});
 	}

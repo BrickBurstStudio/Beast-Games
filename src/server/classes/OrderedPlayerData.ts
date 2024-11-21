@@ -16,7 +16,6 @@ export class OrderedPlayerData {
 	constructor(player: Player) {
 		this.player = player;
 		this.xp = new BaseOrderedDataStore(player, "xp", (amount) => {
-			print("Rewarding XP: ", amount);
 			store.changeXP(tostring(player.UserId), amount);
 		});
 		this.wins = new BaseOrderedDataStore(player, "wins", (amount) =>

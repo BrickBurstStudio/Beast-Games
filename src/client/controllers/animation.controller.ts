@@ -10,6 +10,7 @@ export class AnimationController implements OnStart {
 
 	async onStart() {
 		Players.LocalPlayer.CharacterAdded.Connect(async () => {
+			print("character added");
 			const character = await getCharacter(Players.LocalPlayer);
 			this.loadTracks(character);
 		});

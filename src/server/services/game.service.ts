@@ -1,6 +1,9 @@
 import { OnInit, OnStart, Service } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, StarterGui } from "@rbxts/services";
+import { BoulderChallenge } from "server/challenges/boulder.challenge";
+import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
+import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
 import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { Gizmo } from "server/classes/Gizmo";
 import { Pugil } from "server/classes/gizmos/Pugil";
@@ -15,14 +18,12 @@ export class GameService implements OnStart {
 
 	async onStart() {
 		if (game.PlaceId !== MAIN_PLACE_ID) return;
+
 		this.setupReset();
 		this.setupDestroyCharacterOnDeath();
 
 		while (Players.GetPlayers().size() < 1) task.wait();
-		task.wait(2);
-
-		new PugilChallenge().Start();
-		new PugilChallenge().Start();
+		await new PugilChallenge().Start();
 	}
 
 	setupReset() {

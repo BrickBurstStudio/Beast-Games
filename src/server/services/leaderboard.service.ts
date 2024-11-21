@@ -36,7 +36,6 @@ export class LeaderboardService implements OnStart {
 			const wins = BaseOrderedDataStore.GetTop(100, "wins");
 
 			const cash = BaseOrderedDataStore.GetTop(100, "cash");
-			print("Updating leaderboards", cash);
 			Events.updateLeaderboards.broadcast({
 				xp,
 				playTime,

@@ -20,16 +20,16 @@ export class LoginService implements OnStart {
 					// give welcome rewards
 					orderedPlayerData.xp.UpdateBy(75);
 					orderedPlayerData.cash.UpdateBy(100_000);
-					print(`Player ${player.UserId} (${player.Name}) has logged in for the first time!`);
+					// print(`Player ${player.UserId} (${player.Name}) has logged in for the first time!`);
 				} else if (playerLoggedIn.last !== today) {
 					// player has logged in on a new day
 					// give daily rewards
 					orderedPlayerData.xp.UpdateBy(50);
 					orderedPlayerData.cash.UpdateBy(50_000);
-					print(`Player ${player.UserId} (${player.Name}) has logged in today!`);
+					// print(`Player ${player.UserId} (${player.Name}) has logged in today!`);
 				} else {
 					// player has already logged in today. cringe. get a job
-					print(`Player ${player.UserId} (${player.Name}) has already logged in today!`);
+					// print(`Player ${player.UserId} (${player.Name}) has already logged in today!`);
 					rewarded = false;
 				}
 
@@ -39,7 +39,7 @@ export class LoginService implements OnStart {
 					task.wait(60);
 					if (!Players.GetPlayers().find((p: Player) => p === player)) break;
 					orderedPlayerData.playTime.UpdateBy(1);
-					print(`Player ${player.UserId} (${player.Name}) has played for 1 minute!`);
+					// print(`Player ${player.UserId} (${player.Name}) has played for 1 minute!`);
 					orderedPlayerData.xp.UpdateBy(1);
 				}
 			});

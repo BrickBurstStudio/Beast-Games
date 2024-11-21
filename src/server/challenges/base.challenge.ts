@@ -5,6 +5,7 @@ import { CollectionService, Players, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { announce } from "server/util/announce";
+import { announceRules } from "server/util/announceRules";
 import { countdown } from "server/util/countdown";
 import { calculateReward } from "shared/utils/functions/calculateReward";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
@@ -28,43 +29,23 @@ export abstract class BaseChallenge {
 	protected contestantDiedOrLeft = new Instance("BindableEvent");
 	static round = 0;
 
+	/* ---------------------------- Lifecycle Methods ---------------------------- */
+
 	public async Start() {
-		BaseChallenge.round++;
+		await this.initializeRound();
+		await this.setupMap();
+		await this.setupPlayers();
 
-		this.ToggleFloor(this.floor);
-
-		this.playersInChallenge = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
-
-		this.obliterator.Add(this.map, "Destroy");
-		this.map.Parent = Workspace;
-		task.wait(this.mapLoadingTime);
-
-		await Promise.all(
-			this.playersInChallenge.map(async (player, i) => {
-				player.CharacterAdded.Connect(async () => {
-					const character = await getCharacter(player);
-					character.Humanoid.Died.Connect(() => this.contestantDiedOrLeft.Fire(player));
-				});
-				const conn = Players.PlayerRemoving.Connect((player) => {
-					this.contestantDiedOrLeft.Fire(player);
-					conn.Disconnect();
-				});
-				this.obliterator.Add(conn, "Disconnect");
-
-				player.LoadCharacter();
-				const character = await getCharacter(player);
-				character.Humanoid.WalkSpeed = 0;
-				this.SpawnCharacter({ player, character, i });
-			}),
-		);
-
-		await this.ExplainRulesAndStart();
+		Events.animations.setBlackFade.broadcast(false);
+		await this.doUISequence();
+		await this.enablePlayerMovement();
 
 		await this.Main();
-		Events.announcer.announce.broadcast(["The challenge is over!"]);
-		await this.RewardPlayers();
+		await this.rewardPlayers();
 
-		// task.wait(this.socialPeriodDuration);
+		Events.animations.setBlackFade.broadcast(true);
+		task.wait(1);
+
 		this.obliterator.Cleanup();
 	}
 
@@ -72,21 +53,34 @@ export abstract class BaseChallenge {
 
 	protected abstract SpawnCharacter({ player, character, i }: SpawnCharacterArgs): void;
 
-	protected async ExplainRulesAndStart() {
-		Events.announcer.announceRules.broadcast({
-			challengeName: this.challengeName,
-			rules: this.rules,
-		});
+	/* ---------------------------- Player Management --------------------------- */
 
-		task.wait(10);
-		await countdown({ seconds: 3, description: "Get Ready!" });
+	private async setupPlayers() {
+		this.playersInChallenge = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
 
 		await Promise.all(
-			this.playersInChallenge.map(async (player) => {
+			this.playersInChallenge.map(async (player, i) => {
+				this.setupPlayerEvents(player);
+				player.LoadCharacter();
 				const character = await getCharacter(player);
-				character.Humanoid.WalkSpeed = 16;
+				character.Humanoid.WalkSpeed = 0;
+				character.Humanoid.JumpPower = 0;
+				this.SpawnCharacter({ player, character, i });
 			}),
 		);
+	}
+
+	private setupPlayerEvents(player: Player) {
+		player.CharacterAdded.Connect(async () => {
+			const character = await getCharacter(player);
+			character.Humanoid.Died.Connect(() => this.contestantDiedOrLeft.Fire(player));
+		});
+
+		const conn = Players.PlayerRemoving.Connect((player) => {
+			this.contestantDiedOrLeft.Fire(player);
+			conn.Disconnect();
+		});
+		this.obliterator.Add(conn, "Disconnect");
 	}
 
 	protected async EliminatePlayer(player: Player) {
@@ -99,6 +93,14 @@ export abstract class BaseChallenge {
 		player.SetAttribute("eliminated", true);
 	}
 
+	/* ------------------------------ Map Control ----------------------------- */
+
+	private async setupMap() {
+		this.ToggleFloor(this.floor);
+		this.obliterator.Add(this.map, "Destroy");
+		this.map.Parent = Workspace;
+	}
+
 	protected ToggleFloor(value: boolean) {
 		CollectionService.GetTagged("stadium-floor").forEach((floor) => {
 			if (!floor.IsA("BasePart")) return;
@@ -107,7 +109,31 @@ export abstract class BaseChallenge {
 		});
 	}
 
-	private async RewardPlayers() {
+	/* ---------------------------- Round Management --------------------------- */
+
+	private async initializeRound() {
+		BaseChallenge.round++;
+	}
+
+	protected async doUISequence() {
+		await announceRules({
+			challengeName: this.challengeName,
+			rules: this.rules,
+		});
+		await countdown({ seconds: 3, description: "Get Ready!" });
+	}
+
+	protected async enablePlayerMovement() {
+		return Promise.all(
+			this.playersInChallenge.map(async (player) => {
+				const character = await getCharacter(player);
+				character.Humanoid.WalkSpeed = 16;
+				character.Humanoid.JumpPower = 50;
+			}),
+		);
+	}
+
+	private async rewardPlayers() {
 		await Promise.all(
 			this.playersInChallenge.map(async (player) => {
 				const cashReward = calculateReward(BaseChallenge.round, 10_000, 1.1);
