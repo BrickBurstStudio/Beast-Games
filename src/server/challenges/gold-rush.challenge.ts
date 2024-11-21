@@ -16,10 +16,14 @@ export class GoldRushChallenge extends BaseChallenge {
 	protected readonly rules = [
 		"You must touch a green platform to be safe.",
 		"There are not enough green platforms for everyone.",
+		"There will be 3 rounds.",
+		""
 	];
 	protected readonly map = ServerStorage.ChallengeMaps.GoldRushChallenge.Clone();
-
-	protected async Main() {}
+	protected floor = false;
+	protected async Main() {
+		task.wait(5000);
+	}
 
 	protected SetupCharacter({ character, i }: SpawnCharacterArgs): void {
 		const children = this.map.Spawns.GetChildren() as BasePart[];

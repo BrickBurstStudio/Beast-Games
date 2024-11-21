@@ -1,15 +1,8 @@
-import { OnInit, OnStart, Service } from "@flamework/core";
-import Log from "@rbxts/log";
+import { OnStart, Service } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { Players, RunService, StarterGui, TeleportService } from "@rbxts/services";
+import { Players } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
-import { BaseChallenge } from "server/challenges/base.challenge";
-import { BoulderChallenge } from "server/challenges/boulder.challenge";
-import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
-import { PugilChallenge } from "server/challenges/pugil.challenge";
-import { Gizmo } from "server/classes/Gizmo";
-import { Pugil } from "server/classes/gizmos/Pugil";
 import { Events } from "server/network";
 import { MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
@@ -19,7 +12,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 export class MainService implements OnStart {
 	public static DESTROY_CHARACTER_DELAY = 3;
 	private static EXPECTED_PLAYERS_DEFAULT = 1;
-	private static JOIN_TIMEOUT = 15;
+	private static JOIN_TIMEOUT = 20;
 
 	private playersJoined = 0;
 	private expectedPlayers = MainService.EXPECTED_PLAYERS_DEFAULT;
@@ -31,7 +24,7 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [PugilChallenge, BriefcaseChallenge]) {
+		for (const challenge of [GoldRushChallenge]) {
 			await new challenge().Start();
 		}
 	}
@@ -40,7 +33,6 @@ export class MainService implements OnStart {
 		Players.PlayerAdded.Connect((player) => {
 			this.playersJoined++;
 			this.expectedPlayers = player.GetJoinData().Members?.size() ?? MainService.EXPECTED_PLAYERS_DEFAULT;
-			print(this.expectedPlayers);
 		});
 		setTimeout(() => {
 			this.joinTimedOut = true;
