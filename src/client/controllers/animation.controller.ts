@@ -1,4 +1,5 @@
 import { Controller, OnStart } from "@flamework/core";
+import Log from "@rbxts/log";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, ReplicatedStorage } from "@rbxts/services";
 import { Events } from "client/network";
@@ -9,6 +10,7 @@ export class AnimationController implements OnStart {
 	public tracks: Map<Animation, AnimationTrack> = new Map();
 
 	async onStart() {
+		Log.Info("AnimationController started");
 		Players.LocalPlayer.CharacterAdded.Connect(async () => {
 			print("character added");
 			const character = await getCharacter(Players.LocalPlayer);

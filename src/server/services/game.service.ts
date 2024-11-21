@@ -1,4 +1,5 @@
 import { OnInit, OnStart, Service } from "@flamework/core";
+import Log from "@rbxts/log";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, StarterGui } from "@rbxts/services";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
@@ -19,6 +20,7 @@ export class GameService implements OnStart {
 	async onStart() {
 		if (game.PlaceId !== MAIN_PLACE_ID) return;
 
+		Log.Info("GameService started");
 		this.setupReset();
 		this.setupDestroyCharacterOnDeath();
 

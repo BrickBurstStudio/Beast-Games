@@ -5,3 +5,4 @@
 flamework.build
 game.rbxl.lock
 sourcemap.json
+.env.local
