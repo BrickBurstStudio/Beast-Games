@@ -9,12 +9,22 @@ function useSpectate() {
 	const index = useRef(0);
 	const [player, setPlayer] = useState<Player>();
 
+	if (player === undefined) {
+		const player = Players.GetPlayers().filter((p) => p.Character !== undefined && p !== Players.LocalPlayer)[0];
+		if (player) setPlayer(player);
+	}
+
+	useEffect(() => {
+		if (player) Workspace.CurrentCamera!.CameraSubject = (player.Character as CharacterRigR6)?.Head;
+	}, [player]);
+
 	return [
 		(direction: 1 | -1) => {
 			index.current += direction;
-			const spectatablePlayers = Players.GetPlayers().filter((p) => p.Character !== undefined);
+			const spectatablePlayers = Players.GetPlayers().filter(
+				(p) => p.Character !== undefined && p !== Players.LocalPlayer,
+			);
 			const player = spectatablePlayers[index.current % spectatablePlayers.size()];
-			Workspace.CurrentCamera!.CameraSubject = (player.Character as CharacterRigR6)?.Head;
 			setPlayer(player);
 		},
 		player,

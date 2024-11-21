@@ -24,6 +24,11 @@ interface ServerStorage extends Instance {
 			};
 		};
 		Gui: Folder & {
+			CircleBGUI: BillboardGui & {
+				Frame: Frame & {
+					UICorner: UICorner;
+				};
+			};
 			TitleBGUI: BillboardGui & {
 				UIListLayout: UIListLayout;
 				Frame: Frame & {
@@ -43,9 +48,6 @@ interface ServerStorage extends Instance {
 		BriefcaseChallenge: Folder & {
 			Briefcases: Model;
 			Baseplate: Part;
-		};
-		MoneyPileChallenge: Folder & {
-			Platforms: Model;
 		};
 		BoulderChallenge: Folder & {
 			["1"]: Folder & {
@@ -67,6 +69,18 @@ interface ServerStorage extends Instance {
 			["4"]: Folder & {
 				Rope: Part;
 				Boulder: Part;
+			};
+		};
+		MoneyPileChallenge: Folder & {
+			Platforms: Model;
+		};
+		PugilChallenge: Folder & {
+			Lights: Model;
+			Spawns: Folder & {
+				Purple: Part;
+				Yellow: Part;
+				Orange: Part;
+				Red: Part;
 			};
 		};
 		FlagChallenge: Folder & {

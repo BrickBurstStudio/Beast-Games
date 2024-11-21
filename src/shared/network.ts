@@ -27,6 +27,7 @@ interface ServerEvents {
 		};
 	};
 	useAction: (args: { actionId: ActionId; toPlayer: Player }) => void;
+	reset: () => void;
 
 	exitQueue: () => void;
 }
@@ -71,10 +72,9 @@ interface ClientEvents {
 	};
 
 	animations: {
-		startChallenge: () => void;
-		endChallenge: () => void;
 		levelUp: (level: number) => void;
 		recieveCurrency: (args: { currency: Currency; amount: number }) => void;
+		setBlackFade: (value: boolean) => void;
 	};
 
 	updateLeaderboards: (args: updateLeaderboardsArgs) => void;

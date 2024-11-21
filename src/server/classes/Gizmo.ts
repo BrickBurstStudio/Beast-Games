@@ -103,7 +103,7 @@ export abstract class Gizmo {
 		return this;
 	}
 
-	static give(owner: Player, gizmo: new (owner: Player) => Gizmo) {
+	static give<T extends Gizmo>(owner: Player, gizmo: new (owner: Player) => T): T {
 		return new gizmo(owner).setup();
 	}
 }

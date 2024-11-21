@@ -1,9 +1,11 @@
 import { Janitor } from "@rbxts/janitor";
+import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { Players, Workspace } from "@rbxts/services";
+import { CollectionService, Players, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { announce } from "server/util/announce";
+import { countdown } from "server/util/countdown";
 import { calculateReward } from "shared/utils/functions/calculateReward";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
@@ -22,10 +24,14 @@ export abstract class BaseChallenge {
 	protected abstract readonly challengeName: string;
 	protected abstract readonly rules: string[];
 	protected playersInChallenge: Player[] = [];
+	protected floor = true;
+	protected contestantDiedOrLeft = new Instance("BindableEvent");
 	static round = 0;
 
 	public async Start() {
 		BaseChallenge.round++;
+
+		this.ToggleFloor(this.floor);
 
 		this.playersInChallenge = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
 
@@ -35,6 +41,17 @@ export abstract class BaseChallenge {
 
 		await Promise.all(
 			this.playersInChallenge.map(async (player, i) => {
+				player.CharacterAdded.Connect(async () => {
+					const character = await getCharacter(player);
+					character.Humanoid.Died.Connect(() => this.contestantDiedOrLeft.Fire(player));
+				});
+				const conn = Players.PlayerRemoving.Connect((player) => {
+					this.contestantDiedOrLeft.Fire(player);
+					conn.Disconnect();
+				});
+				this.obliterator.Add(conn, "Disconnect");
+
+				player.LoadCharacter();
 				const character = await getCharacter(player);
 				character.Humanoid.WalkSpeed = 0;
 				this.SpawnCharacter({ player, character, i });
@@ -61,7 +78,8 @@ export abstract class BaseChallenge {
 			rules: this.rules,
 		});
 
-		Events.announcer.countdown.broadcast({ seconds: 3, description: "Get Ready!" });
+		task.wait(10);
+		await countdown({ seconds: 3, description: "Get Ready!" });
 
 		await Promise.all(
 			this.playersInChallenge.map(async (player) => {
@@ -79,6 +97,14 @@ export abstract class BaseChallenge {
 		this.playersInChallenge.remove(this.playersInChallenge.findIndex((p) => p === player));
 		task.wait(1);
 		player.SetAttribute("eliminated", true);
+	}
+
+	protected ToggleFloor(value: boolean) {
+		CollectionService.GetTagged("stadium-floor").forEach((floor) => {
+			if (!floor.IsA("BasePart")) return;
+			floor.Transparency = value ? 0 : 1;
+			floor.CanCollide = value;
+		});
 	}
 
 	private async RewardPlayers() {

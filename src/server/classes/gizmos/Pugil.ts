@@ -13,10 +13,11 @@ export class Pugil extends Gizmo {
 		activated: ReplicatedStorage.Assets.Animations.PugilActivated,
 	};
 	name = "Pugil";
-	tool = ServerStorage.Assets.Gizmos.Pugil;
+	tool = ServerStorage.Assets.Gizmos.Pugil.Clone();
 
 	/* ---------------------------------- Class --------------------------------- */
 	private hitDebounce: Debounced<(character: CharacterRigR6) => void>;
+	private hitValidator: (character: CharacterRigR6) => boolean = () => true;
 
 	/* ------------------------------ Configuration ----------------------------- */
 	private MAX_FORCE_MULTIPLIER = 15000;
@@ -37,8 +38,13 @@ export class Pugil extends Gizmo {
 		this.tool.Side1.Touched.Connect((hit: BasePart) => {
 			if (!this.activatedDebounce.pending() || !isCharacterPart(hit)) return;
 			const character = hit.Parent as CharacterRigR6;
+			if (!this.hitValidator(character)) return;
 			this.hitDebounce(character);
 		});
+	}
+
+	setHitValidator(validator: (character: CharacterRigR6) => boolean) {
+		this.hitValidator = validator;
 	}
 
 	activated() {

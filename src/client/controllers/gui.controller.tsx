@@ -1,4 +1,4 @@
-import { Controller, OnStart } from "@flamework/core";
+import { Controller, OnInit, OnStart } from "@flamework/core";
 import React from "@rbxts/react";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { createPortal, createRoot } from "@rbxts/react-roblox";

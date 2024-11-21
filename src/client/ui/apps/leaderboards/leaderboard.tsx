@@ -20,7 +20,7 @@ export default function Leaderboard(props: LeaderboardProps) {
 						const numberValue = tonumber(props.convertValue ? props.convertValue(value) : value);
 						return {
 							key: key.split("_")[1],
-							value: !!numberValue ? FormatCompact(numberValue) : value,
+							value: numberValue !== undefined ? FormatCompact(numberValue) : value,
 						};
 					}),
 			);
