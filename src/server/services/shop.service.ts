@@ -1,9 +1,11 @@
 import { OnStart, Service } from "@flamework/core";
+import { AnalyticsService } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Functions } from "server/network";
 import { store } from "server/store";
 import { items } from "shared/configs/items";
 import { cases } from "shared/configs/items/cases";
+import { selectPlayerData } from "shared/store/selectors/players";
 
 @Service()
 export class ShopService implements OnStart {
@@ -20,6 +22,15 @@ export class ShopService implements OnStart {
 			if (playerCash < caseObj.price) throw error("You do not have enough cash to purchase this case.");
 
 			orderedPlayerData.cash.UpdateBy(-caseObj.price);
+			const playerData = store.getState(selectPlayerData(tostring(player.UserId)));
+			AnalyticsService.LogEconomyEvent(
+				player,
+				Enum.AnalyticsEconomyFlowType.Sink,
+				"cash",
+				caseObj.price,
+				playerData.balance.cash,
+				Enum.AnalyticsEconomyTransactionType.Shop.Name,
+			);
 			// Adding case to inventory should be the last operation to prevent duplication with players leaving
 			store.addItemToInventory(tostring(player.UserId), caseId);
 		});
