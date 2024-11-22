@@ -18,12 +18,3 @@ export const COLORS = {
 };
 
 export const BORDER_THICKNESS = 7.5;
-
-export const IMAGES = {
-	coins: "15416676802",
-	gems: "15416675953",
-	settings: "16545611198",
-	shop: "9405933234",
-} as const;
-
-export type ImageName = keyof typeof IMAGES;

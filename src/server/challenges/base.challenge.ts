@@ -1,15 +1,13 @@
 import { Janitor } from "@rbxts/janitor";
-import Log from "@rbxts/log";
-import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { CollectionService, Players, Workspace } from "@rbxts/services";
+import { AnalyticsService, CollectionService, Players, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
-import { announce } from "server/util/announce";
+import { store } from "server/store";
 import { announceRules } from "server/util/announceRules";
 import { countdown } from "server/util/countdown";
+import { selectPlayerData } from "shared/store/selectors/players";
 import { calculateReward } from "shared/utils/functions/calculateReward";
-import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
 export type SpawnCharacterArgs = {
@@ -139,8 +137,18 @@ export abstract class BaseChallenge {
 				const cashReward = calculateReward(BaseChallenge.round, 10_000, 1.1);
 				const xpReward = calculateReward(BaseChallenge.round, 10, 1.1);
 
+
 				const orderedPlayerData = new OrderedPlayerData(player);
 				orderedPlayerData.cash.UpdateBy(cashReward);
+				const playerData = store.getState(selectPlayerData(tostring(player.UserId)));
+				AnalyticsService.LogEconomyEvent(
+					player,
+					Enum.AnalyticsEconomyFlowType.Source,
+					"cash",
+					cashReward,
+					playerData.balance.cash,
+					Enum.AnalyticsEconomyTransactionType.Gameplay.Name,
+				);
 				orderedPlayerData.xp.UpdateBy(xpReward);
 			}),
 		);

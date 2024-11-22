@@ -1,15 +1,16 @@
 import { OnStart, Service } from "@flamework/core";
-import { ServerStorage } from "@rbxts/services";
+import { AnalyticsService, ServerStorage } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { store } from "server/store";
-import { selectPlayerXP } from "shared/store/selectors/players";
+import { selectPlayerData, selectPlayerXP } from "shared/store/selectors/players";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { getLevel } from "shared/utils/functions/getLevel";
 
 @Service()
 export class LevelService implements OnStart {
+	private readonly levelUpReward = 50_000;
 	onStart() {
 		forEveryPlayer((player) => {
 			let previousLevel: number | undefined = undefined;
@@ -30,10 +31,18 @@ export class LevelService implements OnStart {
 	}
 
 	async levelUpPlayer(player: Player, level: number) {
-		const vfxDuration = 0.5;
-
 		const orderedPlayerData = new OrderedPlayerData(player);
-		orderedPlayerData.cash.UpdateBy(100_000);
+		orderedPlayerData.cash.UpdateBy(this.levelUpReward);
+		AnalyticsService.LogCustomEvent(player, "leveled_up", level);
+		const playerData = store.getState(selectPlayerData(tostring(player.UserId)));
+		AnalyticsService.LogEconomyEvent(
+			player,
+			Enum.AnalyticsEconomyFlowType.Source,
+			"cash",
+			this.levelUpReward,
+			playerData.balance.cash,
+			Enum.AnalyticsEconomyTransactionType.Gameplay.Name,
+		);
 
 		Events.animations.levelUp(player, level);
 
@@ -44,6 +53,8 @@ export class LevelService implements OnStart {
 
 		levelUpVFX.Sound.Play();
 		(levelUpVFX.Start.GetChildren() as ParticleEmitter[]).forEach((v) => (v.Enabled = true));
+
+		const vfxDuration = 0.5;
 		task.wait(vfxDuration);
 		(levelUpVFX.Start.GetChildren() as ParticleEmitter[]).forEach((v) => (v.Enabled = false));
 		task.wait(levelUpVFX.Sound.TimeLength - vfxDuration);
