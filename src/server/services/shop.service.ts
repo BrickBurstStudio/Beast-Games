@@ -30,6 +30,7 @@ export class ShopService implements OnStart {
 				caseObj.price,
 				playerData.balance.cash,
 				Enum.AnalyticsEconomyTransactionType.Shop.Name,
+				caseObj.id,
 			);
 			// Adding case to inventory should be the last operation to prevent duplication with players leaving
 			store.addItemToInventory(tostring(player.UserId), caseId);
