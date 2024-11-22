@@ -1,10 +1,12 @@
 import { OnStart, Service } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { Players } from "@rbxts/services";
+import { AnalyticsService, Players } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
+import { FlagChallenge } from "server/challenges/flag.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
+import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { Events } from "server/network";
 import { MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
@@ -26,13 +28,28 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [BoulderChallenge]) {
+		for (const challenge of [
+			FlagChallenge,
+			BriefcaseChallenge,
+			BoulderChallenge,
+			GoldRushChallenge,
+			PugilChallenge,
+		]) {
 			await new challenge().Start();
 		}
 	}
 
 	yieldPlayers() {
 		Players.PlayerAdded.Connect((player) => {
+			AnalyticsService.LogFunnelStepEvent(
+				player,
+				"core_loop",
+				`${player.UserId}-${game.JobId}`,
+				4,
+				"joined_main_game",
+			);
+			AnalyticsService.LogOnboardingFunnelStepEvent(player, 4, "joined_main_game");
+
 			this.playersJoined++;
 			this.expectedPlayers = player.GetJoinData().Members?.size() ?? MainService.EXPECTED_PLAYERS_DEFAULT;
 		});

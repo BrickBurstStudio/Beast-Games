@@ -1,5 +1,5 @@
 import { OnStart, Service } from "@flamework/core";
-import { Players, TeleportService, Workspace } from "@rbxts/services";
+import { AnalyticsService, Players, TeleportService, Workspace } from "@rbxts/services";
 import { Events } from "server/network";
 import { LOBBY_PLACE_ID, MAIN_PLACE_ID } from "shared/configs/places";
 import createForcefield from "shared/utils/functions/createForcefield";
@@ -57,12 +57,14 @@ export class QueueService implements OnStart {
 		character.PivotTo(forcefield.CFrame.mul(new CFrame(0, -forcefield.Size.Y / 2, 0)));
 		player.SetAttribute("inQueue", true);
 
+		AnalyticsService.LogOnboardingFunnelStepEvent(player, 2, "entered_queue");
+		AnalyticsService.LogFunnelStepEvent(player, "core_loop", `${player.UserId}-${game.JobId}`, 2, "entered_queue");
 		const playersInQueue = this.getPlayersInQueue();
 		if (playersInQueue.size() === this.MIN_PLAYERS) {
 			// Start countdown when minimum players is reached
 			this.queueState.startTime = tick();
 			this.queueState.countdownEndTime = tick() + this.MAX_QUEUE_WAIT_TIME;
-			
+
 			// Start countdown for all players in queue
 			playersInQueue.forEach((queuedPlayer) => {
 				Events.announcer.countdown.fire(queuedPlayer, {
@@ -161,7 +163,18 @@ export class QueueService implements OnStart {
 			}
 
 			print(`Starting match with ${playersInQueue.size()} players`);
-			await TeleportService.TeleportAsync(MAIN_PLACE_ID, playersInQueue);
+			TeleportService.TeleportAsync(MAIN_PLACE_ID, playersInQueue);
+
+			playersInQueue.forEach((player) => {
+				AnalyticsService.LogOnboardingFunnelStepEvent(player, 3, "teleported");
+				AnalyticsService.LogFunnelStepEvent(
+					player,
+					"core_loop",
+					`${player.UserId}-${game.JobId}`,
+					3,
+					"teleported",
+				);
+			});
 		} catch (error) {
 			print(`Teleport failed: ${error}`);
 			const playersInQueue = this.getPlayersInQueue();

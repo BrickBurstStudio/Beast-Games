@@ -111,6 +111,32 @@ export abstract class BaseChallenge {
 
 	private async initializeRound() {
 		BaseChallenge.round++;
+		Players.GetPlayers().forEach((player) => {
+			AnalyticsService.LogFunnelStepEvent(
+				player,
+				"core_loop",
+				`${player.UserId}-${game.JobId}`,
+				BaseChallenge.round + 4,
+				`challenge-${BaseChallenge.round}`,
+				{
+					[Enum.AnalyticsCustomFieldKeys.CustomField01.Name]: this.challengeName,
+					[Enum.AnalyticsCustomFieldKeys.CustomField02.Name]: player.GetAttribute("eliminated")
+						? true
+						: false,
+				},
+			);
+			AnalyticsService.LogOnboardingFunnelStepEvent(
+				player,
+				BaseChallenge.round + 4,
+				`challenge-${this.challengeName}`,
+				{
+					[Enum.AnalyticsCustomFieldKeys.CustomField01.Name]: this.challengeName,
+					[Enum.AnalyticsCustomFieldKeys.CustomField02.Name]: player.GetAttribute("eliminated")
+						? true
+						: false,
+				},
+			);
+		});
 	}
 
 	protected async doUISequence() {
