@@ -10,7 +10,7 @@ interface BriefcaseProps extends ClaimComponentProps {
 @Component({
 	tag: "briefcase",
 	defaults: {
-		safe: true,
+		safe: false,
 		highlightMode: "disabled",
 		touchEnabled: false,
 	},

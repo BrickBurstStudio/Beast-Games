@@ -24,13 +24,14 @@ export class BriefcaseChallenge extends BaseChallenge {
 	readonly memorizeTime = 15;
 	readonly runTime = 30;
 	readonly playerSelections: { [key: Player["UserId"]]: BriefcaseComponent } = {};
+	cases = 0;
 
 	briefcases: BriefcaseComponent[] = [];
 	revealing = false;
 
 	protected async Main() {
-		const cases = this.playersInChallenge.size() + this.badBriefcases;
-		const grid = generatePlayerGrid(cases, 10);
+		this.cases = math.ceil(this.playersInChallenge.size() / 2) + this.badBriefcases;
+		const grid = generatePlayerGrid(this.cases, 10);
 		const largestY = this.GetLargestSubarray(grid)!;
 		const gridCenterXOffset = grid.size() * (this.cellPadding / 2) - this.cellPadding / 2;
 		const gridCenterYOffset = largestY.size() * (this.cellPadding / 2) - this.cellPadding / 2;
@@ -95,7 +96,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 		this.RandomizeCases();
 
 		await announce([
-			`Only ${cases - this.badBriefcases} cases here are safe. ${this.badBriefcases} cases are deadly.`,
+			`Only ${this.cases - this.badBriefcases} cases here are safe. ${this.badBriefcases} cases are deadly.`,
 		]);
 		this.ToggleCases(true);
 		await countdown({ seconds: this.memorizeTime, description: "Memorize the safe cases!" });
@@ -119,11 +120,11 @@ export class BriefcaseChallenge extends BaseChallenge {
 	private RandomizeCases() {
 		if (this.briefcases.size() < this.badBriefcases) throw "Not enough brief cases";
 		const unmarked = [...this.briefcases];
-		for (let i = 0; i < this.badBriefcases; i++) {
+		for (let i = 0; i < this.cases - this.badBriefcases; i++) {
 			const index = math.random(0, unmarked.size() - 1);
 			const briefCase = unmarked.remove(index);
 			if (!briefCase) throw `Index ${index} does not exist for briefCase`;
-			briefCase.attributes.safe = false;
+			briefCase.attributes.safe = true;
 		}
 	}
 
