@@ -28,7 +28,7 @@ export class FlagChallenge extends BaseChallenge {
 	private playersInArena: Player[] = [];
 	private playersToAdvanceTarget: number = 0;
 
-	protected async Main() {
+	protected async main() {
 		this.playersToAdvanceTarget = math.floor(this.playersInChallenge.size() * 0.8);
 		this.undecidedPlayers = [...this.playersInChallenge];
 		this.map.ChallengeArea.StartArea.Barier.Touched.Connect((otherPart) => {
@@ -155,7 +155,7 @@ export class FlagChallenge extends BaseChallenge {
 		}
 	}
 
-	protected SetupCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
+	protected setupCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
 		// spawn player anywhere inside x and z bounds of `StartSide`
 		character.HumanoidRootPart.CFrame = this.map.ChallengeArea.StartArea.Platform.CFrame.add(
 			new Vector3(

@@ -25,9 +25,7 @@ export class GoldRushChallenge extends BaseChallenge {
 	private allGreenClaims: GreenClaimComponent[] = [];
 	private greenClaims: GreenClaimComponent[] = [];
 	private safePlayers: Player[] = [];
-	protected async Main() {
-		this.allGreenClaims = this.components.getAllComponents<GreenClaimComponent>();
-		this.setupClaims();
+	protected async main() {
 		this.contestantDiedOrLeft.Event.Connect((player: Player) => {
 			this.safePlayers = this.safePlayers.filter((p) => p !== player);
 		});
@@ -38,13 +36,10 @@ export class GoldRushChallenge extends BaseChallenge {
 		// while (!this.isFinished()) task.wait();
 	}
 
-	private isFinished() {
-		if (this.greenClaims === undefined) return warn("Green claims are undefined");
+	protected async setup() {
+		this.allGreenClaims = this.components.getAllComponents<GreenClaimComponent>();
+		print(this.allGreenClaims.size());
 
-		return this.safePlayers.size() >= this.greenClaims.size() || this.playersInChallenge.size() === 0;
-	}
-
-	private setupClaims() {
 		// Get the calculated number of claims we want
 		const numClaimsNeeded = this.calculateGreenClaims();
 
@@ -74,13 +69,20 @@ export class GoldRushChallenge extends BaseChallenge {
 		});
 	}
 
+	private isFinished() {
+		if (this.greenClaims === undefined) return warn("Green claims are undefined");
+
+		return this.safePlayers.size() >= this.greenClaims.size() || this.playersInChallenge.size() === 0;
+	}
+
 	private calculateGreenClaims() {
+		print(this.allGreenClaims.size());
 		const playerCount = this.playersInChallenge.size();
 		const greenClaims = math.clamp(math.ceil(playerCount / 3), 1, this.allGreenClaims.size());
 		return greenClaims;
 	}
 
-	protected SetupCharacter({ character, i }: SpawnCharacterArgs): void {
+	protected setupCharacter({ character, i }: SpawnCharacterArgs): void {
 		const children = this.map.Spawns.GetChildren() as BasePart[];
 		character.PivotTo(children[i % children.size()].CFrame);
 	}

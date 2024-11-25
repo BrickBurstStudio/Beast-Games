@@ -18,7 +18,7 @@ export class PugilChallenge extends BaseChallenge {
 		(spawn) => ({ spawn, players: [] }) as Team,
 	);
 
-	protected async Main(): Promise<void> {
+	protected async main(): Promise<void> {
 		this.contestantDiedOrLeft.Event.Connect((player: Player) => {
 			const team = this.teams.find((team) => team.players.includes(player));
 			if (!team) return;
@@ -29,11 +29,11 @@ export class PugilChallenge extends BaseChallenge {
 				this.finished = true;
 			}
 		});
-		this.ToggleFloor(false);
+		this.toggleFloor(false);
 
 		while (!this.finished) task.wait();
 	}
-	protected SetupCharacter({ player, character, i }: SpawnCharacterArgs): void {
+	protected setupCharacter({ player, character, i }: SpawnCharacterArgs): void {
 		const team = this.teams[i % this.teams.size()];
 		team.players.push(player);
 		character.PivotTo(team.spawn.CFrame);

@@ -29,7 +29,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 	briefcases: BriefcaseComponent[] = [];
 	revealing = false;
 
-	protected async Main() {
+	protected async main() {
 		this.cases = math.ceil(this.playersInChallenge.size() / 2) + this.badBriefcases;
 		const grid = generatePlayerGrid(this.cases, 10);
 		const largestY = this.GetLargestSubarray(grid)!;
@@ -128,7 +128,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 		}
 	}
 
-	protected async SetupCharacter({ character }: SpawnCharacterArgs) {
+	protected async setupCharacter({ character }: SpawnCharacterArgs) {
 		character.HumanoidRootPart.CFrame = this.map.Baseplate.CFrame.add(
 			new Vector3(-10, this.map.Baseplate.Size.Y / 2 + 5, 0),
 		);

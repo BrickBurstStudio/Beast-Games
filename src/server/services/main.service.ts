@@ -29,7 +29,7 @@ export class MainService implements OnStart {
 		this.yieldPlayers();
 
 		for (const challenge of [GoldRushChallenge]) {
-			await new challenge().Start();
+			await new challenge().start();
 		}
 	}
 

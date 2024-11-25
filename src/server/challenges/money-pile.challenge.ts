@@ -28,7 +28,7 @@ export class MoneyPileChallenge extends BaseChallenge {
 
 	private components = Dependency<Components>();
 
-	protected async Main() {
+	protected async main() {
 		this.forcefields = this.platforms.map((platform) => this.CreateForcefield(platform));
 		this.ToggleForcefields(true);
 
@@ -172,7 +172,7 @@ export class MoneyPileChallenge extends BaseChallenge {
 		(platform.Part.FindFirstChild("Buzz") as Sound)?.Play();
 	}
 
-	protected SetupCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
+	protected setupCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
 		const index = i & this.platforms.size();
 		const platform = this.platforms[index];
 		this.platformData[index] = {

@@ -30,7 +30,7 @@ export class BoulderChallenge extends BaseChallenge {
 	private teamFinishGoals: number[] = [0, 0, 0, 0, 0];
 	private teamsCompleted = 0;
 
-	protected async Main() {
+	protected async main() {
 		await Promise.all(
 			this.playersInChallenge.map(async (player) => {
 				this.teamFinishGoals[player.GetAttribute("team") as number] =
@@ -126,13 +126,13 @@ export class BoulderChallenge extends BaseChallenge {
 				const rope = teamAssets.Rope as Part;
 				const startPos = teamAssets.Rope.GetAttribute("initialPosition") as Vector3;
 				const endPos = startPos.add(new Vector3(0, 0, -15));
-				const progress = this.teamProgress[team] / this.teamFinishGoals[team] * 0.5;
+				const progress = (this.teamProgress[team] / this.teamFinishGoals[team]) * 0.5;
 				rope.Position = startPos.Lerp(endPos, progress);
 			}
 		}
 	}
 
-	protected SetupCharacter({ player, character, i }: SpawnCharacterArgs): void {
+	protected setupCharacter({ player, character, i }: SpawnCharacterArgs): void {
 		character.Humanoid.WalkSpeed = 0;
 		character.Humanoid.JumpHeight = 0;
 
