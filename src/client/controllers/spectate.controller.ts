@@ -17,9 +17,7 @@ export class SpectateController implements OnStart {
 	async SetupSpectate() {
 		const character = Players.LocalPlayer.Character !== undefined && (await getCharacter(Players.LocalPlayer));
 		if (!character) return;
-		character.Humanoid.Died.Connect(() => {
-			task.wait(4);
-			if (Players.LocalPlayer.Character !== undefined) return;
+		character.Destroying.Connect(() => {
 			store.setSpectating(true);
 		});
 	}

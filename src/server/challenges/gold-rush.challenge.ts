@@ -13,7 +13,7 @@ import { countdown } from "server/util/countdown";
 import { GreenClaimComponent } from "server/components/claim-components/green-claim.component";
 
 export class GoldRushChallenge extends BaseChallenge {
-	protected readonly challengeName = "Flag";
+	protected readonly challengeName = "Gold Rush";
 	protected readonly rules = [
 		"You must touch a green platform to be safe.",
 		"There are not enough green platforms for everyone.",
@@ -25,10 +25,26 @@ export class GoldRushChallenge extends BaseChallenge {
 	private allGreenClaims: GreenClaimComponent[] = [];
 	private greenClaims: GreenClaimComponent[] = [];
 	private safePlayers: Player[] = [];
-
 	protected async Main() {
 		this.allGreenClaims = this.components.getAllComponents<GreenClaimComponent>();
+		this.setupClaims();
+		this.contestantDiedOrLeft.Event.Connect((player: Player) => {
+			this.safePlayers = this.safePlayers.filter((p) => p !== player);
+		});
 
+		// Set up claim events
+
+		task.wait(5000);
+		// while (!this.isFinished()) task.wait();
+	}
+
+	private isFinished() {
+		if (this.greenClaims === undefined) return warn("Green claims are undefined");
+
+		return this.safePlayers.size() >= this.greenClaims.size() || this.playersInChallenge.size() === 0;
+	}
+
+	private setupClaims() {
 		// Get the calculated number of claims we want
 		const numClaimsNeeded = this.calculateGreenClaims();
 
@@ -51,14 +67,11 @@ export class GoldRushChallenge extends BaseChallenge {
 
 		this.greenClaims = selectedClaims;
 
-		// Set up claim events
 		this.greenClaims.forEach((claim) => {
 			claim.claimedEvent.Event.Connect((player: Player) => {
 				this.safePlayers.push(player);
 			});
 		});
-
-		task.wait(5000);
 	}
 
 	private calculateGreenClaims() {

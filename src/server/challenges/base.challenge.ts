@@ -140,6 +140,8 @@ export abstract class BaseChallenge {
 	}
 
 	protected async doUISequence() {
+		if (Players.GetPlayers().size() === 1) return task.wait(3);
+
 		await announceRules({
 			challengeName: this.challengeName,
 			rules: this.rules,
@@ -162,7 +164,6 @@ export abstract class BaseChallenge {
 			this.playersInChallenge.map(async (player) => {
 				const cashReward = calculateReward(BaseChallenge.round, 10_000, 1.1);
 				const xpReward = calculateReward(BaseChallenge.round, 10, 1.1);
-
 
 				const orderedPlayerData = new OrderedPlayerData(player);
 				orderedPlayerData.cash.UpdateBy(cashReward);

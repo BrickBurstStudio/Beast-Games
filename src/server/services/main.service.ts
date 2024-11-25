@@ -28,13 +28,7 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [
-			FlagChallenge,
-			BriefcaseChallenge,
-			BoulderChallenge,
-			GoldRushChallenge,
-			PugilChallenge,
-		]) {
+		for (const challenge of [GoldRushChallenge]) {
 			await new challenge().Start();
 		}
 	}
@@ -69,21 +63,16 @@ export class MainService implements OnStart {
 	}
 
 	setupDestroyCharacterOnDeath() {
-		forEveryPlayer((player) => {
+		forEveryPlayer(async (player) => {
 			const func = (character: CharacterRigR6) => {
-				(character.WaitForChild("Humanoid") as Humanoid).Died.Connect(() => {
-					// task.wait(GameService.DESTROY_CHARACTER_DELAY);
-					player.Character = undefined;
+				character.Humanoid.Died.Connect(() => {
+					task.wait(MainService.DESTROY_CHARACTER_DELAY);
 					character.Destroy();
 				});
 			};
 
-			if (player.Character) func(player.Character as CharacterRigR6);
-
-			player.CharacterAdded.Connect(async () => {
-				const character = await getCharacter(player);
-				character.Humanoid.Died.Connect(() => func(character));
-			});
+			if (player.Character) func(await getCharacter(player));
+			player.CharacterAdded.Connect(async () => func(await getCharacter(player)));
 		});
 	}
 }

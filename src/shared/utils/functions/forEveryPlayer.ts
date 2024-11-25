@@ -1,10 +1,13 @@
 import { Players } from "@rbxts/services";
 
-type Callback = (player: Player, addedConn?: RBXScriptConnection) => (() => void) | void | Promise<(() => void) | void>;
+type Callback = (
+	player: Player,
+	addedConn?: RBXScriptConnection,
+) => void | (() => void) | Promise<void> | Promise<() => void>;
 
 function runCallback(player: Player, joinFunc: Callback, c?: RBXScriptConnection) {
 	const cleanupPlayer = joinFunc(player, c);
-	if (!cleanupPlayer) return;
+	if (cleanupPlayer === undefined) return;
 
 	const leaveConn = Players.PlayerRemoving.Connect(async (playerLeaving) => {
 		if (playerLeaving === player) {
@@ -43,7 +46,7 @@ function runCallback(player: Player, joinFunc: Callback, c?: RBXScriptConnection
 
 export function forEveryPlayer(joinFunc: Callback, leaveFunc?: (p: Player) => void) {
 	const connections = new Array<RBXScriptConnection>();
-	if (leaveFunc) connections.push(Players.PlayerRemoving.Connect(leaveFunc))
+	if (leaveFunc) connections.push(Players.PlayerRemoving.Connect(leaveFunc));
 
 	Players.GetPlayers().forEach((p) => {
 		runCallback(p, joinFunc);
