@@ -33,8 +33,8 @@ export abstract class BaseChallenge {
 		await this.initializeRound();
 		await this.setupMap();
 		await this.setupPlayers();
-		while (!this.isSetupCompleted()) task.wait(0.25);
 
+		while (!(await this.isSetupCompleted())) task.wait(0.5);
 		await this.setup();
 
 		Events.animations.setBlackFade.broadcast(false);
@@ -53,11 +53,9 @@ export abstract class BaseChallenge {
 	protected abstract main(): Promise<void>;
 
 	protected abstract setupCharacter({ player, character, i }: SpawnCharacterArgs): void;
-	protected setup(): Promise<void> {
-		return Promise.resolve();
-	}
-	protected isSetupCompleted(): Promise<void> {
-		return Promise.resolve();
+	protected async setup() {}
+	protected async isSetupCompleted(): Promise<boolean> {
+		return true;
 	}
 
 	/* ---------------------------- Player Management --------------------------- */

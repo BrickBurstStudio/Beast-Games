@@ -36,9 +36,12 @@ export class GoldRushChallenge extends BaseChallenge {
 		// while (!this.isFinished()) task.wait();
 	}
 
+	protected async isSetupCompleted() {
+		return this.components.getAllComponents<GreenClaimComponent>().size() > 0;
+	}
+
 	protected async setup() {
 		this.allGreenClaims = this.components.getAllComponents<GreenClaimComponent>();
-		print(this.allGreenClaims.size());
 
 		// Get the calculated number of claims we want
 		const numClaimsNeeded = this.calculateGreenClaims();
@@ -76,7 +79,6 @@ export class GoldRushChallenge extends BaseChallenge {
 	}
 
 	private calculateGreenClaims() {
-		print(this.allGreenClaims.size());
 		const playerCount = this.playersInChallenge.size();
 		const greenClaims = math.clamp(math.ceil(playerCount / 3), 1, this.allGreenClaims.size());
 		return greenClaims;
