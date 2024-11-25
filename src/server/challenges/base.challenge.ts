@@ -47,6 +47,7 @@ export abstract class BaseChallenge {
 		Events.animations.setBlackFade.broadcast(true);
 		task.wait(1);
 
+		this.freezePlayers();
 		this.obliterator.Cleanup();
 	}
 
@@ -59,6 +60,13 @@ export abstract class BaseChallenge {
 	}
 
 	/* ---------------------------- Player Management --------------------------- */
+
+	private freezePlayers() {
+		this.playersInChallenge.forEach(async (player) => {
+			const character = await getCharacter(player);
+			character.HumanoidRootPart.Anchored = true;
+		});
+	}
 
 	private async setupPlayers() {
 		this.playersInChallenge = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));

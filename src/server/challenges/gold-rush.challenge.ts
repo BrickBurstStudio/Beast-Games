@@ -15,9 +15,9 @@ import { GreenClaimComponent } from "server/components/claim-components/green-cl
 export class GoldRushChallenge extends BaseChallenge {
 	protected readonly challengeName = "Gold Rush";
 	protected readonly rules = [
-		"You must touch a green platform to be safe.",
-		"There are not enough green platforms for everyone.",
-		"There will be 3 rounds.",
+		"You must claim any gold platform to be safe.",
+		"Each gold platform can only be claimed by one player.",
+		"There are not enough gold platforms for everyone.",
 	];
 	protected readonly map = ServerStorage.ChallengeMaps.GoldRushChallenge.Clone();
 	protected floor = false;
@@ -32,8 +32,13 @@ export class GoldRushChallenge extends BaseChallenge {
 
 		// Set up claim events
 
-		task.wait(5000);
-		// while (!this.isFinished()) task.wait();
+		while (!this.isFinished()) task.wait(0.25);
+		this.playersInChallenge.forEach((player) => {
+			if (!this.safePlayers.find((p) => p === player) && player.Character !== undefined) {
+				// todo : add feat for displaying why plr died (ex. OUT OF TIME, NO MORE PLATFORMS, etc.)
+				(player.Character as CharacterRigR6).Humanoid.Health = 0;
+			}
+		});
 	}
 
 	protected async isSetupCompleted() {
@@ -73,9 +78,11 @@ export class GoldRushChallenge extends BaseChallenge {
 	}
 
 	private isFinished() {
-		if (this.greenClaims === undefined) return warn("Green claims are undefined");
-
-		return this.safePlayers.size() >= this.greenClaims.size() || this.playersInChallenge.size() === 0;
+		return (
+			this.safePlayers.size() >= this.greenClaims.size() ||
+			this.playersInChallenge.size() === 0 ||
+			this.safePlayers.size() >= this.playersInChallenge.size()
+		);
 	}
 
 	private calculateGreenClaims() {
