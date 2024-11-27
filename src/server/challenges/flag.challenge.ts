@@ -12,7 +12,7 @@ import { BaseChallenge } from "./base.challenge";
 import { countdown } from "server/util/countdown";
 
 export class FlagChallenge extends BaseChallenge {
-	protected readonly challengeName = "Flag";
+	protected readonly challengeName = "Flag Run" as const;
 	protected readonly rules = [
 		"You will be playing against 1 random player.",
 		"You must claim the flag and bring it back to your base to win!",

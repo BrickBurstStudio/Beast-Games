@@ -6,6 +6,7 @@ import { Events } from "server/network";
 import { store } from "server/store";
 import { announceRules } from "server/util/announceRules";
 import { countdown } from "server/util/countdown";
+import { ChallengeName } from "shared/configs/gui";
 import { selectPlayerData } from "shared/store/selectors/players";
 import { calculateReward } from "shared/utils/functions/calculateReward";
 import { getCharacter } from "shared/utils/functions/getCharacter";
@@ -20,7 +21,7 @@ export abstract class BaseChallenge {
 	private readonly socialPeriodDuration = 30;
 	protected readonly obliterator = new Janitor();
 	protected abstract readonly map: Folder;
-	protected abstract readonly challengeName: string;
+	protected abstract readonly challengeName: ChallengeName;
 	protected abstract readonly rules: string[];
 	protected playersInChallenge: Player[] = [];
 	protected floor = true;
@@ -129,6 +130,9 @@ export abstract class BaseChallenge {
 
 	private async initializeRound() {
 		BaseChallenge.round++;
+
+		store.setChallenge(this.challengeName);
+
 		Players.GetPlayers().forEach((player) => {
 			AnalyticsService.LogFunnelStepEvent(
 				player,

@@ -25,6 +25,9 @@ interface ServerEvents {
 		boulderChallenge: {
 			pull: () => void;
 		};
+		bribeChallenge: {
+			acceptBribe: () => void;
+		};
 	};
 	useAction: (args: { actionId: ActionId; toPlayer: Player }) => void;
 	reset: () => void;

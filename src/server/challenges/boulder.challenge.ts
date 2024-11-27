@@ -16,7 +16,7 @@ const TeamColors = {
 };
 
 export class BoulderChallenge extends BaseChallenge {
-	protected readonly challengeName = "Boulder Challenge";
+	protected readonly challengeName = "Boulder Pull" as const;
 	protected readonly rules = [
 		"You will be assigned a random team.",
 		"You must work with your team to pull the boulder to the finish line.",
@@ -69,8 +69,6 @@ export class BoulderChallenge extends BaseChallenge {
 			}),
 			"Disconnect",
 		);
-
-		store.setChallenge("Boulder");
 
 		while (this.teamsCompleted < this.teamFinishGoals.size() - 1) {
 			// Update the boulder position for each team

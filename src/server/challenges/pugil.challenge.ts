@@ -6,7 +6,7 @@ import { CharacterRigR6 } from "@rbxts/promise-character";
 
 export class PugilChallenge extends BaseChallenge {
 	protected map = ServerStorage.ChallengeMaps.PugilChallenge.Clone();
-	protected challengeName = "Knockoff Knockout";
+	protected challengeName = "Pugil" as const;
 	protected rules = ["Knockout opponents to win!"];
 	protected floor = false;
 	private finished = false;

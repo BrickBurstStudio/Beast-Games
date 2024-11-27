@@ -10,7 +10,7 @@ import { BriefcaseComponent } from "../components/claim-components/briefcase.com
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 
 export class BriefcaseChallenge extends BaseChallenge {
-	protected readonly challengeName = "Briefcase";
+	protected readonly challengeName = "Briefcase Memory" as const;
 	protected readonly rules = [
 		"A random number of cases are safe.",
 		"Memorize the safe cases!",

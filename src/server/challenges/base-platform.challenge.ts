@@ -1,6 +1,7 @@
 import { Lighting, ServerStorage } from "@rbxts/services";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 import Make from "@rbxts/make";
+import { getCharacter } from "shared/utils/functions/getCharacter";
 
 type PlatformState = "safe" | "eliminated" | "neutral";
 
@@ -20,12 +21,14 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 	protected async setup() {
 		BasePlatformChallenge.transformScene("void");
 		this.generatePlatforms();
+
+		this.contestantDiedOrLeft.Event.Connect((player) => this.changePlatformState(player, "eliminated"));
 	}
 
 	protected spawnCharacter({ player, character, i }: SpawnCharacterArgs): void {
 		const platform = this.platforms[i];
 		const primaryPart = platform.PrimaryPart!;
-		character.PivotTo(primaryPart.CFrame.mul(new CFrame(0, primaryPart.Size.Y / 2 + 10, 0)));
+		character.PivotTo(primaryPart.CFrame);
 		this.playerToPlatform.set(player, platform);
 	}
 
@@ -47,6 +50,29 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 				this.platforms.push(platform);
 			}
 		}
+	}
+
+	protected async dropPlayer(player: Player) {
+		const platform = this.playerToPlatform.get(player);
+		if (!platform) return;
+
+		const character = await getCharacter(player);
+		character.Humanoid.WalkSpeed = 0;
+		character.Humanoid.JumpPower = 0;
+
+		character.PivotTo(platform.PrimaryPart!.CFrame);
+
+		platform.Door1.Transparency = 1;
+		platform.Door1.CanCollide = false;
+		platform.Door2.Transparency = 1;
+		platform.Door2.CanCollide = false;
+		task.wait(2);
+		platform.Door1.Transparency = 0;
+		platform.Door1.CanCollide = true;
+		platform.Door2.Transparency = 0;
+		platform.Door2.CanCollide = true;
+
+		character.Humanoid.Health = 0;
 	}
 
 	protected changePlatformState(player: Player, state: PlatformState) {

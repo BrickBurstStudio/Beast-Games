@@ -5,13 +5,14 @@ import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
 import { FlagChallenge } from "server/challenges/flag.challenge";
-import { FreebyChallenge } from "server/challenges/freeby.challenge";
+import { BribeChallenge } from "server/challenges/bribe.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
 import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { Events } from "server/network";
 import { MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
+import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 
 @Service()
 export class MainService implements OnStart {
@@ -32,7 +33,14 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [FreebyChallenge]) {
+		spawn(() => {
+			task.wait(5);
+			print("do yo thang");
+			const pd = new OrderedPlayerData(Players.GetPlayers()[0]);
+			pd.cash.UpdateBy(1_000);
+		});
+
+		for (const challenge of [BribeChallenge]) {
 			await new challenge().start();
 		}
 	}

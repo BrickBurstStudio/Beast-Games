@@ -4,17 +4,22 @@ interface ServerStorage extends Instance {
 		Skybox: Folder & {
 			Void: Sky;
 		};
+		Sounds: Folder & {
+			MoneySFX: Sound;
+		};
 		Objects: Folder & {
 			Platform: Model & {
-				Door1: Part;
-				Door2: Part;
+				Union: UnionOperation;
+				CharacterSpawn: Part;
 				Lighting: Model & {
 					Union: UnionOperation;
 					Part: Part & {
 						SpotLight: SpotLight;
 					};
 				};
-				Union: UnionOperation;
+				Door2: Part;
+				Door1: Part;
+				Barrier: UnionOperation;
 			};
 		};
 		Gizmos: Folder & {
@@ -28,6 +33,7 @@ interface ServerStorage extends Instance {
 			};
 		};
 		VFX: Folder & {
+			MoneyVFX: ParticleEmitter;
 			CashStack: MeshPart;
 			LevelUp: Part & {
 				Start: Attachment & {

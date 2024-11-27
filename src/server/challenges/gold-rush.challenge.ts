@@ -13,7 +13,7 @@ import { countdown } from "server/util/countdown";
 import { GreenClaimComponent } from "server/components/claim-components/green-claim.component";
 
 export class GoldRushChallenge extends BaseChallenge {
-	protected readonly challengeName = "Gold Rush";
+	protected readonly challengeName = "Gold Rush" as const;
 	protected readonly rules = [
 		"You must claim any gold platform to be safe.",
 		"Each gold platform can only be claimed by one player.",
