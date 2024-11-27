@@ -91,7 +91,7 @@ export class GoldRushChallenge extends BaseChallenge {
 		return greenClaims;
 	}
 
-	protected setupCharacter({ character, i }: SpawnCharacterArgs): void {
+	protected spawnCharacter({ character, i }: SpawnCharacterArgs): void {
 		const children = this.map.Spawns.GetChildren() as BasePart[];
 		character.PivotTo(children[i % children.size()].CFrame);
 	}

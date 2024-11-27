@@ -1,6 +1,22 @@
 interface ServerStorage extends Instance {
 	__Rojo_SessionLock: ObjectValue;
 	Assets: Folder & {
+		Skybox: Folder & {
+			Void: Sky;
+		};
+		Objects: Folder & {
+			Platform: Model & {
+				Door1: Part;
+				Door2: Part;
+				Lighting: Model & {
+					Union: UnionOperation;
+					Part: Part & {
+						SpotLight: SpotLight;
+					};
+				};
+				Union: UnionOperation;
+			};
+		};
 		Gizmos: Folder & {
 			Pugil: Tool & {
 				Side1: UnionOperation;
@@ -71,9 +87,6 @@ interface ServerStorage extends Instance {
 		};
 		GoldRushChallenge: Folder & {
 			Claims: Model & {
-				GreenClaim: Model & {
-					Part: Part;
-				};
 				Highlight: Highlight;
 			};
 			Underglow: Model;

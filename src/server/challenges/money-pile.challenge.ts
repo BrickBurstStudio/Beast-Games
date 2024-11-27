@@ -172,7 +172,7 @@ export class MoneyPileChallenge extends BaseChallenge {
 		(platform.Part.FindFirstChild("Buzz") as Sound)?.Play();
 	}
 
-	protected setupCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
+	protected spawnCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
 		const index = i & this.platforms.size();
 		const platform = this.platforms[index];
 		this.platformData[index] = {

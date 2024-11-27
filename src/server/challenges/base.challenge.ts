@@ -1,6 +1,6 @@
 import { Janitor } from "@rbxts/janitor";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { AnalyticsService, CollectionService, Players, Workspace } from "@rbxts/services";
+import { AnalyticsService, CollectionService, Lighting, Players, ServerStorage, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { store } from "server/store";
@@ -32,10 +32,12 @@ export abstract class BaseChallenge {
 	public async start() {
 		await this.initializeRound();
 		await this.setupMap();
-		await this.setupPlayers();
+		this.assignPlayers();
 
 		while (!(await this.isSetupCompleted())) task.wait(0.5);
 		await this.setup();
+
+		await this.spawnPlayers();
 
 		Events.animations.setBlackFade.broadcast(false);
 		await this.doUISequence();
@@ -53,7 +55,7 @@ export abstract class BaseChallenge {
 
 	protected abstract main(): Promise<void>;
 
-	protected abstract setupCharacter({ player, character, i }: SpawnCharacterArgs): void;
+	protected abstract spawnCharacter({ player, character, i }: SpawnCharacterArgs): void;
 	protected async setup() {}
 	protected async isSetupCompleted(): Promise<boolean> {
 		return true;
@@ -68,9 +70,11 @@ export abstract class BaseChallenge {
 		});
 	}
 
-	private async setupPlayers() {
+	private assignPlayers() {
 		this.playersInChallenge = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
+	}
 
+	private async spawnPlayers() {
 		await Promise.all(
 			this.playersInChallenge.map(async (player, i) => {
 				this.setupPlayerEvents(player);
@@ -78,7 +82,7 @@ export abstract class BaseChallenge {
 				const character = await getCharacter(player);
 				character.Humanoid.WalkSpeed = 0;
 				character.Humanoid.JumpPower = 0;
-				this.setupCharacter({ player, character, i });
+				this.spawnCharacter({ player, character, i });
 			}),
 		);
 	}
@@ -194,4 +198,6 @@ export abstract class BaseChallenge {
 			}),
 		);
 	}
+
+	/* -------------------------------- Utilities ------------------------------- */
 }

@@ -128,7 +128,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 		}
 	}
 
-	protected async setupCharacter({ character }: SpawnCharacterArgs) {
+	protected async spawnCharacter({ character }: SpawnCharacterArgs) {
 		character.HumanoidRootPart.CFrame = this.map.Baseplate.CFrame.add(
 			new Vector3(-10, this.map.Baseplate.Size.Y / 2 + 5, 0),
 		);
