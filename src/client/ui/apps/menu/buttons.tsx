@@ -4,7 +4,11 @@ import ImageButton from "client/ui/components/image-button";
 import { px } from "client/ui/utils/usePx";
 import { GuiPage } from "shared/configs/gui";
 
-export const BUTTONS: { name: GuiPage; icon: string }[] = [
+export type Button = {
+	name: GuiPage;
+	icon: string;
+};
+export const BUTTONS: Button[] = [
 	{ name: "Inventory", icon: "rbxassetid://6035056487" },
 	{ name: "Shop", icon: "rbxassetid://6031265976" },
 ] as const;

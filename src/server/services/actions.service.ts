@@ -1,11 +1,8 @@
 import { OnStart, Service } from "@flamework/core";
-import { Events, Functions } from "server/network";
+import { Events } from "server/network";
 import { store } from "server/store";
-import { chooseRandomItem } from "server/util/getRandomItem";
 import { deviousLicks, divine } from "shared/configs/action";
-import { items } from "shared/configs/items";
-import { cases } from "shared/configs/items/cases";
-import { selectPlayerActions, selectPlayerItems } from "shared/store/selectors/players";
+import { selectPlayerActions } from "shared/store/selectors/players";
 
 @Service()
 export class CaseService implements OnStart {
@@ -20,6 +17,9 @@ export class CaseService implements OnStart {
 			if (!fromPlayerActions.includes(actionId)) throw error("Player does not have action");
 
 			store.removeActionTicket(tostring(fromPlayer.UserId), actionId);
+			Events.announcer.announce.broadcast([
+				`${fromPlayer.DisplayName} used ${action.name} on ${toPlayer.DisplayName}`,
+			]);
 			action.callback({ fromPlayer, toPlayer });
 		});
 	}

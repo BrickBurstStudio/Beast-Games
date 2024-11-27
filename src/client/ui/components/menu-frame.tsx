@@ -8,7 +8,7 @@ type MenuFrameProps = {
 	square?: boolean;
 	children?: ReactNode;
 	header: {
-		icon: string;
+		icon?: string;
 		title: string;
 	};
 };
@@ -22,6 +22,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 			AnchorPoint={new Vector2(0.5, 0.5)}
 			Position={UDim2.fromScale(0.5, 0.5)}
 			BackgroundColor3={Color3.fromHSV(0, 0, 1)}
+			BackgroundTransparency={0.5}
 		>
 			<uicorner CornerRadius={new UDim(0, px(10))} />
 			<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS)} />
@@ -36,28 +37,30 @@ export default function MenuFrame(props: MenuFrameProps) {
 					BackgroundTransparency={1}
 				>
 					{/* icon */}
-					<frame
-						Size={UDim2.fromOffset(px(headerElementSize * 0.75), px(headerElementSize * 0.75))}
-						Position={UDim2.fromScale(0, 0)}
-						AnchorPoint={new Vector2(0, 0)}
-						BackgroundColor3={COLORS.Primary}
-					>
-						<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS)} />
-						<uicorner CornerRadius={new UDim(0, px(10))} />
-						<uipadding
-							PaddingTop={new UDim(0, px(10))}
-							PaddingBottom={new UDim(0, px(10))}
-							PaddingLeft={new UDim(0, px(10))}
-							PaddingRight={new UDim(0, px(10))}
-						/>
-						<imagelabel
-							Image={props.header.icon}
-							ImageColor3={COLORS.White}
-							Size={UDim2.fromScale(1, 1)}
-							BackgroundTransparency={1}
+					{props.header.icon && (
+						<frame
+							Size={UDim2.fromOffset(px(headerElementSize * 0.75), px(headerElementSize * 0.75))}
 							Position={UDim2.fromScale(0, 0)}
-						/>
-					</frame>
+							AnchorPoint={new Vector2(0, 0)}
+							BackgroundColor3={COLORS.Primary}
+						>
+							<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS)} />
+							<uicorner CornerRadius={new UDim(0, px(10))} />
+							<uipadding
+								PaddingTop={new UDim(0, px(10))}
+								PaddingBottom={new UDim(0, px(10))}
+								PaddingLeft={new UDim(0, px(10))}
+								PaddingRight={new UDim(0, px(10))}
+							/>
+							<imagelabel
+								Image={props.header.icon}
+								ImageColor3={COLORS.White}
+								Size={UDim2.fromScale(1, 1)}
+								BackgroundTransparency={1}
+								Position={UDim2.fromScale(0, 0)}
+							/>
+						</frame>
+					)}
 					{/* title */}
 					<textlabel
 						Text={props.header.title}
