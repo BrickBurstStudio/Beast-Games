@@ -6,6 +6,7 @@ import { BribeChallenge } from "./bribe";
 
 export default function ChallengesApp() {
 	const challenge = useSelector(selectChallenge);
+	// const challenge = "Bribe" as const;
 
 	const CurrentChallenge = useCallback(() => {
 		if (challenge === "Boulder Pull") return <BoulderChallenge />;

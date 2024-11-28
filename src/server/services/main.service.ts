@@ -33,13 +33,6 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		spawn(() => {
-			task.wait(5);
-			print("do yo thang");
-			const pd = new OrderedPlayerData(Players.GetPlayers()[0]);
-			pd.cash.UpdateBy(1_000);
-		});
-
 		for (const challenge of [BribeChallenge]) {
 			await new challenge().start();
 		}
