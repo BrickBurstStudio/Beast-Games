@@ -68,7 +68,9 @@ interface ReplicatedStorage extends Instance {
 			Buzz: Sound & {
 				PitchShiftSoundEffect: PitchShiftSoundEffect;
 			};
-			["GO!!!"]: Sound;
+			["GO!!!"]: Sound & {
+				PitchShiftSoundEffect: PitchShiftSoundEffect;
+			};
 			PugilHit: Sound;
 			Character: Sound;
 			Countdown1: Sound;
@@ -138,6 +140,9 @@ interface ReplicatedStorage extends Instance {
 			};
 		};
 		Gui: Folder & {
+			MoneyBGUI: BillboardGui & {
+				TextLabel: TextLabel;
+			};
 			DollarBGUI: BillboardGui & {
 				TextLabel: TextLabel;
 			};

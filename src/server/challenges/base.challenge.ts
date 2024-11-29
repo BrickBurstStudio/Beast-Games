@@ -1,11 +1,12 @@
 import { Janitor } from "@rbxts/janitor";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { AnalyticsService, CollectionService, Players, Workspace } from "@rbxts/services";
+import { AnalyticsService, CollectionService, Lighting, Players, ServerStorage, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { store } from "server/store";
 import { announceRules } from "server/util/announceRules";
 import { countdown } from "server/util/countdown";
+import { ChallengeName } from "shared/configs/gui";
 import { selectPlayerData } from "shared/store/selectors/players";
 import { calculateReward } from "shared/utils/functions/calculateReward";
 import { getCharacter } from "shared/utils/functions/getCharacter";
@@ -18,10 +19,9 @@ export type SpawnCharacterArgs = {
 
 export abstract class BaseChallenge {
 	private readonly socialPeriodDuration = 30;
-	private readonly mapLoadingTime = 2;
 	protected readonly obliterator = new Janitor();
 	protected abstract readonly map: Folder;
-	protected abstract readonly challengeName: string;
+	protected abstract readonly challengeName: ChallengeName;
 	protected abstract readonly rules: string[];
 	protected playersInChallenge: Player[] = [];
 	protected floor = true;
@@ -30,33 +30,55 @@ export abstract class BaseChallenge {
 
 	/* ---------------------------- Lifecycle Methods ---------------------------- */
 
-	public async Start() {
+	public async start() {
 		await this.initializeRound();
 		await this.setupMap();
-		await this.setupPlayers();
+		this.assignPlayers();
+
+		while (!(await this.isSetupCompleted())) task.wait(0.5);
+		await this.setup();
+
+		await this.spawnPlayers();
 
 		Events.animations.setBlackFade.broadcast(false);
 		await this.doUISequence();
+		store.setChallenge(this.challengeName);
 
 		await this.enablePlayerMovement();
-		await this.Main();
+		await this.main();
 		await this.rewardPlayers();
+		store.setChallenge(undefined);
 
+		task.wait(3.5);
 		Events.animations.setBlackFade.broadcast(true);
 		task.wait(1);
 
+		this.freezePlayers();
 		this.obliterator.Cleanup();
 	}
 
-	protected abstract Main(): Promise<void>;
+	protected abstract main(): Promise<void>;
 
-	protected abstract SetupCharacter({ player, character, i }: SpawnCharacterArgs): void;
+	protected abstract spawnCharacter({ player, character, i }: SpawnCharacterArgs): void;
+	protected async setup() {}
+	protected async isSetupCompleted(): Promise<boolean> {
+		return true;
+	}
 
 	/* ---------------------------- Player Management --------------------------- */
 
-	private async setupPlayers() {
-		this.playersInChallenge = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
+	private freezePlayers() {
+		this.playersInChallenge.forEach(async (player) => {
+			const character = await getCharacter(player);
+			character.HumanoidRootPart.Anchored = true;
+		});
+	}
 
+	private assignPlayers() {
+		this.playersInChallenge = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
+	}
+
+	private async spawnPlayers() {
 		await Promise.all(
 			this.playersInChallenge.map(async (player, i) => {
 				this.setupPlayerEvents(player);
@@ -64,7 +86,7 @@ export abstract class BaseChallenge {
 				const character = await getCharacter(player);
 				character.Humanoid.WalkSpeed = 0;
 				character.Humanoid.JumpPower = 0;
-				this.SetupCharacter({ player, character, i });
+				this.spawnCharacter({ player, character, i });
 			}),
 		);
 	}
@@ -94,12 +116,12 @@ export abstract class BaseChallenge {
 	/* ------------------------------ Map Control ----------------------------- */
 
 	private async setupMap() {
-		this.ToggleFloor(this.floor);
+		this.toggleFloor(this.floor);
 		this.obliterator.Add(this.map, "Destroy");
 		this.map.Parent = Workspace;
 	}
 
-	protected ToggleFloor(value: boolean) {
+	protected toggleFloor(value: boolean) {
 		CollectionService.GetTagged("stadium-floor").forEach((floor) => {
 			if (!floor.IsA("BasePart")) return;
 			floor.Transparency = value ? 0 : 1;
@@ -111,6 +133,7 @@ export abstract class BaseChallenge {
 
 	private async initializeRound() {
 		BaseChallenge.round++;
+
 		Players.GetPlayers().forEach((player) => {
 			AnalyticsService.LogFunnelStepEvent(
 				player,
@@ -180,4 +203,6 @@ export abstract class BaseChallenge {
 			}),
 		);
 	}
+
+	/* -------------------------------- Utilities ------------------------------- */
 }

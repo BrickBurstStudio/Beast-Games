@@ -12,7 +12,7 @@ import { BaseChallenge } from "./base.challenge";
 import { countdown } from "server/util/countdown";
 
 export class FlagChallenge extends BaseChallenge {
-	protected readonly challengeName = "Flag";
+	protected readonly challengeName = "Flag Run" as const;
 	protected readonly rules = [
 		"You will be playing against 1 random player.",
 		"You must claim the flag and bring it back to your base to win!",
@@ -28,7 +28,7 @@ export class FlagChallenge extends BaseChallenge {
 	private playersInArena: Player[] = [];
 	private playersToAdvanceTarget: number = 0;
 
-	protected async Main() {
+	protected async main() {
 		this.playersToAdvanceTarget = math.floor(this.playersInChallenge.size() * 0.8);
 		this.undecidedPlayers = [...this.playersInChallenge];
 		this.map.ChallengeArea.StartArea.Barier.Touched.Connect((otherPart) => {
@@ -155,7 +155,7 @@ export class FlagChallenge extends BaseChallenge {
 		}
 	}
 
-	protected SetupCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
+	protected spawnCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
 		// spawn player anywhere inside x and z bounds of `StartSide`
 		character.HumanoidRootPart.CFrame = this.map.ChallengeArea.StartArea.Platform.CFrame.add(
 			new Vector3(

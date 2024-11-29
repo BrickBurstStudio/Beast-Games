@@ -1,6 +1,27 @@
 interface ServerStorage extends Instance {
 	__Rojo_SessionLock: ObjectValue;
 	Assets: Folder & {
+		Skybox: Folder & {
+			Void: Sky;
+		};
+		Sounds: Folder & {
+			MoneySFX: Sound;
+		};
+		Objects: Folder & {
+			Platform: Model & {
+				Union: UnionOperation;
+				CharacterSpawn: Part;
+				Lighting: Model & {
+					Union: UnionOperation;
+					Part: Part & {
+						SpotLight: SpotLight;
+					};
+				};
+				Door2: Part;
+				Door1: Part;
+				Barrier: UnionOperation;
+			};
+		};
 		Gizmos: Folder & {
 			Pugil: Tool & {
 				Side1: UnionOperation;
@@ -12,6 +33,7 @@ interface ServerStorage extends Instance {
 			};
 		};
 		VFX: Folder & {
+			MoneyVFX: ParticleEmitter;
 			CashStack: MeshPart;
 			LevelUp: Part & {
 				Start: Attachment & {
@@ -71,9 +93,6 @@ interface ServerStorage extends Instance {
 		};
 		GoldRushChallenge: Folder & {
 			Claims: Model & {
-				GreenClaim: Model & {
-					Part: Part;
-				};
 				Highlight: Highlight;
 			};
 			Underglow: Model;

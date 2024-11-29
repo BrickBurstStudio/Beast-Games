@@ -1,35 +1,40 @@
 import { OnStart, Service } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { AnalyticsService, Players } from "@rbxts/services";
+import { AnalyticsService, Lighting, Players, ServerStorage } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
 import { FlagChallenge } from "server/challenges/flag.challenge";
+import { BribeChallenge } from "server/challenges/bribe.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
 import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { Events } from "server/network";
 import { MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
+import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 
 @Service()
 export class MainService implements OnStart {
+	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
-	private static EXPECTED_PLAYERS_DEFAULT = 1;
+	private static EXPECTED_PLAYERS_DEFAULT = 3;
 	private static JOIN_TIMEOUT = 20;
 
+	/* ---------------------------------- Class --------------------------------- */
 	private playersJoined = 0;
 	private expectedPlayers = MainService.EXPECTED_PLAYERS_DEFAULT;
 	private joinTimedOut = false;
 
+	/* ------------------------------- Life Cycle ------------------------------- */
 	async onStart() {
 		if (game.PlaceId !== MAIN_PLACE_ID) return;
 		this.setupReset();
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [GoldRushChallenge]) {
-			await new challenge().Start();
+		for (const challenge of [BribeChallenge, PugilChallenge]) {
+			await new challenge().start();
 		}
 	}
 
@@ -75,4 +80,6 @@ export class MainService implements OnStart {
 			player.CharacterAdded.Connect(async () => func(await getCharacter(player)));
 		});
 	}
+
+	/* --------------------------------- Utility -------------------------------- */
 }

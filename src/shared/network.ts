@@ -9,6 +9,7 @@ import { Currency } from "./configs/currency";
 import { EquippableItemId, Item } from "./configs/items";
 import { Case, cases } from "./configs/items/cases";
 import { PlayerData } from "./store/slices/players/types";
+import { BribeChallengeData } from "../../types/BribeChallengeData";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -24,6 +25,9 @@ interface ServerEvents {
 	challenges: {
 		boulderChallenge: {
 			pull: () => void;
+		};
+		bribeChallenge: {
+			acceptBribe: () => void;
 		};
 	};
 	useAction: (args: { actionId: ActionId; toPlayer: Player }) => void;
@@ -50,6 +54,10 @@ interface ClientEvents {
 		moneyPileChallenge: {
 			growMoney: () => void;
 			dropMoney: (model: Model) => void;
+		};
+		bribeChallenge: {
+			updateBribe: (args: BribeChallengeData) => void;
+			disableBribe: () => void;
 		};
 	};
 

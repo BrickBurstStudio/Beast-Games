@@ -16,7 +16,7 @@ const TeamColors = {
 };
 
 export class BoulderChallenge extends BaseChallenge {
-	protected readonly challengeName = "Boulder Challenge";
+	protected readonly challengeName = "Boulder Pull" as const;
 	protected readonly rules = [
 		"You will be assigned a random team.",
 		"You must work with your team to pull the boulder to the finish line.",
@@ -30,7 +30,7 @@ export class BoulderChallenge extends BaseChallenge {
 	private teamFinishGoals: number[] = [0, 0, 0, 0, 0];
 	private teamsCompleted = 0;
 
-	protected async Main() {
+	protected async main() {
 		await Promise.all(
 			this.playersInChallenge.map(async (player) => {
 				this.teamFinishGoals[player.GetAttribute("team") as number] =
@@ -69,8 +69,6 @@ export class BoulderChallenge extends BaseChallenge {
 			}),
 			"Disconnect",
 		);
-
-		store.setChallenge("Boulder");
 
 		while (this.teamsCompleted < this.teamFinishGoals.size() - 1) {
 			// Update the boulder position for each team
@@ -126,13 +124,13 @@ export class BoulderChallenge extends BaseChallenge {
 				const rope = teamAssets.Rope as Part;
 				const startPos = teamAssets.Rope.GetAttribute("initialPosition") as Vector3;
 				const endPos = startPos.add(new Vector3(0, 0, -15));
-				const progress = this.teamProgress[team] / this.teamFinishGoals[team] * 0.5;
+				const progress = (this.teamProgress[team] / this.teamFinishGoals[team]) * 0.5;
 				rope.Position = startPos.Lerp(endPos, progress);
 			}
 		}
 	}
 
-	protected SetupCharacter({ player, character, i }: SpawnCharacterArgs): void {
+	protected spawnCharacter({ player, character, i }: SpawnCharacterArgs): void {
 		character.Humanoid.WalkSpeed = 0;
 		character.Humanoid.JumpHeight = 0;
 
