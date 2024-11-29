@@ -3,13 +3,13 @@ import { Networking } from "@flamework/networking";
 import { BroadcastAction } from "@rbxts/reflex";
 // import BaseItem from "shared/components/Items/BaseItem";
 
+import { BribeChallengeData } from "../../types/BribeChallengeData";
 import { Dare } from "../../types/Dare";
-import { ActionId } from "./configs/action";
+import { ActionName } from "./configs/action";
 import { Currency } from "./configs/currency";
 import { EquippableItemId, Item } from "./configs/items";
 import { Case, cases } from "./configs/items/cases";
 import { PlayerData } from "./store/slices/players/types";
-import { BribeChallengeData } from "../../types/BribeChallengeData";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -30,7 +30,7 @@ interface ServerEvents {
 			acceptBribe: () => void;
 		};
 	};
-	useAction: (args: { actionId: ActionId; toPlayer: Player }) => void;
+	useAction: (args: { actionName: ActionName; toPlayer: Player }) => void;
 	reset: () => void;
 
 	exitQueue: () => void;

@@ -1,6 +1,5 @@
-import { ActionId } from "shared/configs/action";
 import { Currency } from "shared/configs/currency";
-import { EquippableItemId, EquippableItemType, ItemId, ItemType } from "shared/configs/items";
+import { EquippableItemId, EquippableItemType, ItemId } from "shared/configs/items";
 
 export interface PlayerData {
 	loggedIn: PlayerLoggedIn;
@@ -10,7 +9,7 @@ export interface PlayerData {
 	xp: number;
 	wins: number;
 	playTime: number;
-	actions: ActionId[];
+	actionTokens: number;
 }
 
 export type PlayerEquipped = {
