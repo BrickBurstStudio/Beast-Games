@@ -18,7 +18,7 @@ import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 export class MainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
-	private static EXPECTED_PLAYERS_DEFAULT = 1;
+	private static EXPECTED_PLAYERS_DEFAULT = 3;
 	private static JOIN_TIMEOUT = 20;
 
 	/* ---------------------------------- Class --------------------------------- */
@@ -33,7 +33,7 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [BribeChallenge]) {
+		for (const challenge of [BribeChallenge, PugilChallenge]) {
 			await new challenge().start();
 		}
 	}

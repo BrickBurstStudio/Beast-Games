@@ -1,7 +1,8 @@
-import { Lighting, ServerStorage } from "@rbxts/services";
+import { Lighting, ReplicatedStorage, ServerStorage } from "@rbxts/services";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 import Make from "@rbxts/make";
 import { getCharacter } from "shared/utils/functions/getCharacter";
+import { spawnSound } from "shared/utils/functions/spawnSound";
 
 type PlatformState = "safe" | "eliminated" | "neutral";
 
@@ -17,6 +18,7 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 	protected map: Folder = Make("Folder", { Name: "GeneratedPlatforms" });
 	protected platforms: PlatformT[] = [];
 	protected playerToPlatform = new Map<Player, PlatformT>();
+	protected platformStates = new Map<PlatformT, PlatformState>();
 
 	protected async setup() {
 		BasePlatformChallenge.transformScene("void");
@@ -77,10 +79,14 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 
 	protected changePlatformState(player: Player, state: PlatformState) {
 		const platform = this.playerToPlatform.get(player);
-		if (!platform) return;
+		if (!platform || this.platformStates.get(platform) === state) return;
+
+		this.platformStates.set(platform, state);
 
 		platform.Lighting.Union.Color = BasePlatformChallenge.PLATFORM_STATE_COLORS[state];
 		platform.Lighting.Part.SpotLight.Color = BasePlatformChallenge.PLATFORM_STATE_COLORS[state];
+
+		if (state === "eliminated") spawnSound(ReplicatedStorage.Assets.Sounds.Buzz, platform);
 	}
 
 	static transformScene(scene: "void" | "normal") {

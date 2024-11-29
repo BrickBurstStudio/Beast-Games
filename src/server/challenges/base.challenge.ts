@@ -42,11 +42,14 @@ export abstract class BaseChallenge {
 
 		Events.animations.setBlackFade.broadcast(false);
 		await this.doUISequence();
+		store.setChallenge(this.challengeName);
 
 		await this.enablePlayerMovement();
 		await this.main();
 		await this.rewardPlayers();
+		store.setChallenge(undefined);
 
+		task.wait(3.5);
 		Events.animations.setBlackFade.broadcast(true);
 		task.wait(1);
 
@@ -130,8 +133,6 @@ export abstract class BaseChallenge {
 
 	private async initializeRound() {
 		BaseChallenge.round++;
-
-		store.setChallenge(this.challengeName);
 
 		Players.GetPlayers().forEach((player) => {
 			AnalyticsService.LogFunnelStepEvent(
