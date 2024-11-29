@@ -3,6 +3,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 export type Action = {
 	id: number;
 	name: string;
+	cost: number;
 	callback: (args: { fromPlayer: Player; toPlayer: Player }) => void;
 };
 
@@ -10,6 +11,7 @@ export const divine = [
 	{
 		id: 1,
 		name: "Revive",
+		cost: 1,
 		callback: ({ fromPlayer, toPlayer }) => {},
 	},
 ] as const satisfies Action[];
@@ -18,6 +20,7 @@ export const deviousLicks = [
 	{
 		id: 2320616747,
 		name: "Ragdoll",
+		cost: 1,
 		callback: ({ toPlayer }) => {
 			const character = toPlayer.Character;
 			if (!character) return;
@@ -41,6 +44,7 @@ export const deviousLicks = [
 	{
 		id: 2664589454,
 		name: "Fling",
+		cost: 5,
 		callback: async ({ fromPlayer, toPlayer }) => {
 			const character = await getCharacter(toPlayer);
 			const VELOCITY_MAGNITUDE = 100;
@@ -48,11 +52,7 @@ export const deviousLicks = [
 
 			// Generate random direction
 			const randomAngle = math.random() * math.pi * 2;
-			const direction = new Vector3(
-				math.cos(randomAngle),
-				1.5,
-				math.sin(randomAngle)
-			).Unit;
+			const direction = new Vector3(math.cos(randomAngle), 1.5, math.sin(randomAngle)).Unit;
 
 			// Create LinearVelocity instance
 			const velocity = new Instance("LinearVelocity");
