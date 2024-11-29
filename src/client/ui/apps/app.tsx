@@ -9,13 +9,13 @@ import AnnounceApp from "./announce";
 import ChallengesApp from "./challenges";
 import MenuButtonsApp from "./menu/buttons";
 import AchievementsApp from "./menu/pages/achievements";
+import ActionsPage from "./menu/pages/actions";
 import InventoryApp from "./menu/pages/inventory";
 import SettingsApp from "./menu/pages/settings";
 import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
 import QueueApp from "./queue";
 import SpectateApp from "./spectate";
-import ActionsPage from "./menu/pages/actions";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);

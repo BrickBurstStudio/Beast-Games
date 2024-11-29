@@ -6,7 +6,7 @@ import { equippedSlice } from "./equipped";
 import { xpSlice } from "./xp";
 import { winsSlice } from "./wins";
 import { playTimeSlice } from "./playTime";
-import { actionTicketsSlice } from "./actionTickets";
+import { actionTokensSlice } from "./actionTokens";
 
 export const playersSlice = combineProducers({
 	balance: balanceSlice,
@@ -16,5 +16,5 @@ export const playersSlice = combineProducers({
 	xp: xpSlice,
 	wins: winsSlice,
 	playTime: playTimeSlice,
-	actions: actionTicketsSlice,
+	actionTokens: actionTokensSlice,
 });

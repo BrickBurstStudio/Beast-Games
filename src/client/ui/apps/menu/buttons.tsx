@@ -11,6 +11,7 @@ export type Button = {
 export const BUTTONS: Button[] = [
 	{ name: "Inventory", icon: "rbxassetid://6035056487" },
 	{ name: "Shop", icon: "rbxassetid://6031265976" },
+	{ name: "Actions", icon: "rbxassetid://6023565892" },
 ] as const;
 
 const BUTTON_SIZE = 80;
@@ -19,13 +20,13 @@ const PADDING_SIZE = BUTTON_SIZE / 8;
 export default function MenuButtonsApp() {
 	return (
 		<frame
-			Size={
-				new UDim2(0, px(BUTTON_SIZE), 0, px(BUTTON_SIZE) * BUTTONS.size() + px(PADDING_SIZE) * BUTTONS.size())
-			}
-			Position={new UDim2(0, px(PADDING_SIZE), 0.5, 0)}
-			AnchorPoint={new Vector2(0, 0.5)}
-			BackgroundTransparency={1}
-		>
+				Size={
+					new UDim2(0, px(BUTTON_SIZE), 0, px(BUTTON_SIZE) * BUTTONS.size() + px(PADDING_SIZE) * (BUTTONS.size() + 1))
+				}
+				Position={new UDim2(0, px(PADDING_SIZE), 0.5, 0)}
+				AnchorPoint={new Vector2(0, 0.5)}
+				BackgroundTransparency={1}
+			>
 			<uigridlayout
 				FillDirection={Enum.FillDirection.Vertical}
 				CellPadding={new UDim2(0, 0, 0, px(PADDING_SIZE) * 2)}
