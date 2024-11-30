@@ -1,6 +1,6 @@
 import { OnStart, Service } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { AnalyticsService, Players } from "@rbxts/services";
+import { AnalyticsService, Players, TeleportService } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BribeChallenge } from "server/challenges/bribe.challenge";
@@ -12,7 +12,8 @@ import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { SplitOrStealChallenge } from "server/challenges/split-or-steal.challenge";
 import { TowerChallenge } from "server/challenges/tower.challenge";
 import { Events } from "server/network";
-import { MAIN_PLACE_ID } from "shared/configs/places";
+import { announce } from "server/util/announce";
+import { MAIN_PLACE_ID, LOBBY_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
@@ -61,6 +62,11 @@ export class GameMainService implements OnStart {
 
 		await new KingOfHillChallenge().start();
 		await new SplitOrStealChallenge().start();
+
+		// After all challenges are complete, teleport remaining players to lobby
+
+		Events.announcer.announce.broadcast(["Game Over! Returning to lobby..."]);
+		TeleportService.TeleportAsync(LOBBY_PLACE_ID, Players.GetPlayers());
 	}
 
 	yieldPlayers() {
