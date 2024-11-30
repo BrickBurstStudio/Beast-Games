@@ -17,7 +17,7 @@ import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
 @Service()
-export class MainService implements OnStart {
+export class GameMainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
 	private static EXPECTED_PLAYERS_DEFAULT = 2;
@@ -25,7 +25,7 @@ export class MainService implements OnStart {
 
 	/* ---------------------------------- Class --------------------------------- */
 	private playersJoined = 0;
-	private expectedPlayers = MainService.EXPECTED_PLAYERS_DEFAULT;
+	private expectedPlayers = GameMainService.EXPECTED_PLAYERS_DEFAULT;
 	private joinTimedOut = false;
 
 	/* ------------------------------- Life Cycle ------------------------------- */
@@ -38,17 +38,18 @@ export class MainService implements OnStart {
 		await new BribeChallenge().start();
 
 		const availableChallenges = [
-			// BriefcaseChallenge,
-			BoulderChallenge,
-			FlagChallenge,
 			GoldRushChallenge,
 			PugilChallenge,
+			// BoulderChallenge,
 			TowerChallenge,
+			// FlagChallenge,
+			// BriefcaseChallenge,
 		];
 
 		const shuffledChallenges = availableChallenges
-			.sort(() => !(math.random() - 0.5))
-			.filter((_, i) => i < 5);
+			.map((value) => ({ value, sort: math.random() }))
+			.sort((a, b) => a.sort - b.sort > 0)
+			.map(({ value }) => value);
 
 		for (const Challenge of shuffledChallenges) {
 			await new Challenge().start();
@@ -70,11 +71,11 @@ export class MainService implements OnStart {
 			AnalyticsService.LogOnboardingFunnelStepEvent(player, 4, "joined_main_game");
 
 			this.playersJoined++;
-			this.expectedPlayers = player.GetJoinData().Members?.size() ?? MainService.EXPECTED_PLAYERS_DEFAULT;
+			this.expectedPlayers = player.GetJoinData().Members?.size() ?? GameMainService.EXPECTED_PLAYERS_DEFAULT;
 		});
 		setTimeout(() => {
 			this.joinTimedOut = true;
-		}, MainService.JOIN_TIMEOUT);
+		}, GameMainService.JOIN_TIMEOUT);
 
 		while (this.playersJoined < this.expectedPlayers && !this.joinTimedOut) task.wait();
 	}
@@ -91,7 +92,7 @@ export class MainService implements OnStart {
 		forEveryPlayer(async (player) => {
 			const func = (character: CharacterRigR6) => {
 				character.Humanoid.Died.Connect(() => {
-					task.wait(MainService.DESTROY_CHARACTER_DELAY);
+					task.wait(GameMainService.DESTROY_CHARACTER_DELAY);
 					character.Destroy();
 				});
 			};
