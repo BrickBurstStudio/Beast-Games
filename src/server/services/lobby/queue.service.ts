@@ -1,30 +1,25 @@
 import { OnStart, Service } from "@flamework/core";
-import { AnalyticsService, CollectionService, Players, TeleportService, Workspace } from "@rbxts/services";
+import { AnalyticsService, CollectionService, Players, TeleportService } from "@rbxts/services";
 import { Events } from "server/network";
 import { LOBBY_PLACE_ID, MAIN_PLACE_ID } from "shared/configs/places";
+import { QUEUE_CONFIG } from "shared/configs/queue";
 import createForcefield from "shared/utils/functions/createForcefield";
 import { getCharacter } from "shared/utils/functions/getCharacter";
-import { QUEUE_CONFIG } from "shared/configs/queue";
 
 interface QueueState {
 	startTime: number;
-	isMatchmaking: boolean;
 	countdownEndTime?: number;
 }
 
 @Service()
 export class QueueService implements OnStart {
-	private readonly QUEUE_CHECK_INTERVAL = 0.5; // Check queue every half second
 	private readonly MIN_PLAYERS = QUEUE_CONFIG.MIN_PLAYERS; // Minimum players to start a match
 	private readonly MAX_QUEUE_WAIT_TIME = QUEUE_CONFIG.MAX_QUEUE_WAIT_TIME; // Maximum time (in seconds) before forcing a match with available players
 	private readonly MAX_PLAYERS = QUEUE_CONFIG.MAX_PLAYERS; // Add this line after line 19
 
 	private queueState: QueueState = {
 		startTime: 0,
-		isMatchmaking: false,
 	};
-
-	private running = true;
 
 	private getPlayersInQueue(): Player[] {
 		return Players.GetPlayers().filter((player) => player.GetAttribute("inQueue") === true);
@@ -37,12 +32,17 @@ export class QueueService implements OnStart {
 		const forcefield = createForcefield(queueBox.PrimaryPart!);
 
 		this.setupQueueEvents(forcefield);
-		this.startQueueProcessor();
 		this.handlePlayerRemoving();
-	}
 
-	onStop() {
-		this.running = false;
+		// Add match start checker loop
+		task.spawn(() => {
+			while (true) {
+				if (this.shouldStartMatch()) {
+					this.startMatch();
+				}
+				task.wait(0.5);
+			}
+		});
 	}
 
 	private setupQueueEvents(forcefield: Part) {
@@ -61,7 +61,7 @@ export class QueueService implements OnStart {
 
 	private async addPlayerToQueue(player: Player, forcefield: Part) {
 		const playersInQueue = this.getPlayersInQueue();
-		
+
 		if (playersInQueue.size() >= this.MAX_PLAYERS) {
 			Events.announcer.announce.fire(player, ["Queue is full! Please try again later."]);
 			return;
@@ -69,17 +69,19 @@ export class QueueService implements OnStart {
 
 		const character = await getCharacter(player);
 		character.PivotTo(forcefield.CFrame.mul(new CFrame(0, -forcefield.Size.Y / 2, 0)));
-		
+
 		player.SetAttribute("inQueue", true);
 
+		playersInQueue.push(player);
+
 		AnalyticsService.LogOnboardingFunnelStepEvent(player, 2, "entered_queue");
-		
+
 		AnalyticsService.LogFunnelStepEvent(player, "core_loop", `${player.UserId}-${game.JobId}`, 2, "entered_queue");
 
 		if (playersInQueue.size() === this.MIN_PLAYERS) {
 			// Start countdown when minimum players is reached
 			this.queueState.startTime = tick();
-			this.queueState.countdownEndTime = tick() + this.MAX_QUEUE_WAIT_TIME;
+			this.queueState.countdownEndTime = this.queueState.startTime + this.MAX_QUEUE_WAIT_TIME;
 
 			// Start countdown for all players in queue
 			playersInQueue.forEach((queuedPlayer) => {
@@ -129,39 +131,22 @@ export class QueueService implements OnStart {
 		});
 	}
 
-	private startQueueProcessor() {
-		while (this.running) {
-			task.wait(this.QUEUE_CHECK_INTERVAL);
-
-			const playersInQueue = this.getPlayersInQueue();
-			if (this.queueState.isMatchmaking || playersInQueue.size() < this.MIN_PLAYERS) {
-				continue;
-			}
-
-			const currentTime = tick();
-			const queueDuration = currentTime - this.queueState.startTime;
-			const shouldStartMatch = this.shouldStartMatch(queueDuration);
-
-			if (shouldStartMatch) {
-				this.startMatch();
-			}
-		}
-	}
-
-	private shouldStartMatch(queueDuration: number): boolean {
+	private shouldStartMatch(): boolean {
 		const playersInQueue = this.getPlayersInQueue();
+		const currentTime = tick();
+
 		return (
 			playersInQueue.size() >= this.MIN_PLAYERS &&
-			queueDuration >= this.MAX_QUEUE_WAIT_TIME &&
-			!this.queueState.isMatchmaking
+			this.queueState.countdownEndTime !== undefined &&
+			currentTime >= this.queueState.countdownEndTime
 		);
 	}
 
 	private async startMatch() {
-		this.queueState.isMatchmaking = true;
-
+		print("Starting match...");
 		try {
 			const playersInQueue = this.getPlayersInQueue();
+			print(`Players in queue: ${playersInQueue.size()}`);
 
 			if (playersInQueue.size() < this.MIN_PLAYERS) {
 				playersInQueue.forEach((player) => {
@@ -171,10 +156,12 @@ export class QueueService implements OnStart {
 				});
 				Events.announcer.clearCountdown.broadcast();
 				this.queueState.countdownEndTime = undefined;
-				this.queueState.isMatchmaking = false;
 				return;
 			}
 
+			// Reset queue state before teleporting to prevent edge cases
+			this.queueState.countdownEndTime = undefined;
+			print("Teleporting players to main place...");
 			TeleportService.TeleportAsync(MAIN_PLACE_ID, playersInQueue);
 
 			playersInQueue.forEach((player) => {
@@ -191,10 +178,9 @@ export class QueueService implements OnStart {
 			const playersInQueue = this.getPlayersInQueue();
 			playersInQueue.forEach((player) => Events.announcer.clearCountdown.fire(player));
 			this.queueState.countdownEndTime = undefined;
+		} finally {
+			this.broadcastQueueUpdate();
 		}
-
-		this.queueState.isMatchmaking = false;
-		this.broadcastQueueUpdate();
 	}
 
 	private broadcastQueueUpdate() {
