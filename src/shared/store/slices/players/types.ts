@@ -1,6 +1,6 @@
-import { ActionId } from "shared/configs/action";
 import { Currency } from "shared/configs/currency";
-import { EquippableItemId, EquippableItemType, ItemId, ItemType } from "shared/configs/items";
+import { ItemId } from "shared/configs/items";
+import { hats } from "shared/configs/items/hats";
 
 export interface PlayerData {
 	loggedIn: PlayerLoggedIn;
@@ -14,7 +14,7 @@ export interface PlayerData {
 }
 
 export type PlayerEquipped = {
-	[K in EquippableItemType]: EquippableItemId[];
+	hat: (typeof hats)[number]["id"] | undefined;
 };
 
 export type PlayerItems = ItemId[];

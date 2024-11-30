@@ -3,14 +3,14 @@ import { Players } from "@rbxts/services";
 import { Events } from "client/network";
 import Modal from "client/ui/components/modal";
 import { px } from "client/ui/utils/usePx";
-import { ActionId } from "shared/configs/action";
+import { ActionName } from "shared/configs/action";
 
 interface PlayerSelectModalProps {
-	actionId: ActionId;
+	actionName: ActionName;
 	onClose: () => void;
 }
 
-export default function PlayerSelectModal({ actionId, onClose }: PlayerSelectModalProps) {
+export default function PlayerSelectModal({ actionName, onClose }: PlayerSelectModalProps) {
 	return (
 		<Modal
 			title="Select Target Player"
@@ -39,7 +39,7 @@ export default function PlayerSelectModal({ actionId, onClose }: PlayerSelectMod
 							BackgroundColor3={new Color3(0.2, 0.2, 0.2)}
 							Event={{
 								MouseButton1Click: () => {
-									Events.useAction.fire({ actionId, toPlayer: player });
+									Events.useAction.fire({ actionName, toPlayer: player });
 									onClose();
 								},
 							}}

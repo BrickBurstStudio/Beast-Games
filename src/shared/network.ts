@@ -3,13 +3,14 @@ import { Networking } from "@flamework/networking";
 import { BroadcastAction } from "@rbxts/reflex";
 // import BaseItem from "shared/components/Items/BaseItem";
 
-import { Dare } from "../../types/Dare";
-import { ActionId } from "./configs/action";
-import { Currency } from "./configs/currency";
-import { EquippableItemId, Item } from "./configs/items";
-import { Case, cases } from "./configs/items/cases";
-import { PlayerData } from "./store/slices/players/types";
 import { BribeChallengeData } from "../../types/BribeChallengeData";
+import { Dare } from "../../types/Dare";
+import { ActionName } from "./configs/action";
+import { Currency } from "./configs/currency";
+import { Item } from "./configs/items";
+import { Case, cases } from "./configs/items/cases";
+import { hats } from "./configs/items/hats";
+import { PlayerData } from "./store/slices/players/types";
 
 type updateLeaderboardsArgs = {
 	xp: { key: string; value: number }[];
@@ -32,7 +33,7 @@ interface ServerEvents {
 			acceptBribe: () => void;
 		};
 	};
-	useAction: (args: { actionId: ActionId; toPlayer: Player }) => void;
+	useAction: (args: { actionName: ActionName; toPlayer: Player }) => void;
 	reset: () => void;
 	exitQueue: () => void;
 	inputActivated: (inputData: InputData) => void;
@@ -41,8 +42,8 @@ interface ServerEvents {
 interface ServerFunctions {
 	inventory: {
 		openCase: (caseId: (typeof cases)[number]["id"]) => Item;
-		equip: (itemId: EquippableItemId) => boolean;
-		unequip: (itemId: EquippableItemId) => boolean;
+		equip: (itemId: (typeof hats)[number]["id"]) => boolean;
+		unequip: (itemId: (typeof hats)[number]["id"]) => boolean;
 	};
 
 	purchase: {

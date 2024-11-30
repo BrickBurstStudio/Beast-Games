@@ -8,6 +8,5 @@ export class ExampleGizmo extends Gizmo {
 	activationType = "server" as const;
 
 	activated() {
-		print("Example Gizmo activated");
 	}
 }

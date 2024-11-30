@@ -59,9 +59,6 @@ export class FlagChallenge extends BaseChallenge {
 	}
 
 	private IsSpaceAvailableForUndecidedPlayers() {
-		print("Players to advance target", this.playersToAdvanceTarget);
-		print("Players size", this.playersInChallenge.size());
-		print("Undecided players size", this.undecidedPlayers.size());
 		if (this.playersToAdvanceTarget - this.playersInChallenge.size() >= 0) {
 			this.undecidedPlayers.forEach((player) => this.MovePlayerToEndArea(player));
 			announce(["There is space for everyone left to advance! Congratulations!"]);
