@@ -20,7 +20,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 export class GameMainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
-	private static EXPECTED_PLAYERS_DEFAULT = 2;
+	private static EXPECTED_PLAYERS_DEFAULT = 1;
 	private static JOIN_TIMEOUT = 20;
 
 	/* ---------------------------------- Class --------------------------------- */
@@ -35,25 +35,25 @@ export class GameMainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		await new BribeChallenge().start();
+		// await new BribeChallenge().start();
 
-		const availableChallenges = [
-			GoldRushChallenge,
-			PugilChallenge,
-			// BoulderChallenge,
-			TowerChallenge,
-			// FlagChallenge,
-			// BriefcaseChallenge,
-		];
+		// const availableChallenges = [
+		// 	GoldRushChallenge,
+		// 	PugilChallenge,
+		// 	BoulderChallenge,
+		// 	TowerChallenge,
+		// 	FlagChallenge,
+		// 	BriefcaseChallenge,
+		// ];
 
-		const shuffledChallenges = availableChallenges
-			.map((value) => ({ value, sort: math.random() }))
-			.sort((a, b) => a.sort - b.sort > 0)
-			.map(({ value }) => value);
+		// const shuffledChallenges = availableChallenges
+		// 	.map((value) => ({ value, sort: math.random() }))
+		// 	.sort((a, b) => a.sort - b.sort > 0)
+		// 	.map(({ value }) => value);
 
-		for (const Challenge of shuffledChallenges) {
-			await new Challenge().start();
-		}
+		// for (const Challenge of shuffledChallenges) {
+		// 	await new Challenge().start();
+		// }
 
 		await new KingOfHillChallenge().start();
 		await new SplitOrStealChallenge().start();

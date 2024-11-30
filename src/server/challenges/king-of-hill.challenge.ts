@@ -6,6 +6,7 @@ import { Events } from "server/network";
 import { store } from "server/store";
 import { announce } from "server/util/announce";
 import { countdown } from "server/util/countdown";
+import { KING_OF_HILL_CONFIG } from "shared/configs/challenges/king-of-hill";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 
 export class KingOfHillChallenge extends BaseChallenge {
@@ -18,10 +19,10 @@ export class KingOfHillChallenge extends BaseChallenge {
 		"Everyone else will be eliminated",
 	];
 
-	private readonly ROUND_TIME = 120; // 2 minutes
-	private readonly POINTS_PER_SECOND = 10;
-	private readonly TARGET_SCORE = 1000;
-	private readonly SCORE_UPDATE_INTERVAL = 0.1;
+	private readonly ROUND_TIME = KING_OF_HILL_CONFIG.ROUND_TIME;
+	private readonly POINTS_PER_SECOND = KING_OF_HILL_CONFIG.POINTS_PER_SECOND;
+	private readonly TARGET_SCORE = KING_OF_HILL_CONFIG.TARGET_SCORE;
+	private readonly SCORE_UPDATE_INTERVAL = KING_OF_HILL_CONFIG.SCORE_UPDATE_INTERVAL;
 
 	private playerScores = new Map<Player, number>();
 	private hillOccupants = new Set<Player>();
@@ -44,12 +45,6 @@ export class KingOfHillChallenge extends BaseChallenge {
 
 		// Set up hill detection
 		this.setupHillDetection();
-
-		// Start the round
-		await countdown({
-			seconds: 3,
-			description: "Get ready to climb!",
-		});
 
 		// Enable player movement
 		await this.enablePlayerMovement();
@@ -74,17 +69,14 @@ export class KingOfHillChallenge extends BaseChallenge {
 		// Calculate random angle for circular distribution
 		const angle = math.rad(math.random(0, 360));
 
-		// Calculate spawn position using polar coordinates
-		const spawnX = math.cos(angle) * spawnRadius;
-		const spawnZ = math.sin(angle) * spawnRadius;
+		// Get the hill's world position
+		const hillPosition = hillPlatform.Position;
 
-		// Position the character relative to the hill
-		character.HumanoidRootPart.CFrame = hillPlatform.CFrame.mul(
-			new CFrame(
-				spawnX,
-				hillPlatform.Size.Y / 2 + 5, // Spawn slightly above the platform
-				spawnZ,
-			),
+		// Create spawn CFrame at world position
+		character.HumanoidRootPart.CFrame = new CFrame(
+			hillPosition.X,
+			hillPosition.Y + hillPlatform.Size.Y / 2 + 5, // Spawn slightly above the platform
+			hillPosition.Z,
 		).mul(CFrame.Angles(0, -angle, 0)); // Face towards the hill
 	}
 
@@ -134,7 +126,6 @@ export class KingOfHillChallenge extends BaseChallenge {
 	private async startTimeLimit() {
 		await countdown({
 			seconds: this.ROUND_TIME,
-			description: "Time Remaining",
 		});
 
 		// If time runs out, advance top 2 scoring players
@@ -165,7 +156,7 @@ export class KingOfHillChallenge extends BaseChallenge {
 	private broadcastScores() {
 		const scores = new Map<string, number>();
 		this.playerScores.forEach((score, player) => {
-			scores.set(player.Name, score);
+			scores.set(player.DisplayName, score);
 		});
 		Events.challenges.kingOfHillChallenge.updateScores.broadcast(scores);
 	}

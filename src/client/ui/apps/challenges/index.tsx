@@ -4,6 +4,7 @@ import { selectChallenge } from "shared/store/selectors/client";
 import BoulderChallenge from "./boulder";
 import { BribeChallenge } from "./bribe";
 import { SplitOrStealChallenge } from "./split-or-steal";
+import { KingOfHillChallenge } from "./king-of-hill";
 
 export default function ChallengesApp() {
 	const challenge = useSelector(selectChallenge);
@@ -12,6 +13,7 @@ export default function ChallengesApp() {
 		if (challenge === "Boulder Pull") return <BoulderChallenge />;
 		if (challenge === "Bribe") return <BribeChallenge />;
 		if (challenge === "Split or Steal") return <SplitOrStealChallenge />;
+		if (challenge === "King of the Hill") return <KingOfHillChallenge />;
 		return <></>;
 	}, [challenge]);
 

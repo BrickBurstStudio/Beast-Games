@@ -12,7 +12,11 @@ export class TowerChallenge extends BasePlatformChallenge {
 	private readonly CHALLENGE_DURATION = 60;
 
 	protected readonly challengeName = "Tower";
-	protected readonly rules = ["place your mf tower on the platform"];
+	protected readonly rules = [
+		"Place your tower on the platform",
+		"You will be given a red ball",
+		"Throw the ball at other players to eliminate them",
+	];
 	private playersToTowers = new Map<Player, BlockTower>();
 	private finished = false;
 
@@ -94,8 +98,11 @@ export class TowerChallenge extends BasePlatformChallenge {
 			this.obliterator.Add(
 				CollectionService.GetInstanceAddedSignal("block-tower").Connect((tower) => {
 					const ownerId = tower.GetAttribute("owner") as number;
-					if (ownerId === player.UserId && this.allPlayersPlacedTowers()) {
-						Events.announcer.clearCountdown.broadcast();
+					if (ownerId === player.UserId) {
+						this.playersToTowers.set(player, tower as BlockTower);
+						if (this.allPlayersPlacedTowers()) {
+							Events.announcer.clearCountdown.broadcast();
+						}
 					}
 				})
 			);
