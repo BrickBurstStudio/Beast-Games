@@ -21,6 +21,7 @@ export class TitleService implements OnStart {
 
 				getCharacter(player).then((character) => {
 					if (!character) return;
+					if (titleBGUIClone.Destroying) return;
 					titleBGUIClone.Parent = character.Head;
 				});
 
