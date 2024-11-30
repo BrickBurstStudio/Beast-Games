@@ -90,15 +90,23 @@ export class GameMainService implements OnStart {
 
 	setupDestroyCharacterOnDeath() {
 		forEveryPlayer(async (player) => {
-			const func = (character: CharacterRigR6) => {
-				character.Humanoid.Died.Connect(() => {
-					task.wait(GameMainService.DESTROY_CHARACTER_DELAY);
-					character.Destroy();
-				});
+			const connections = new Array<RBXScriptConnection>();
+			
+			const handleCharacter = (character: CharacterRigR6) => {
+				connections.push(
+					character.Humanoid.Died.Connect(() => {
+						task.wait(GameMainService.DESTROY_CHARACTER_DELAY);
+						character.Destroy();
+					})
+				);
 			};
 
-			if (player.Character) func(await getCharacter(player));
-			player.CharacterAdded.Connect(async () => func(await getCharacter(player)));
+			if (player.Character) handleCharacter(await getCharacter(player));
+			connections.push(
+				player.CharacterAdded.Connect(async (char) => handleCharacter(await getCharacter(player)))
+			);
+
+			return () => connections.forEach(c => c.Disconnect());
 		});
 	}
 }

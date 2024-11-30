@@ -23,6 +23,8 @@ export class QueueService implements OnStart {
 		isMatchmaking: false,
 	};
 
+	private running = true;
+
 	private getPlayersInQueue(): Player[] {
 		return Players.GetPlayers().filter((player) => player.GetAttribute("inQueue") === true);
 	}
@@ -36,6 +38,10 @@ export class QueueService implements OnStart {
 		this.setupQueueEvents(forcefield);
 		this.startQueueProcessor();
 		this.handlePlayerRemoving();
+	}
+
+	onStop() {
+		this.running = false;
 	}
 
 	private setupQueueEvents(forcefield: Part) {
@@ -114,7 +120,7 @@ export class QueueService implements OnStart {
 	}
 
 	private startQueueProcessor() {
-		while (true) {
+		while (this.running) {
 			task.wait(this.QUEUE_CHECK_INTERVAL);
 
 			const playersInQueue = this.getPlayersInQueue();

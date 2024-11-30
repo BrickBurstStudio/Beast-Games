@@ -3,13 +3,13 @@ import { Dependency } from "@flamework/core";
 import Object from "@rbxts/object-utils";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { Players, ReplicatedStorage, ServerStorage } from "@rbxts/services";
-import { ClaimComponent } from "../components/claim-components/claim.component";
-import { FlagPoleComponent } from "../components/claim-components/flag-pole.component";
 import { Events } from "server/network";
 import { announce } from "server/util/announce";
-import { getCharacter } from "shared/utils/functions/getCharacter";
-import { BaseChallenge } from "./base.challenge";
 import { countdown } from "server/util/countdown";
+import { getCharacter } from "shared/utils/functions/getCharacter";
+import { ClaimComponent } from "../components/claim-components/claim.component";
+import { FlagPoleComponent } from "../components/claim-components/flag-pole.component";
+import { BaseChallenge } from "./base.challenge";
 
 export class FlagChallenge extends BaseChallenge {
 	protected readonly challengeName = "Flag Run" as const;
@@ -31,15 +31,18 @@ export class FlagChallenge extends BaseChallenge {
 	protected async main() {
 		this.playersToAdvanceTarget = math.floor(this.playersInChallenge.size() * 0.8);
 		this.undecidedPlayers = [...this.playersInChallenge];
-		this.map.ChallengeArea.StartArea.Barier.Touched.Connect((otherPart) => {
-			if (this.map.ChallengeArea.StartArea.Barier.CanCollide) return;
-			const player = Players.GetPlayerFromCharacter(otherPart.Parent!);
-			if (!player) return;
-			if (!this.undecidedPlayers.includes(player)) return;
-			this.undecidedPlayers.remove(this.undecidedPlayers.indexOf(player));
-			this.playersInArena.push(player);
-			Events.announcer.announce(player, ["You have entered the yellow area! Claim a flag or be eliminated!"]);
-		});
+		this.obliterator.Add(
+			this.map.ChallengeArea.StartArea.Barier.Touched.Connect((otherPart) => {
+				if (this.map.ChallengeArea.StartArea.Barier.CanCollide) return;
+				const player = Players.GetPlayerFromCharacter(otherPart.Parent!);
+				if (!player) return;
+				if (!this.undecidedPlayers.includes(player)) return;
+				this.undecidedPlayers.remove(this.undecidedPlayers.indexOf(player));
+				this.playersInArena.push(player);
+				Events.announcer.announce(player, ["You have entered the yellow area! Claim a flag or be eliminated!"]);
+			}),
+			"Disconnect",
+		);
 
 		while (
 			this.playersInChallenge.size() - this.undecidedPlayers.size() < this.playersToAdvanceTarget &&
@@ -108,19 +111,31 @@ export class FlagChallenge extends BaseChallenge {
 	}
 
 	private YieldGameRound() {
-		// TODO: Refactor this to use `onAttributeChanged` instead of a while loop for performance reasons
-		const startTime = DateTime.now().UnixTimestamp;
-		while (this.flagPoles.size() > 0 && DateTime.now().UnixTimestamp - startTime < this.FIELD_TIME) {
-			for (const flag of this.flagPoles) {
-				const flagComponent = this.components.getComponent<FlagPoleComponent>(flag);
-				if (!flagComponent) continue;
-				if (flagComponent.attributes.owner) {
-					this.flagPoles.remove(this.flagPoles.indexOf(flag));
-					flag.Destroy();
+		let running = true;
+		this.obliterator.Add(
+			task.spawn(() => {
+				const startTime = DateTime.now().UnixTimestamp;
+				while (
+					running &&
+					this.flagPoles.size() > 0 &&
+					DateTime.now().UnixTimestamp - startTime < this.FIELD_TIME
+				) {
+					for (const flag of this.flagPoles) {
+						const flagComponent = this.components.getComponent<FlagPoleComponent>(flag);
+						if (!flagComponent) continue;
+						if (flagComponent.attributes.owner) {
+							this.flagPoles.remove(this.flagPoles.indexOf(flag));
+							flag.Destroy();
+						}
+					}
+					task.wait();
 				}
-			}
-			task.wait();
-		}
+			}),
+		);
+
+		return () => {
+			running = false;
+		};
 	}
 
 	private SpawnFlags() {

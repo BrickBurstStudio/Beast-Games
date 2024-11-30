@@ -1,11 +1,10 @@
-import { Tower } from "server/classes/gizmos/Tower";
-import { BasePlatformChallenge } from "./base-platform.challenge";
-import { Gizmo } from "server/classes/Gizmo";
-import { countdown } from "server/util/countdown";
 import { CollectionService, Players } from "@rbxts/services";
+import { Gizmo } from "server/classes/Gizmo";
 import { Ball } from "server/classes/gizmos/Ball";
-import { getCharacter } from "shared/utils/functions/getCharacter";
+import { Tower } from "server/classes/gizmos/Tower";
 import { Events } from "server/network";
+import { countdown } from "server/util/countdown";
+import { BasePlatformChallenge } from "./base-platform.challenge";
 
 export class TowerChallenge extends BasePlatformChallenge {
 	private readonly TOWER_PLACE_TIME = 30;
@@ -23,10 +22,10 @@ export class TowerChallenge extends BasePlatformChallenge {
 	protected async main() {
 		const destroyGizmos = this.giveTowerGizmos();
 
-		const countdownPromise = countdown({ 
-			seconds: this.TOWER_PLACE_TIME, 
-			description: "Place your tower", 
-			showGo: false 
+		const countdownPromise = countdown({
+			seconds: this.TOWER_PLACE_TIME,
+			description: "Place your tower",
+			showGo: false,
 		});
 
 		// Wait for either countdown to finish or all towers to be placed
@@ -39,7 +38,7 @@ export class TowerChallenge extends BasePlatformChallenge {
 					resolve();
 				});
 				this.obliterator.Add(checkInterval);
-			})
+			}),
 		]);
 
 		this.setupTowers();
@@ -90,11 +89,13 @@ export class TowerChallenge extends BasePlatformChallenge {
 	}
 
 	private giveTowerGizmos() {
-		const gizmos: Gizmo[] = [];
+		const gizmos = new Array<Gizmo>();
+
 		this.playerToPlatform.forEach((platform, player) => {
 			const gizmo = Gizmo.give(player, Tower);
 			gizmo.setParentValidation(platform);
-			
+			gizmos.push(gizmo);
+
 			this.obliterator.Add(
 				CollectionService.GetInstanceAddedSignal("block-tower").Connect((tower) => {
 					const ownerId = tower.GetAttribute("owner") as number;
@@ -104,16 +105,13 @@ export class TowerChallenge extends BasePlatformChallenge {
 							Events.announcer.clearCountdown.broadcast();
 						}
 					}
-				})
+				}),
 			);
-			
-			gizmos.push(gizmo);
 		});
 
 		return () => {
-			gizmos.forEach((gizmo) => {
-				gizmo.destroy();
-			});
+			gizmos.forEach((gizmo) => gizmo.destroy());
+			gizmos.clear();
 		};
 	}
 

@@ -6,6 +6,8 @@ import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 
 @Service({})
 export class LeaderboardService implements OnStart {
+	private running = true;
+
 	onStart() {
 		const xp = BaseOrderedDataStore.GetTop(100, "xp");
 		const playTime = BaseOrderedDataStore.GetTop(100, "playTime");
@@ -20,7 +22,7 @@ export class LeaderboardService implements OnStart {
 		// BaseOrderedDataStore.Reset("cash");
 
 		forEveryPlayer((player) => {
-			player.CharacterAdded.Connect(() => {
+			const connection = player.CharacterAdded.Connect(() => {
 				Events.updateLeaderboards.fire(player, {
 					xp,
 					playTime,
@@ -28,21 +30,29 @@ export class LeaderboardService implements OnStart {
 					cash,
 				});
 			});
+			
+			return () => connection.Disconnect();
 		});
 
-		while (true) {
-			const xp = BaseOrderedDataStore.GetTop(100, "xp");
-			const playTime = BaseOrderedDataStore.GetTop(100, "playTime");
-			const wins = BaseOrderedDataStore.GetTop(100, "wins");
+		task.spawn(() => {
+			while (this.running) {
+				const xp = BaseOrderedDataStore.GetTop(100, "xp");
+				const playTime = BaseOrderedDataStore.GetTop(100, "playTime");
+				const wins = BaseOrderedDataStore.GetTop(100, "wins");
+				const cash = BaseOrderedDataStore.GetTop(100, "cash");
+				
+				Events.updateLeaderboards.broadcast({
+					xp,
+					playTime,
+					wins,
+					cash,
+				});
+				task.wait(60);
+			}
+		});
+	}
 
-			const cash = BaseOrderedDataStore.GetTop(100, "cash");
-			Events.updateLeaderboards.broadcast({
-				xp,
-				playTime,
-				wins,
-				cash,
-			});
-			task.wait(60);
-		}
+	onStop() {
+		this.running = false;
 	}
 }

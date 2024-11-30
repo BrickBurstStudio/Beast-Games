@@ -71,9 +71,12 @@ export class GoldRushChallenge extends BaseChallenge {
 		this.greenClaims = selectedClaims;
 
 		this.greenClaims.forEach((claim) => {
-			claim.claimedEvent.Event.Connect((player: Player) => {
-				this.safePlayers.push(player);
-			});
+			this.obliterator.Add(
+				claim.claimedEvent.Event.Connect((player: Player) => {
+					this.safePlayers.push(player);
+				}),
+				"Disconnect"
+			);
 		});
 	}
 

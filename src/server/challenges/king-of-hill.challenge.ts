@@ -83,17 +83,23 @@ export class KingOfHillChallenge extends BaseChallenge {
 	private setupHillDetection() {
 		const hillPlatform = this.map.Hill.PrimaryPart!;
 
-		hillPlatform.Touched.Connect((part) => {
-			const player = Players.GetPlayerFromCharacter(part.Parent);
-			if (!player || !this.playersInChallenge.includes(player)) return;
-			this.hillOccupants.add(player);
-		});
+		this.obliterator.Add(
+			hillPlatform.Touched.Connect((part) => {
+				const player = Players.GetPlayerFromCharacter(part.Parent);
+				if (!player || !this.playersInChallenge.includes(player)) return;
+				this.hillOccupants.add(player);
+			}),
+			"Disconnect"
+		);
 
-		hillPlatform.TouchEnded.Connect((part) => {
-			const player = Players.GetPlayerFromCharacter(part.Parent);
-			if (!player) return;
-			this.hillOccupants.delete(player);
-		});
+		this.obliterator.Add(
+			hillPlatform.TouchEnded.Connect((part) => {
+				const player = Players.GetPlayerFromCharacter(part.Parent);
+				if (!player) return;
+				this.hillOccupants.delete(player);
+			}),
+			"Disconnect"
+		);
 	}
 
 	private async startGameLoop() {
