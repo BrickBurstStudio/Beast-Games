@@ -28,6 +28,7 @@ export class BoulderChallenge extends BaseChallenge {
 	private teamProgress: number[] = [0, 0, 0, 0, 0];
 	private teamFinishGoals: number[] = [0, 0, 0, 0, 0];
 	private teamsCompleted = 0;
+	private activeTeams = new Set<number>();
 
 	protected async main() {
 		await Promise.all(
@@ -79,13 +80,15 @@ export class BoulderChallenge extends BaseChallenge {
 			// If only one team is left, end the game and eliminate that team
 			if (activeTeams === 1) {
 				const lastTeam = this.teamProgress.findIndex((progress, i) => 
-					progress < this.teamFinishGoals[i]
+					this.activeTeams.has(i) && progress < this.teamFinishGoals[i]
 				);
 				
 				store.setChallenge(undefined);
 				await announce([`Team ${lastTeam + 1} was the last team pulling and has been eliminated!`], {
 					[lastTeam]: `<font color="#${TeamColors[lastTeam as keyof typeof TeamColors].ToHex()}">Team ${lastTeam + 1}</font>`,
 				});
+
+				await this.killTeamPlayers(lastTeam);
 
 				this.playersInChallenge = this.playersInChallenge.filter(
 					(player) => player.GetAttribute("team") !== lastTeam,
@@ -114,9 +117,12 @@ export class BoulderChallenge extends BaseChallenge {
 				[losingTeam]: `<font color="#${TeamColors[losingTeam as keyof typeof TeamColors].ToHex()}">Team ${losingTeam + 1}</font>`,
 			});
 
+			await this.killTeamPlayers(losingTeam);
+			
 			this.playersInChallenge = this.playersInChallenge.filter(
 				(player) => player.GetAttribute("team") !== losingTeam,
 			);
+
 		}
 
 		this.CleanUp();
@@ -155,6 +161,7 @@ export class BoulderChallenge extends BaseChallenge {
 		character.Humanoid.JumpHeight = 0;
 
 		const team = i % 5;
+		this.activeTeams.add(team);
 		const teamAssets = this.map[tostring(team) as keyof typeof this.map] as (typeof this.map)["1"];
 
 		character.HumanoidRootPart.CFrame = teamAssets.Rope.CFrame.mul(
@@ -178,6 +185,19 @@ export class BoulderChallenge extends BaseChallenge {
 				character.Humanoid.WalkSpeed = 16;
 				character.Humanoid.JumpHeight = 50;
 			}),
+		);
+	}
+
+	private async killTeamPlayers(teamNumber: number) {
+		await Promise.all(
+			this.playersInChallenge
+				.filter((player) => player.GetAttribute("team") === teamNumber)
+				.map(async (player) => {
+					if (player.Character) {
+						const character = await getCharacter(player);
+						character.Humanoid.Health = 0;
+					}
+				})
 		);
 	}
 }

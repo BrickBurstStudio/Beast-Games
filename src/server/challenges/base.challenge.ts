@@ -18,7 +18,6 @@ export type SpawnCharacterArgs = {
 };
 
 export abstract class BaseChallenge {
-	private readonly socialPeriodDuration = 30;
 	protected readonly obliterator = new Janitor();
 	protected abstract readonly map: Folder;
 	protected abstract readonly challengeName: ChallengeName;

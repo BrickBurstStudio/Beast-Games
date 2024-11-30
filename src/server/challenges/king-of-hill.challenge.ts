@@ -7,6 +7,7 @@ import { store } from "server/store";
 import { announce } from "server/util/announce";
 import { countdown } from "server/util/countdown";
 import { KING_OF_HILL_CONFIG } from "shared/configs/challenges/king-of-hill";
+import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 
 export class KingOfHillChallenge extends BaseChallenge {
@@ -150,11 +151,17 @@ export class KingOfHillChallenge extends BaseChallenge {
 	}
 
 	private async eliminateRemainingPlayers() {
-		this.playersInChallenge.forEach((player) => {
-			if (!this.advancedPlayers.has(player)) {
-				player.SetAttribute("lives", 0);
-			}
-		});
+		await Promise.all(
+			this.playersInChallenge.map(async (player) => {
+				if (!this.advancedPlayers.has(player)) {
+					player.SetAttribute("lives", 0);
+					if (player.Character) {
+						const character = await getCharacter(player);
+						character.Humanoid.Health = 0;
+					}
+				}
+			}),
+		);
 	}
 
 	private getSortedPlayersByScore() {
