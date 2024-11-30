@@ -43,17 +43,22 @@ export class TowerChallenge extends BasePlatformChallenge {
 		await this.dropNonBuilders();
 		this.giveBallGizmos();
 
-		countdown({ seconds: this.CHALLENGE_DURATION, description: "ENDING IN", showGo: false }).then(() => {
-			this.finished = true;
-		});
+		await Promise.race([
+			countdown({ seconds: this.CHALLENGE_DURATION, description: "ENDING IN", showGo: false }),
+			new Promise<void>((resolve) => {
+				task.spawn(() => {
+					while (true) {
+						if (this.playersInChallenge.size() === 1) {
+							resolve();
+							break;
+						}
+						task.wait(0.5);
+					}
+				});
+			}),
+		]);
 
-		while (!this.finished) {
-			if (this.playersInChallenge.size() === 1) {
-				this.finished = true;
-				break;
-			}
-			task.wait(0.5);
-		}
+		this.finished = true;
 	}
 
 	private setupTowers() {
