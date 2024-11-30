@@ -18,7 +18,13 @@ export class GizmoController implements OnStart {
 		});
 
 		UserInputService.TouchTapInWorld.Connect((position) => {
-			// this.sendMouseData({ origin: new CFrame(position) });
+			print(position);
+			const ray = Workspace.CurrentCamera!.ViewportPointToRay(position.X, position.Y);
+
+			Events.inputActivated.fire({
+				origin: ray.Origin,
+				direction: ray.Direction,
+			});
 		});
 	}
 }

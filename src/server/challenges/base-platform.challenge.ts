@@ -19,9 +19,11 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 	protected platforms: PlatformT[] = [];
 	protected playerToPlatform = new Map<Player, PlatformT>();
 	protected platformStates = new Map<PlatformT, PlatformState>();
+	protected platformDistance = 12;
 
 	protected async setup() {
 		BasePlatformChallenge.transformScene("void");
+		this.platformDistance = this.challengeName === "Tower" ? 50 : 12;
 		this.generatePlatforms();
 
 		this.contestantDiedOrLeft.Event.Connect((player) => this.changePlatformState(player, "eliminated"));
@@ -44,7 +46,11 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 				if (platformsCreated >= playerCount) break;
 
 				const platform = ServerStorage.Assets.Objects.Platform.Clone();
-				platform.PivotTo(BasePlatformChallenge.GENERATION_POSITION.mul(new CFrame(x * 12, 0, y * 12)));
+				platform.PivotTo(
+					BasePlatformChallenge.GENERATION_POSITION.mul(
+						new CFrame(x * this.platformDistance, 0, y * this.platformDistance),
+					),
+				);
 				platform.Parent = this.map;
 				this.platforms.push(platform);
 				platformsCreated++;
