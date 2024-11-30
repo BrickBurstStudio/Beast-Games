@@ -7,6 +7,7 @@ export const CHALLENGE_NAMES = [
 	"Gold Rush",
 	"Flag Run",
 	"Briefcase Memory",
+	"Tower",
 ] as const;
 export type ChallengeName = (typeof CHALLENGE_NAMES)[number];
 

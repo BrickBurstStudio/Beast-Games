@@ -46,6 +46,7 @@ export abstract class BaseChallenge {
 
 		await this.enablePlayerMovement();
 		await this.main();
+		Events.announcer.clearCountdown.broadcast();
 		await this.rewardPlayers();
 		store.setChallenge(undefined);
 

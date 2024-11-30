@@ -8,9 +8,12 @@ interface ServerStorage extends Instance {
 			MoneySFX: Sound;
 		};
 		Objects: Folder & {
+			BlockTower: Model & {
+				Hitbox: Part;
+			};
 			Platform: Model & {
 				Union: UnionOperation;
-				CharacterSpawn: Part;
+				Door1: Part;
 				Lighting: Model & {
 					Union: UnionOperation;
 					Part: Part & {
@@ -18,18 +21,29 @@ interface ServerStorage extends Instance {
 					};
 				};
 				Door2: Part;
-				Door1: Part;
+				CharacterSpawn: Part & {
+					Sound: Sound;
+				};
 				Barrier: UnionOperation;
 			};
+			Ball: Part;
 		};
 		Gizmos: Folder & {
+			Ball: Tool & {
+				Handle: Part;
+				bruh: Part;
+			};
+			ExampleGizmo: Tool & {
+				Base: Part;
+			};
 			Pugil: Tool & {
 				Side1: UnionOperation;
 				Base: UnionOperation;
 				Side2: UnionOperation;
 			};
-			ExampleGizmo: Tool & {
-				Base: Part;
+			Tower: Tool & {
+				Union: UnionOperation;
+				Handle: Part;
 			};
 		};
 		VFX: Folder & {

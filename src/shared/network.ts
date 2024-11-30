@@ -18,6 +18,8 @@ type updateLeaderboardsArgs = {
 	cash: { key: string; value: number }[];
 };
 
+export type InputData = { origin: Vector3; direction: Vector3 };
+
 interface ServerEvents {
 	reflex: {
 		start: () => void;
@@ -32,8 +34,8 @@ interface ServerEvents {
 	};
 	useAction: (args: { actionId: ActionId; toPlayer: Player }) => void;
 	reset: () => void;
-
 	exitQueue: () => void;
+	inputActivated: (inputData: InputData) => void;
 }
 
 interface ServerFunctions {

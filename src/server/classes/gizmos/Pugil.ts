@@ -15,6 +15,8 @@ export class Pugil extends Gizmo {
 	name = "Pugil";
 	tool = ServerStorage.Assets.Gizmos.Pugil.Clone();
 
+	activationType = "server" as const;
+
 	/* ---------------------------------- Class --------------------------------- */
 	private hitDebounce: Debounced<(character: CharacterRigR6) => void>;
 	private hitValidator: (character: CharacterRigR6) => boolean = () => true;

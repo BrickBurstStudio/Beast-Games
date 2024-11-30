@@ -3,6 +3,7 @@ import Make from "@rbxts/make";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { debounce, Debounced } from "@rbxts/set-timeout";
 import { Events } from "server/network";
+import { InputData } from "shared/network";
 
 type GizmoConfigs = {
 	activatedInterval?: number;
@@ -16,29 +17,38 @@ export abstract class Gizmo {
 		idle: Animation;
 		activated: Animation;
 	}>;
-	abstract activated(): void;
+	abstract activated(inputData: InputData | undefined): void;
+	abstract activationType: "server" | "client";
 
 	/* ---------------------------------- Class --------------------------------- */
 	protected owner: Player;
 	protected obliterator = new Janitor();
-	protected readonly activatedDebounce: Debounced<() => void>;
+	protected readonly activatedDebounce: Debounced<(inputData: InputData | undefined) => void>;
+	private destroyed = false;
 
 	/* ------------------------------ Configurable ------------------------------ */
 	// Default values here
 	protected ACTIVATED_INTERVAL = 0.5;
 
 	constructor(owner: Player, configs: GizmoConfigs = {}) {
+		this.obliterator.SupressInstanceReDestroy = true;
 		this.owner = owner;
 		this.ACTIVATED_INTERVAL = configs.activatedInterval ?? this.ACTIVATED_INTERVAL;
 
 		this.activatedDebounce = debounce(
-			() => {
+			(inputData: InputData | undefined) => {
 				if (this.animations.activated) Events.animationController.play(this.owner, this.animations.activated);
-				this.activated();
+				this.activated(inputData);
 			},
 			this.ACTIVATED_INTERVAL,
 			{ leading: true, trailing: false },
 		);
+
+		Events.inputActivated.connect((player, inputData) => {
+			if (player !== this.owner || this.tool.Parent === undefined || this.tool.Parent !== this.owner.Character)
+				return;
+			if (this.activationType === "client") this.activatedDebounce(inputData);
+		});
 	}
 
 	private setupAttachments() {
@@ -71,7 +81,9 @@ export abstract class Gizmo {
 	}
 
 	private setupEvents() {
-		this.tool.Activated.Connect(() => this.activatedDebounce());
+		this.tool.Activated.Connect(() => {
+			if (this.activationType === "server") this.activatedDebounce(undefined);
+		});
 
 		this.tool.Equipped.Connect(() => {
 			if (this.animations.idle) Events.animationController.play(this.owner, this.animations.idle);
@@ -101,6 +113,12 @@ export abstract class Gizmo {
 
 		if (this.animations.idle) Events.animationController.play(this.owner, this.animations.idle);
 		return this;
+	}
+
+	destroy() {
+		if (this.destroyed) return;
+		this.obliterator.Destroy();
+		this.destroyed = true;
 	}
 
 	static give<T extends Gizmo>(owner: Player, gizmo: new (owner: Player) => T): T {
