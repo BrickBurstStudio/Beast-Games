@@ -32,6 +32,9 @@ interface ServerEvents {
 		bribeChallenge: {
 			acceptBribe: () => void;
 		};
+		splitOrStealChallenge: {
+			makeChoice: (choice: "split" | "steal") => void;
+		};
 	};
 	useAction: (args: { actionName: ActionName; toPlayer: Player }) => void;
 	reset: () => void;

@@ -10,7 +10,7 @@ export class TowerChallenge extends BasePlatformChallenge {
 	private readonly TOWER_PLACE_TIME = 30;
 	private readonly CHALLENGE_DURATION = 60;
 
-	protected readonly challengeName = "Tower" as const;
+	protected readonly challengeName = "Tower";
 	protected readonly rules = ["place your mf tower on the platform"];
 	private playersToTowers = new Map<Player, BlockTower>();
 	private finished = false;

@@ -1,19 +1,13 @@
 import { OnStart, Service } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { AnalyticsService, Lighting, Players, ServerStorage } from "@rbxts/services";
+import { AnalyticsService, Players } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
-import { BoulderChallenge } from "server/challenges/boulder.challenge";
-import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
-import { FlagChallenge } from "server/challenges/flag.challenge";
-import { BribeChallenge } from "server/challenges/bribe.challenge";
-import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
-import { PugilChallenge } from "server/challenges/pugil.challenge";
+import { SplitOrStealChallenge } from "server/challenges/split-or-steal.challenge";
+import { TowerChallenge } from "server/challenges/tower.challenge";
 import { Events } from "server/network";
 import { MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
-import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
-import { TowerChallenge } from "server/challenges/tower.challenge";
 
 @Service()
 export class MainService implements OnStart {
@@ -37,6 +31,7 @@ export class MainService implements OnStart {
 		for (const challenge of [TowerChallenge]) {
 			await new challenge().start();
 		}
+		await new SplitOrStealChallenge().start();
 	}
 
 	yieldPlayers() {
