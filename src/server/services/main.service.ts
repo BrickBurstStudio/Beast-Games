@@ -13,12 +13,13 @@ import { MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
+import { TowerChallenge } from "server/challenges/tower.challenge";
 
 @Service()
 export class MainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
-	private static EXPECTED_PLAYERS_DEFAULT = 3;
+	private static EXPECTED_PLAYERS_DEFAULT = 2;
 	private static JOIN_TIMEOUT = 20;
 
 	/* ---------------------------------- Class --------------------------------- */
@@ -33,7 +34,7 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [BribeChallenge, PugilChallenge]) {
+		for (const challenge of [TowerChallenge]) {
 			await new challenge().start();
 		}
 	}
@@ -80,6 +81,4 @@ export class MainService implements OnStart {
 			player.CharacterAdded.Connect(async () => func(await getCharacter(player)));
 		});
 	}
-
-	/* --------------------------------- Utility -------------------------------- */
 }

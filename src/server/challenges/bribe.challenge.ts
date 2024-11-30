@@ -4,6 +4,8 @@ import { announce } from "server/util/announce";
 import { countdown } from "server/util/countdown";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { store } from "server/store";
+import { Gizmo } from "server/classes/Gizmo";
+import { Tower } from "server/classes/gizmos/Tower";
 
 export class BribeChallenge extends BasePlatformChallenge {
 	private readonly PLAYER_MULTIPLIER = 10_000;

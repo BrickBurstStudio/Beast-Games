@@ -5,6 +5,7 @@ export class ExampleGizmo extends Gizmo {
 	animations = {};
 	name = "Example Gizmo";
 	tool = ServerStorage.Assets.Gizmos.ExampleGizmo;
+	activationType = "server" as const;
 
 	activated() {
 	}

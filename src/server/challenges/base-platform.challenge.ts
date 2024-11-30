@@ -54,9 +54,12 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 		}
 	}
 
-	protected async dropPlayer(player: Player) {
+	protected async dropPlayer(player: Player): Promise<void> {
 		const platform = this.playerToPlatform.get(player);
 		if (!platform) return;
+
+		this.playersInChallenge = this.playersInChallenge.filter((p) => p !== player);
+		this.changePlatformState(player, "eliminated");
 
 		const character = await getCharacter(player);
 		character.Humanoid.WalkSpeed = 0;
@@ -75,6 +78,7 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 		platform.Door2.CanCollide = true;
 
 		character.Humanoid.Health = 0;
+		task.wait(1);
 	}
 
 	protected changePlatformState(player: Player, state: PlatformState) {
