@@ -46,7 +46,9 @@ export class MainService implements OnStart {
 			TowerChallenge,
 		];
 
-		const shuffledChallenges = availableChallenges.sort(() => !!(math.random() - 0.5)).filter((_, i) => i < 5);
+		const shuffledChallenges = availableChallenges
+			.sort(() => !(math.random() - 0.5))
+			.filter((_, i) => i < 5);
 
 		for (const Challenge of shuffledChallenges) {
 			await new Challenge().start();

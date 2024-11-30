@@ -110,10 +110,6 @@ export abstract class BaseChallenge {
 		this.obliterator.Add(conn, "Disconnect");
 	}
 
-	protected async EliminatePlayer(player: Player) {
-		throw "DEPRECATED";
-	}
-
 	/* ------------------------------ Map Control ----------------------------- */
 
 	private async setupMap() {

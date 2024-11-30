@@ -72,7 +72,7 @@ export class FlagChallenge extends BaseChallenge {
 			this.playersInArena.map(async (player) => {
 				this.undecidedPlayers.remove(this.undecidedPlayers.indexOf(player));
 				this.playersInArena.remove(this.playersInArena.indexOf(player));
-				return this.EliminatePlayer(player);
+				this.playersInChallenge = this.playersInChallenge.filter((p) => p !== player);
 			}),
 		);
 	}

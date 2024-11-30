@@ -153,11 +153,7 @@ export class KingOfHillChallenge extends BaseChallenge {
 	}
 
 	private async eliminateRemainingPlayers() {
-		for (const player of this.playersInChallenge) {
-			if (!this.advancedPlayers.has(player)) {
-				this.EliminatePlayer(player);
-			}
-		}
+		this.playersInChallenge = this.playersInChallenge.filter((player) => !this.advancedPlayers.has(player));
 	}
 
 	private getSortedPlayersByScore() {
