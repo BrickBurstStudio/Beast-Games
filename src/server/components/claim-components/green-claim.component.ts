@@ -8,13 +8,7 @@ import { ClaimComponent, ClaimComponentProps } from "./claim.component";
 		touchEnabled: true,
 	},
 })
-export class GreenClaimComponent
-	extends ClaimComponent<
-		ClaimComponentProps,
-		ServerStorage["ChallengeMaps"]["GoldRushChallenge"]["Claims"]["GreenClaim"]
-	>
-	implements OnStart
-{
+export class GreenClaimComponent extends ClaimComponent<ClaimComponentProps, GreenClaim> implements OnStart {
 	onStart() {
 		this.claimBGUI.MaxDistance = math.huge;
 	}

@@ -30,26 +30,27 @@ export class GameMainService implements OnStart {
 
 	/* ------------------------------- Life Cycle ------------------------------- */
 	async onStart() {
-		if (game.PlaceId !== MAIN_PLACE_ID) return;
+		// ! uncomment this
+		// if (game.PlaceId !== MAIN_PLACE_ID) return;
 		this.setupReset();
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		await new BribeChallenge().start();
-
 		const availableChallenges = [
-			GoldRushChallenge,
-			PugilChallenge,
+			// GoldRushChallenge,
+			// PugilChallenge,
 			// BoulderChallenge,
-			TowerChallenge,
+			// TowerChallenge,
 			// FlagChallenge,
-			// BriefcaseChallenge,
+			BriefcaseChallenge,
 		];
 
 		const shuffledChallenges = availableChallenges
 			.map((value) => ({ value, sort: math.random() }))
 			.sort((a, b) => a.sort - b.sort > 0)
 			.map(({ value }) => value);
+
+		await new BribeChallenge().start();
 
 		for (const Challenge of shuffledChallenges) {
 			await new Challenge().start();
