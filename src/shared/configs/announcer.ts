@@ -26,6 +26,6 @@ export const RICH_TEXT_REPLACE = {
 
 export const RULES_CONFIGS = {
 	animationTime: 1,
-	timeBetweenRules: 3,
-	timeAfterRules: 2,
+	timeBetweenRules: 4.5,
+	timeAfterRules: 3,
 } as const;
