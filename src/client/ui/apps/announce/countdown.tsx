@@ -74,7 +74,7 @@ function useCountdown() {
 
 export default function CountdownApp() {
 	let { initialSeconds, seconds, description, hide, showGo } = useCountdown();
-
+	print(seconds ? (seconds / (initialSeconds.current ?? 999)) * 255 : 255);
 	return (
 		<motion.frame
 			animate={{ Position: hide ? UDim2.fromScale(0.5, 0) : new UDim2(0.5, 0, 0, px(250)) }}
@@ -94,8 +94,8 @@ export default function CountdownApp() {
 				animate={{
 					TextColor3: Color3.fromRGB(
 						255,
-						seconds ? (seconds / (initialSeconds.current ?? 0)) * 255 : 255,
-						seconds ? (seconds / (initialSeconds.current ?? 0)) * 255 : 255,
+						seconds ? (seconds / (initialSeconds.current ?? 999)) * 255 : 255,
+						seconds ? (seconds / (initialSeconds.current ?? 999)) * 255 : 255,
 					),
 				}}
 				Size={UDim2.fromOffset(px(125), px(125))}
