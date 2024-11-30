@@ -89,7 +89,8 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 			await this.handleBothSteal(choices[0].player, choices[1].player);
 		} else {
 			const stealer = choices.find((c) => c.choice === "steal")!;
-			await this.handleOneStealOneSplit(stealer.player);
+			const splitter = choices.find((c) => c.choice === "split")!;
+			await this.handleOneStealOneSplit(stealer.player, splitter.player);
 		}
 
 		if (this.resolveEarly) {
@@ -113,7 +114,7 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 		this.dropPlayer(player2);
 	}
 
-	private async handleOneStealOneSplit(stealer: Player) {
+	private async handleOneStealOneSplit(stealer: Player, splitter: Player) {
 		await announce([
 			`${stealer.Name} chose to STEAL while their opponent chose to SPLIT!`,
 			`${stealer.Name} receives the entire $${this.PRIZE_MONEY}!`,
@@ -121,7 +122,7 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 
 		const data = new OrderedPlayerData(stealer);
 		data.cash.UpdateBy(this.PRIZE_MONEY);
-		this.dropPlayer(stealer);
+		this.dropPlayer(splitter);
 	}
 
 	private async handleNoChoices(player1: Player, player2: Player) {
