@@ -82,10 +82,20 @@ export default function InventoryApp() {
 								}}
 								toolTip={{
 									header: item?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
-									body: `Click To ${isCase ? "Open" : isEmote ? "Use" : isEquipped ? "Unequip" : "Equip"}`,
+									body: `Rarity: ${item?.rarity || "Common"}\n\nClick To ${
+										isCase ? "Open" : isEmote ? "Use" : isEquipped ? "Unequip" : "Equip"
+									}`,
 								}}
 								size={UDim2.fromScale(1, 1)}
 							>
+								<frame
+									Size={UDim2.fromScale(1, 0.1)}
+									Position={UDim2.fromScale(0, 0)}
+									BackgroundColor3={getRarityColor(item?.rarity)}
+									BackgroundTransparency={0.5}
+								>
+									<uicorner CornerRadius={new UDim(0, px(5))} />
+								</frame>
 								{itemMapObject.quantity > 1 && (
 									<textlabel
 										Text={tostring(itemMapObject.quantity)}
@@ -119,4 +129,21 @@ export default function InventoryApp() {
 			{groupedItemsComponents}
 		</MenuFrame>
 	);
+}
+
+function getRarityColor(rarity?: string) {
+	switch (rarity?.lower()) {
+		case "common":
+			return Color3.fromRGB(150, 150, 150);
+		case "uncommon":
+			return Color3.fromRGB(0, 255, 0);
+		case "rare":
+			return Color3.fromRGB(0, 100, 255);
+		case "epic":
+			return Color3.fromRGB(170, 0, 255);
+		case "legendary":
+			return Color3.fromRGB(255, 215, 0);
+		default:
+			return Color3.fromRGB(150, 150, 150); // Default to common
+	}
 }

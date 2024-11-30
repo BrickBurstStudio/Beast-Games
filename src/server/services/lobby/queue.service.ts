@@ -17,6 +17,7 @@ export class QueueService implements OnStart {
 	private readonly QUEUE_CHECK_INTERVAL = 0.5; // Check queue every half second
 	private readonly MIN_PLAYERS = QUEUE_CONFIG.MIN_PLAYERS; // Minimum players to start a match
 	private readonly MAX_QUEUE_WAIT_TIME = QUEUE_CONFIG.MAX_QUEUE_WAIT_TIME; // Maximum time (in seconds) before forcing a match with available players
+	private readonly MAX_PLAYERS = QUEUE_CONFIG.MAX_PLAYERS; // Add this line after line 19
 
 	private queueState: QueueState = {
 		startTime: 0,
@@ -59,13 +60,22 @@ export class QueueService implements OnStart {
 	}
 
 	private async addPlayerToQueue(player: Player, forcefield: Part) {
+		const playersInQueue = this.getPlayersInQueue();
+		
+		if (playersInQueue.size() >= this.MAX_PLAYERS) {
+			Events.announcer.announce.fire(player, ["Queue is full! Please try again later."]);
+			return;
+		}
+
 		const character = await getCharacter(player);
 		character.PivotTo(forcefield.CFrame.mul(new CFrame(0, -forcefield.Size.Y / 2, 0)));
+		
 		player.SetAttribute("inQueue", true);
 
 		AnalyticsService.LogOnboardingFunnelStepEvent(player, 2, "entered_queue");
+		
 		AnalyticsService.LogFunnelStepEvent(player, "core_loop", `${player.UserId}-${game.JobId}`, 2, "entered_queue");
-		const playersInQueue = this.getPlayersInQueue();
+
 		if (playersInQueue.size() === this.MIN_PLAYERS) {
 			// Start countdown when minimum players is reached
 			this.queueState.startTime = tick();
@@ -151,8 +161,6 @@ export class QueueService implements OnStart {
 		this.queueState.isMatchmaking = true;
 
 		try {
-			task.wait(this.MAX_QUEUE_WAIT_TIME);
-
 			const playersInQueue = this.getPlayersInQueue();
 
 			if (playersInQueue.size() < this.MIN_PLAYERS) {

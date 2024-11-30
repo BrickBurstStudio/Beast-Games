@@ -1,8 +1,5 @@
 {
-	"name": "flamework-template",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
+	"name": "beast-games",
 	"scripts": {
 		"build": "rbxts-build build",
 		"watch": "concurrently \"rbxts-build watch\" \"npx io-serve\"",

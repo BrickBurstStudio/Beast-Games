@@ -1,9 +1,10 @@
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import React, { useEffect, useRef, useState } from "@rbxts/react";
-import { Players, Workspace } from "@rbxts/services";
+import { Players, TeleportService, Workspace } from "@rbxts/services";
 import { store } from "client/store";
 import { px } from "client/ui/utils/usePx";
 import { COLORS } from "shared/configs/gui";
+import { LOBBY_PLACE_ID } from "shared/configs/places";
 
 function useSpectate() {
 	const index = useRef(0);
@@ -45,7 +46,6 @@ export default function SpectateApp() {
 				BackgroundColor3={Color3.fromRGB(255, 255, 255)}
 				AnchorPoint={new Vector2(0.5, 1)}
 				Position={new UDim2(0, px(250), 0.95, 0)}
-				// Size={UDim2.fromOffset(px(200), px(200))}
 				AutomaticSize={"XY"}
 			>
 				<uilistlayout FillDirection={"Horizontal"} />
@@ -89,6 +89,28 @@ export default function SpectateApp() {
 				Event={{
 					MouseButton1Click: () => {
 						store.setGuiPage("Actions");
+					},
+				}}
+			>
+				<uipadding
+					PaddingBottom={new UDim(0, px(10))}
+					PaddingLeft={new UDim(0, px(10))}
+					PaddingRight={new UDim(0, px(10))}
+					PaddingTop={new UDim(0, px(10))}
+				/>
+				<uicorner CornerRadius={new UDim(0, px(10))} />
+			</textbutton>
+			<textbutton
+				BackgroundColor3={COLORS.Primary}
+				TextColor3={COLORS.White}
+				Position={new UDim2(0.5, 0, 0.85, 0)}
+				AnchorPoint={new Vector2(0.5, 1)}
+				TextScaled
+				Text="Return to Lobby"
+				Size={new UDim2(0, px(200), 0, px(100))}
+				Event={{
+					MouseButton1Click: () => {
+						TeleportService.Teleport(LOBBY_PLACE_ID);
 					},
 				}}
 			>
