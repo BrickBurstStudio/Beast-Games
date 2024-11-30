@@ -150,7 +150,6 @@ export class QueueService implements OnStart {
 			const playersInQueue = this.getPlayersInQueue();
 
 			if (playersInQueue.size() < this.MIN_PLAYERS) {
-				print("Not enough players to start match after countdown");
 				playersInQueue.forEach((player) => {
 					Events.announcer.announce.fire(player, [
 						"Not enough players to start match. Waiting for more players...",
@@ -162,7 +161,6 @@ export class QueueService implements OnStart {
 				return;
 			}
 
-			print(`Starting match with ${playersInQueue.size()} players`);
 			TeleportService.TeleportAsync(MAIN_PLACE_ID, playersInQueue);
 
 			playersInQueue.forEach((player) => {
@@ -176,7 +174,6 @@ export class QueueService implements OnStart {
 				);
 			});
 		} catch (error) {
-			print(`Teleport failed: ${error}`);
 			const playersInQueue = this.getPlayersInQueue();
 			playersInQueue.forEach((player) => Events.announcer.clearCountdown.fire(player));
 			this.queueState.countdownEndTime = undefined;

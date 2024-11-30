@@ -13,7 +13,7 @@ type MenuFrameProps = {
 	};
 };
 
-const headerElementSize = 100;
+export const HEADER_ELEMENT_SIZE = 100;
 
 export default function MenuFrame(props: MenuFrameProps) {
 	return (
@@ -31,7 +31,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 			<frame Size={UDim2.fromScale(1, 0)} ZIndex={10} BackgroundTransparency={1}>
 				{/* title container */}
 				<frame
-					Size={new UDim2(1, px(headerElementSize), 0, px(headerElementSize * 0.75))}
+					Size={new UDim2(1, px(HEADER_ELEMENT_SIZE), 0, px(HEADER_ELEMENT_SIZE * 0.75))}
 					Position={new UDim2(0.5, 0, 0, 0)}
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					BackgroundTransparency={1}
@@ -39,7 +39,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 					{/* icon */}
 					{props.header.icon && (
 						<frame
-							Size={UDim2.fromOffset(px(headerElementSize * 0.75), px(headerElementSize * 0.75))}
+							Size={UDim2.fromOffset(px(HEADER_ELEMENT_SIZE * 0.75), px(HEADER_ELEMENT_SIZE * 0.75))}
 							Position={UDim2.fromScale(0, 0)}
 							AnchorPoint={new Vector2(0, 0)}
 							BackgroundColor3={COLORS.Primary}
@@ -77,7 +77,7 @@ export default function MenuFrame(props: MenuFrameProps) {
 				{/* x button */}
 				<ImageButton
 					backgroundColor3={Color3.fromRGB(255, 0, 0)}
-					size={UDim2.fromOffset(px(headerElementSize), px(headerElementSize))}
+					size={UDim2.fromOffset(px(HEADER_ELEMENT_SIZE), px(HEADER_ELEMENT_SIZE))}
 					position={new UDim2(1, 0, 0, 0)}
 					anchorPoint={new Vector2(0.5, 0.5)}
 					image="rbxassetid://6031094678"
@@ -94,10 +94,10 @@ export default function MenuFrame(props: MenuFrameProps) {
 				ScrollBarImageColor3={Color3.fromRGB(0, 0, 0)}
 			>
 				<uipadding
-					PaddingTop={new UDim(0, px(headerElementSize / 2))}
-					PaddingBottom={new UDim(0, px(headerElementSize / 2))}
-					PaddingRight={new UDim(0, px(headerElementSize / 2))}
-					PaddingLeft={new UDim(0, px(headerElementSize / 2))}
+					PaddingTop={new UDim(0, px(HEADER_ELEMENT_SIZE / 2))}
+					PaddingBottom={new UDim(0, px(HEADER_ELEMENT_SIZE / 2))}
+					PaddingRight={new UDim(0, px(HEADER_ELEMENT_SIZE / 2))}
+					PaddingLeft={new UDim(0, px(HEADER_ELEMENT_SIZE / 2))}
 				/>
 				{props.children}
 			</scrollingframe>

@@ -80,7 +80,7 @@ export class BaseOrderedDataStore {
 			.GetSortedAsync(false, 100)
 			.GetCurrentPage()
 			.forEach((entry) => {
-				print("Removing entry", entry);
+
 				DataStoreService.GetOrderedDataStore(orderedDataStoreName).RemoveAsync(entry.key);
 			});
 	}
@@ -93,8 +93,8 @@ export class BaseOrderedDataStore {
 		maxRetryAttempts: number = 4,
 	): T | void {
 		if (playerID) {
-			if (!Players.GetPlayerByUserId(playerID)) return; //print(playerID + " has left");
-			if (tries >= maxRetryAttempts) return; //print("Max retries reached");
+			if (!Players.GetPlayerByUserId(playerID)) return;
+			if (tries >= maxRetryAttempts) return;
 		}
 
 		BaseOrderedDataStore.YieldRequestBudget(requestType);

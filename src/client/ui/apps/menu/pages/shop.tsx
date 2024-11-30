@@ -3,6 +3,7 @@ import { Functions } from "client/network";
 import { store } from "client/store";
 import ImageButton from "client/ui/components/image-button";
 import MenuFrame from "client/ui/components/menu-frame";
+import { px } from "client/ui/utils/usePx";
 import { items } from "shared/configs/items";
 import { cases } from "shared/configs/items/cases";
 import { BUTTONS } from "../buttons";
@@ -16,7 +17,7 @@ export default function ShopApp() {
 				title: shopButton.name,
 			}}
 		>
-			<uigridlayout CellSize={new UDim2(0, 100, 0, 100)} CellPadding={new UDim2(0, 10, 0, 10)} />
+			<uigridlayout CellSize={new UDim2(0, px(150), 0, px(150))} CellPadding={new UDim2(0, px(10), 0, px(10))} />
 			{cases.map((caseObj) => {
 				const itemNames = caseObj.items.mapFiltered((itemId) => items.get(itemId)?.name);
 				return (

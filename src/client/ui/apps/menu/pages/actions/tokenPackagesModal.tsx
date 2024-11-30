@@ -18,7 +18,7 @@ const TOKEN_PACKAGES = [
 export default function TokenPackagesModal({ onClose }: { onClose: () => void }) {
 	return (
 		<Modal
-			height={px(TOKEN_PACKAGES.size() * 175 + 100)}
+			height={TOKEN_PACKAGES.size() * px(130) + px(100)}
 			title="Buy Tokens"
 			onClose={onClose}
 			children={TOKEN_PACKAGES.map((pkg) => (

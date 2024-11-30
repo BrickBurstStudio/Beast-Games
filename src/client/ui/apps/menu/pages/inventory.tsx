@@ -7,20 +7,17 @@ import ImageButton from "client/ui/components/image-button";
 import MenuFrame from "client/ui/components/menu-frame";
 import { px } from "client/ui/utils/usePx";
 import { BORDER_THICKNESS, COLORS } from "shared/configs/gui";
-import { EquippableItemId, ItemId, items } from "shared/configs/items";
+import { ItemId, items } from "shared/configs/items";
 import { cases } from "shared/configs/items/cases";
-import { selectPlayerItems } from "shared/store/selectors/players";
+import { hats } from "shared/configs/items/hats";
+import { selectPlayerEquipped, selectPlayerItems } from "shared/store/selectors/players";
 import { BUTTONS } from "../buttons";
 
 const inventoryButton = BUTTONS.find((button) => button.name === "Inventory")!;
 export default function InventoryApp() {
-	const inventory = useSelector(selectPlayerItems(tostring(Players.LocalPlayer.UserId))) ?? [
-		"emote_1",
-		"hat_1",
-		"case_1",
-		"case_1",
-		"case_2",
-	];
+	const inventory = useSelector(selectPlayerItems(tostring(Players.LocalPlayer.UserId)));
+	const equippedItems = useSelector(selectPlayerEquipped(tostring(Players.LocalPlayer.UserId)));
+	if (inventory === undefined || equippedItems === undefined) return <></>;
 
 	const groupedItems = new Map<string, { id: ItemId; quantity: number }[]>();
 	for (const itemId of inventory ?? []) {
@@ -60,19 +57,32 @@ export default function InventoryApp() {
 					/>
 					{itemMapObjects.map((itemMapObject) => {
 						const item = items.get(itemMapObject.id);
+						const isEquipped = equippedItems.hat === itemMapObject.id;
+						const isEmote = itemMapObject.id.split("_")[0] === "emote";
 						return (
 							<ImageButton
 								key={itemMapObject.id}
 								image={"rbxassetid://6031094678"}
+								backgroundColor3={isEquipped ? COLORS.Buttons.On : undefined}
 								onClick={() => {
 									store.setGuiPage(undefined);
 									if (isCase)
-										Functions.inventory.openCase(itemMapObject.id as (typeof cases)[number]["id"]);
-									else Functions.inventory.equip(itemMapObject.id as EquippableItemId);
+										return Functions.inventory.openCase(
+											itemMapObject.id as (typeof cases)[number]["id"],
+										);
+
+									if (isEmote) {
+										// Events.animationController.play(itemMapObject.id);
+										return;
+									}
+
+									if (isEquipped)
+										Functions.inventory.unequip(itemMapObject.id as (typeof hats)[number]["id"]);
+									else Functions.inventory.equip(itemMapObject.id as (typeof hats)[number]["id"]);
 								}}
 								toolTip={{
 									header: item?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
-									body: `Click To ${isCase ? "Open" : "Equip"}`,
+									body: `Click To ${isCase ? "Open" : isEmote ? "Use" : isEquipped ? "Unequip" : "Equip"}`,
 								}}
 								size={UDim2.fromScale(1, 1)}
 							>

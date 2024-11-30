@@ -3,7 +3,9 @@ import motion from "@rbxts/react-motion";
 import { useSelector } from "@rbxts/react-reflex";
 import { UserInputService } from "@rbxts/services";
 import { Events } from "client/network";
+import { BORDER_THICKNESS, COLORS } from "shared/configs/gui";
 import { selectGuiPage, selectSpectating, selectToolTip } from "shared/store/selectors/client";
+import { px } from "../utils/usePx";
 import AnimateEventsApp from "./animateEvents";
 import AnnounceApp from "./announce";
 import ChallengesApp from "./challenges";
@@ -70,16 +72,36 @@ export default function App() {
 function ToolTip() {
 	const toolTip = useSelector(selectToolTip);
 	if (!toolTip) return <></>;
-	const mouseLocation = UserInputService.GetMouseLocation();
+
+	const [mousePos, setMousePos] = React.useState(UserInputService.GetMouseLocation());
+
+	useEffect(() => {
+		const connection = UserInputService.InputChanged.Connect((input) => {
+			if (input.UserInputType === Enum.UserInputType.MouseMovement) {
+				setMousePos(UserInputService.GetMouseLocation());
+			}
+		});
+
+		return () => connection.Disconnect();
+	}, []);
+
 	return (
 		<textlabel
 			ZIndex={100}
 			AutomaticSize={Enum.AutomaticSize.XY}
-			Position={new UDim2(0, mouseLocation.X, 0, mouseLocation.Y)}
+			Position={new UDim2(0, mousePos.X + px(25), 0, mousePos.Y + px(25))}
 			Text={`${toolTip.header}${toolTip.body ? "\n\n" + toolTip.body : ""}`}
 			BackgroundTransparency={0.5}
 			BackgroundColor3={Color3.fromRGB(0, 0, 0)}
 			TextColor3={Color3.fromRGB(255, 255, 255)}
-		/>
+		>
+			<uicorner CornerRadius={new UDim(0, px(10))} />
+			<uipadding
+				PaddingTop={new UDim(0, px(10))}
+				PaddingBottom={new UDim(0, px(10))}
+				PaddingLeft={new UDim(0, px(10))}
+				PaddingRight={new UDim(0, px(10))}
+			/>
+		</textlabel>
 	);
 }
