@@ -1,5 +1,5 @@
 import { OnStart, Service } from "@flamework/core";
-import { AnalyticsService, Players, TeleportService, Workspace } from "@rbxts/services";
+import { AnalyticsService, CollectionService, Players, TeleportService, Workspace } from "@rbxts/services";
 import { Events } from "server/network";
 import { LOBBY_PLACE_ID, MAIN_PLACE_ID } from "shared/configs/places";
 import createForcefield from "shared/utils/functions/createForcefield";
@@ -30,8 +30,8 @@ export class QueueService implements OnStart {
 	onStart() {
 		if (game.PlaceId !== LOBBY_PLACE_ID) return;
 
-		const queueBox = Workspace.WaitForChild("QueueBox") as Part;
-		const forcefield = createForcefield(queueBox);
+		const queueBox = CollectionService.GetTagged("queue")[0] as Model;
+		const forcefield = createForcefield(queueBox.PrimaryPart!);
 
 		this.setupQueueEvents(forcefield);
 		this.startQueueProcessor();

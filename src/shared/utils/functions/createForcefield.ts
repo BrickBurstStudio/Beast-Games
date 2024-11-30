@@ -9,7 +9,7 @@ type ForcefieldOptions = {
 	color: Vector3;
 };
 
-export default function createForcefield(arg: ForcefieldOptions | Part) {
+export default function createForcefield(arg: ForcefieldOptions | Part | BasePart) {
 	let cframe: CFrame;
 	let size: Vector3;
 	let color: Vector3;
@@ -20,7 +20,7 @@ export default function createForcefield(arg: ForcefieldOptions | Part) {
 		size = arg.size;
 		color = arg.color;
 	} else {
-		arg = arg as Part;
+		arg = arg as Part | BasePart;
 		cframe = arg.CFrame;
 		size = arg.Size;
 		color = new Vector3(arg.Color.R, arg.Color.G, arg.Color.B);

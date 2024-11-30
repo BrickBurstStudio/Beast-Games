@@ -71,9 +71,9 @@ export const selectPlayerPlayTime = (playerId: string) => {
 	};
 };
 
-export const selectPlayerActions = (playerId: string) => {
+export const selectPlayerActionTokens = (playerId: string) => {
 	return (state: SharedState) => {
-		return state.players.actions[playerId];
+		return state.players.actionTokens[playerId];
 	};
 };
 
@@ -86,8 +86,8 @@ export const selectPlayerData = (playerId: string) => {
 		selectPlayerXP(playerId),
 		selectPlayerWins(playerId),
 		selectPlayerPlayTime(playerId),
-		selectPlayerActions(playerId),
-		(balances, loggedIns, items, equipped, xp, wins, playTime, actions): PlayerData => {
+		selectPlayerActionTokens(playerId),
+		(balances, loggedIns, items, equipped, xp, wins, playTime, actionTokens): PlayerData => {
 			return {
 				loggedIn: loggedIns || defaultPlayerData.loggedIn,
 				balance: balances || defaultPlayerData.balance,
@@ -96,7 +96,7 @@ export const selectPlayerData = (playerId: string) => {
 				xp: xp || defaultPlayerData.xp,
 				wins: wins || defaultPlayerData.wins,
 				playTime: playTime || defaultPlayerData.playTime,
-				actions: actions || defaultPlayerData.actions,
+				actionTokens: actionTokens || defaultPlayerData.actionTokens,
 			};
 		},
 	);
