@@ -1,22 +1,23 @@
 import { OnStart, Service } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { AnalyticsService, Lighting, Players, ServerStorage } from "@rbxts/services";
+import { AnalyticsService, Players } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
+import { BribeChallenge } from "server/challenges/bribe.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
 import { FlagChallenge } from "server/challenges/flag.challenge";
-import { BribeChallenge } from "server/challenges/bribe.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
+import { KingOfHillChallenge } from "server/challenges/king-of-hill.challenge";
 import { PugilChallenge } from "server/challenges/pugil.challenge";
+import { SplitOrStealChallenge } from "server/challenges/split-or-steal.challenge";
+import { TowerChallenge } from "server/challenges/tower.challenge";
 import { Events } from "server/network";
 import { MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
-import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
-import { TowerChallenge } from "server/challenges/tower.challenge";
 
 @Service()
-export class MainService implements OnStart {
+export class GameMainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
 	private static EXPECTED_PLAYERS_DEFAULT = 2;
@@ -24,7 +25,7 @@ export class MainService implements OnStart {
 
 	/* ---------------------------------- Class --------------------------------- */
 	private playersJoined = 0;
-	private expectedPlayers = MainService.EXPECTED_PLAYERS_DEFAULT;
+	private expectedPlayers = GameMainService.EXPECTED_PLAYERS_DEFAULT;
 	private joinTimedOut = false;
 
 	/* ------------------------------- Life Cycle ------------------------------- */
@@ -34,9 +35,28 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [TowerChallenge]) {
-			await new challenge().start();
+		await new BribeChallenge().start();
+
+		const availableChallenges = [
+			GoldRushChallenge,
+			PugilChallenge,
+			// BoulderChallenge,
+			TowerChallenge,
+			// FlagChallenge,
+			// BriefcaseChallenge,
+		];
+
+		const shuffledChallenges = availableChallenges
+			.map((value) => ({ value, sort: math.random() }))
+			.sort((a, b) => a.sort - b.sort > 0)
+			.map(({ value }) => value);
+
+		for (const Challenge of shuffledChallenges) {
+			await new Challenge().start();
 		}
+
+		await new KingOfHillChallenge().start();
+		await new SplitOrStealChallenge().start();
 	}
 
 	yieldPlayers() {
@@ -51,11 +71,11 @@ export class MainService implements OnStart {
 			AnalyticsService.LogOnboardingFunnelStepEvent(player, 4, "joined_main_game");
 
 			this.playersJoined++;
-			this.expectedPlayers = player.GetJoinData().Members?.size() ?? MainService.EXPECTED_PLAYERS_DEFAULT;
+			this.expectedPlayers = player.GetJoinData().Members?.size() ?? GameMainService.EXPECTED_PLAYERS_DEFAULT;
 		});
 		setTimeout(() => {
 			this.joinTimedOut = true;
-		}, MainService.JOIN_TIMEOUT);
+		}, GameMainService.JOIN_TIMEOUT);
 
 		while (this.playersJoined < this.expectedPlayers && !this.joinTimedOut) task.wait();
 	}
@@ -72,7 +92,7 @@ export class MainService implements OnStart {
 		forEveryPlayer(async (player) => {
 			const func = (character: CharacterRigR6) => {
 				character.Humanoid.Died.Connect(() => {
-					task.wait(MainService.DESTROY_CHARACTER_DELAY);
+					task.wait(GameMainService.DESTROY_CHARACTER_DELAY);
 					character.Destroy();
 				});
 			};

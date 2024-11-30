@@ -32,6 +32,9 @@ interface ServerEvents {
 		bribeChallenge: {
 			acceptBribe: () => void;
 		};
+		splitOrStealChallenge: {
+			makeChoice: (choice: "split" | "steal") => void;
+		};
 	};
 	useAction: (args: { actionName: ActionName; toPlayer: Player }) => void;
 	reset: () => void;
@@ -61,6 +64,9 @@ interface ClientEvents {
 		bribeChallenge: {
 			updateBribe: (args: BribeChallengeData) => void;
 			disableBribe: () => void;
+		};
+		kingOfHillChallenge: {
+			updateScores: (scores: Map<string, number>) => void;
 		};
 	};
 

@@ -105,6 +105,12 @@ interface ServerStorage extends Instance {
 				Boulder: Part;
 			};
 		};
+		KingOfTheHillChallenge: Folder & {
+			Hill: Model & {
+				Base: Part;
+				Top: Part;
+			};
+		};
 		GoldRushChallenge: Folder & {
 			Claims: Model & {
 				Highlight: Highlight;

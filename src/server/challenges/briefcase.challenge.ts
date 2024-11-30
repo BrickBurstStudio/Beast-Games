@@ -137,9 +137,10 @@ export class BriefcaseChallenge extends BaseChallenge {
 	private EliminatePlayers() {
 		this.playersInChallenge.forEach((p) => {
 			if (this.playerSelections[p.UserId]) {
-				if (!this.playerSelections[p.UserId].attributes.safe) this.EliminatePlayer(p);
+				if (!this.playerSelections[p.UserId].attributes.safe)
+					this.playersInChallenge = this.playersInChallenge.filter((p) => p !== p);
 			} else {
-				this.EliminatePlayer(p);
+				this.playersInChallenge = this.playersInChallenge.filter((p) => p !== p);
 			}
 		});
 	}

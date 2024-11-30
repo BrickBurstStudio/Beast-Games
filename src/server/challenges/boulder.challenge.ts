@@ -5,7 +5,6 @@ import { store } from "server/store";
 import { announce } from "server/util/announce";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
-import { countdown } from "server/util/countdown";
 
 const TeamColors = {
 	0: Color3.fromRGB(255, 0, 0),
@@ -93,10 +92,8 @@ export class BoulderChallenge extends BaseChallenge {
 			[losingTeam]: `<font color="#${TeamColors[losingTeam as keyof typeof TeamColors].ToHex()}">Team ${losingTeam + 1}</font>`,
 		});
 
-		Promise.all(
-			this.playersInChallenge
-				.filter((player) => player.GetAttribute("team") === losingTeam)
-				.map((player) => this.EliminatePlayer(player)),
+		this.playersInChallenge = this.playersInChallenge.filter(
+			(player) => player.GetAttribute("team") !== losingTeam,
 		);
 
 		this.CleanUp();

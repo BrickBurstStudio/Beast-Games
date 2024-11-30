@@ -11,25 +11,38 @@ export class TitleService implements OnStart {
 	titleBGUI = ServerStorage.Assets.Gui.TitleBGUI;
 
 	onStart() {
-		// todo : get async func to work as forEveryPlayer callback
 		forEveryPlayer((player) => {
-			const titleBGUIClone = this.titleBGUI.Clone();
+			const setupTitle = () => {
+				const titleBGUIClone = this.titleBGUI.Clone();
 
-			const xpUnsub = store.subscribe(selectPlayerXP(tostring(player.UserId)), (xp) => {
-				titleBGUIClone.Frame.Level.Text = !!xp ? tostring(getLevel(xp)) : "N/A";
-			});
+				const xpUnsub = store.subscribe(selectPlayerXP(tostring(player.UserId)), (xp) => {
+					titleBGUIClone.Frame.Level.Text = !!xp ? tostring(getLevel(xp)) : "N/A";
+				});
 
-			getCharacter(player).then((character) => {
-				if (!character) return;
-				titleBGUIClone.Parent = character.Head;
-			});
+				getCharacter(player).then((character) => {
+					if (!character) return;
+					titleBGUIClone.Parent = character.Head;
+				});
 
-			titleBGUIClone.Username.Text = player.Name;
-			titleBGUIClone.Frame.DisplayName.Text = player.DisplayName;
+				titleBGUIClone.Username.Text = player.Name;
+				titleBGUIClone.Frame.DisplayName.Text = player.DisplayName;
 
-			return () => {
-				xpUnsub();
+				return () => {
+					xpUnsub();
+					titleBGUIClone.Destroy();
+				};
 			};
+
+			// Initial setup
+			let cleanup = setupTitle();
+
+			// Handle character respawns
+			player.CharacterAdded.Connect(() => {
+				cleanup(); // Clean up previous title
+				cleanup = setupTitle(); // Setup new title
+			});
+
+			return () => cleanup();
 		});
 	}
 }
