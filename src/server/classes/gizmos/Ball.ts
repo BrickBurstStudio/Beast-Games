@@ -28,6 +28,6 @@ export class Ball extends Gizmo {
 		ball.SetNetworkOwner(this.owner);
 		ball.AssemblyLinearVelocity = inputData.direction.mul(this.BALL_FORCE).add(new Vector3(0, 40, 0));
 
-		// this.destroy();
+		this.destroy();
 	}
 }
