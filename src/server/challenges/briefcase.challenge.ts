@@ -8,6 +8,7 @@ import { generatePlayerGrid } from "server/util/generatePlayerGrid";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BriefcaseComponent } from "../components/claim-components/briefcase.component";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
+import { Events } from "server/network";
 
 export class BriefcaseChallenge extends BaseChallenge {
 	protected readonly challengeName = "Briefcase Memory" as const;
@@ -21,7 +22,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 	readonly badBriefcases = 50;
 	readonly revealTime = 5;
 	readonly cellPadding = 10;
-	readonly memorizeTime = 15;
+	readonly memorizeTime = 8;
 	readonly runTime = 30;
 	readonly playerSelections: { [key: Player["UserId"]]: BriefcaseComponent } = {};
 	cases = 0;
@@ -105,16 +106,20 @@ export class BriefcaseChallenge extends BaseChallenge {
 
 		// todo: wait until time
 		const t = DateTime.now().UnixTimestamp;
+		countdown({ seconds: this.runTime, description: "Pick a case!", showGo: false });
 		while (
 			!this.playersInChallenge.every((p) => p.UserId in this.playerSelections) &&
 			DateTime.now().UnixTimestamp - t < this.runTime
 		)
 			task.wait();
+		Events.announcer.clearCountdown.broadcast();
+
 		announce(["It's time to reveal who won, and who will die..."]);
 		task.wait(3);
 		this.ToggleCases(true);
-		task.wait(5);
+		task.wait(3);
 		this.EliminatePlayers();
+		task.wait(1); // to process death events, just to be safe
 	}
 
 	private RandomizeCases() {
@@ -137,10 +142,13 @@ export class BriefcaseChallenge extends BaseChallenge {
 	private EliminatePlayers() {
 		this.playersInChallenge.forEach((p) => {
 			if (this.playerSelections[p.UserId]) {
-				if (!this.playerSelections[p.UserId].attributes.safe)
-					this.playersInChallenge = this.playersInChallenge.filter((p) => p !== p);
+				if (!this.playerSelections[p.UserId].attributes.safe) {
+					const humanoid = p.Character?.FindFirstChild("Humanoid") as Humanoid | undefined;
+					if (humanoid) humanoid.Health = 0;
+				}
 			} else {
-				this.playersInChallenge = this.playersInChallenge.filter((p) => p !== p);
+				const humanoid = p.Character?.FindFirstChild("Humanoid") as Humanoid | undefined;
+				if (humanoid) humanoid.Health = 0;
 			}
 		});
 	}
