@@ -2,6 +2,13 @@ import { OnStart, Service } from "@flamework/core";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { AnalyticsService, Players } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
+import { BoulderChallenge } from "server/challenges/boulder.challenge";
+import { BribeChallenge } from "server/challenges/bribe.challenge";
+import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
+import { FlagChallenge } from "server/challenges/flag.challenge";
+import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
+import { KingOfHillChallenge } from "server/challenges/king-of-hill.challenge";
+import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { SplitOrStealChallenge } from "server/challenges/split-or-steal.challenge";
 import { TowerChallenge } from "server/challenges/tower.challenge";
 import { Events } from "server/network";
@@ -28,9 +35,24 @@ export class MainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		for (const challenge of [TowerChallenge]) {
-			await new challenge().start();
+		await new BribeChallenge().start();
+
+		const availableChallenges = [
+			BriefcaseChallenge,
+			BoulderChallenge,
+			FlagChallenge,
+			GoldRushChallenge,
+			PugilChallenge,
+			TowerChallenge,
+		];
+
+		const shuffledChallenges = availableChallenges.sort(() => !!(math.random() - 0.5)).filter((_, i) => i < 5);
+
+		for (const Challenge of shuffledChallenges) {
+			await new Challenge().start();
 		}
+
+		await new KingOfHillChallenge().start();
 		await new SplitOrStealChallenge().start();
 	}
 

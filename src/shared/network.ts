@@ -65,6 +65,9 @@ interface ClientEvents {
 			updateBribe: (args: BribeChallengeData) => void;
 			disableBribe: () => void;
 		};
+		kingOfHillChallenge: {
+			updateScores: (scores: Map<string, number>) => void;
+		};
 	};
 
 	announcer: {
