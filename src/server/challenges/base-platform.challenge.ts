@@ -35,22 +35,21 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 	}
 
 	protected generatePlatforms() {
-		const platformSqrtCeil = math.ceil(math.sqrt(this.playersInChallenge.size()));
+		const playerCount = this.playersInChallenge.size();
+		const platformSqrtCeil = math.ceil(math.sqrt(playerCount));
+		let platformsCreated = 0;
+
 		for (let x = 0; x < platformSqrtCeil; x++) {
 			for (let y = 0; y < platformSqrtCeil; y++) {
-				if (
-					x === platformSqrtCeil - 1 &&
-					y === platformSqrtCeil - 1 &&
-					this.playersInChallenge.size() > 1 &&
-					this.playersInChallenge.size() % 2 === 1
-				)
-					continue;
+				if (platformsCreated >= playerCount) break;
 
 				const platform = ServerStorage.Assets.Objects.Platform.Clone();
 				platform.PivotTo(BasePlatformChallenge.GENERATION_POSITION.mul(new CFrame(x * 12, 0, y * 12)));
 				platform.Parent = this.map;
 				this.platforms.push(platform);
+				platformsCreated++;
 			}
+			if (platformsCreated >= playerCount) break;
 		}
 	}
 
