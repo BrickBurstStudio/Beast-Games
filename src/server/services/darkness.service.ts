@@ -20,11 +20,11 @@ export class DarknessService implements OnStart {
 					this.touchCooldown.get(player) !== undefined
 				)
 					return;
-
+				const character = await getCharacter(player);
 				this.touchCooldown.set(player, true);
 				Events.animations.setBlackFade(player, true);
 				task.wait(1);
-				(player.Character.WaitForChild("Humanoid") as Humanoid).Health = 0;
+				if (character && !character.Destroying && character.Parent !== undefined) character.Humanoid.Health = 0;
 				this.touchCooldown.delete(player);
 			});
 		});

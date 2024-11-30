@@ -32,7 +32,7 @@ export class MoneyService implements OnStart {
 		const bgui = ReplicatedStorage.Assets.Gui.MoneyBGUI.Clone();
 		const character = await getCharacter(player);
 
-		bgui.TextLabel.Text = `+ $${FormatStandard(amount)}`;
+		bgui.TextLabel.Text = `+ $${FormatStandard(tonumber(string.format("%.2f", math.floor(amount * 100) / 100))!)}`;
 
 		bgui.Parent = character.Head;
 		bgui.Adornee = character.Head;
