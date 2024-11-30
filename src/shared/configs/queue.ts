@@ -1,4 +1,5 @@
 export const QUEUE_CONFIG = {
     MIN_PLAYERS: 2,
+    MAX_PLAYERS: 50,
     MAX_QUEUE_WAIT_TIME: 60
 } as const; 
