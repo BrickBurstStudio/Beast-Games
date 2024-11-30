@@ -35,25 +35,29 @@ export class GameMainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
+		Players.GetPlayers().forEach((player) => {
+			player.SetAttribute("lives", 3);
+		});
+
 		await new BribeChallenge().start();
 
-		// const availableChallenges = [
-		// 	GoldRushChallenge,
-		// 	PugilChallenge,
-		// 	BoulderChallenge,
-		// 	TowerChallenge,
-		// 	FlagChallenge,
-		// 	BriefcaseChallenge,
-		// ];
+		const availableChallenges = [
+			GoldRushChallenge,
+			PugilChallenge,
+			BoulderChallenge,
+			TowerChallenge,
+			FlagChallenge,
+			BriefcaseChallenge,
+		];
 
-		// const shuffledChallenges = availableChallenges
-		// 	.map((value) => ({ value, sort: math.random() }))
-		// 	.sort((a, b) => a.sort - b.sort > 0)
-		// 	.map(({ value }) => value);
+		const shuffledChallenges = availableChallenges
+			.map((value) => ({ value, sort: math.random() }))
+			.sort((a, b) => a.sort - b.sort > 0)
+			.map(({ value }) => value);
 
-		// for (const Challenge of shuffledChallenges) {
-		// 	await new Challenge().start();
-		// }
+		for (const Challenge of shuffledChallenges) {
+			await new Challenge().start();
+		}
 
 		await new KingOfHillChallenge().start();
 		await new SplitOrStealChallenge().start();
@@ -91,22 +95,22 @@ export class GameMainService implements OnStart {
 	setupDestroyCharacterOnDeath() {
 		forEveryPlayer(async (player) => {
 			const connections = new Array<RBXScriptConnection>();
-			
+
 			const handleCharacter = (character: CharacterRigR6) => {
 				connections.push(
 					character.Humanoid.Died.Connect(() => {
 						task.wait(GameMainService.DESTROY_CHARACTER_DELAY);
 						character.Destroy();
-					})
+					}),
 				);
 			};
 
 			if (player.Character) handleCharacter(await getCharacter(player));
 			connections.push(
-				player.CharacterAdded.Connect(async (char) => handleCharacter(await getCharacter(player)))
+				player.CharacterAdded.Connect(async (char) => handleCharacter(await getCharacter(player))),
 			);
 
-			return () => connections.forEach(c => c.Disconnect());
+			return () => connections.forEach((c) => c.Disconnect());
 		});
 	}
 }

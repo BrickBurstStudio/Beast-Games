@@ -89,7 +89,7 @@ export class KingOfHillChallenge extends BaseChallenge {
 				if (!player || !this.playersInChallenge.includes(player)) return;
 				this.hillOccupants.add(player);
 			}),
-			"Disconnect"
+			"Disconnect",
 		);
 
 		this.obliterator.Add(
@@ -98,7 +98,7 @@ export class KingOfHillChallenge extends BaseChallenge {
 				if (!player) return;
 				this.hillOccupants.delete(player);
 			}),
-			"Disconnect"
+			"Disconnect",
 		);
 	}
 
@@ -150,7 +150,11 @@ export class KingOfHillChallenge extends BaseChallenge {
 	}
 
 	private async eliminateRemainingPlayers() {
-		this.playersInChallenge = this.playersInChallenge.filter((player) => !this.advancedPlayers.has(player));
+		this.playersInChallenge.forEach((player) => {
+			if (!this.advancedPlayers.has(player)) {
+				player.SetAttribute("lives", 0);
+			}
+		});
 	}
 
 	private getSortedPlayersByScore() {

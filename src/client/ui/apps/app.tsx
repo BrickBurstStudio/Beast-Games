@@ -3,12 +3,13 @@ import motion from "@rbxts/react-motion";
 import { useSelector } from "@rbxts/react-reflex";
 import { UserInputService } from "@rbxts/services";
 import { Events } from "client/network";
-import { BORDER_THICKNESS, COLORS } from "shared/configs/gui";
+import { MAIN_PLACE_ID } from "shared/configs/places";
 import { selectGuiPage, selectSpectating, selectToolTip } from "shared/store/selectors/client";
 import { px } from "../utils/usePx";
 import AnimateEventsApp from "./animateEvents";
 import AnnounceApp from "./announce";
 import ChallengesApp from "./challenges";
+import { LivesDisplay } from "./lives-display";
 import MenuButtonsApp from "./menu/buttons";
 import AchievementsApp from "./menu/pages/achievements";
 import ActionsPage from "./menu/pages/actions";
@@ -54,6 +55,7 @@ export default function App() {
 			<AnnounceApp />
 			<AnimateEventsApp />
 			{spectating ? <SpectateApp /> : <ChallengesApp />}
+			{game.PlaceId === MAIN_PLACE_ID && <LivesDisplay />}
 			{toolTip && <ToolTip />}
 			<QueueApp />
 			<motion.frame

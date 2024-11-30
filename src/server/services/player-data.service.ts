@@ -29,7 +29,6 @@ export class PlayerDataService implements OnInit {
 	}
 
 	private createProfile(player: Player) {
-		player.SetAttribute("eliminated", false);
 		const userId = player.UserId;
 		const profileKey = KEY_TEMPLATE.format(userId);
 		const profile = this.profileStore.LoadProfileAsync(profileKey);

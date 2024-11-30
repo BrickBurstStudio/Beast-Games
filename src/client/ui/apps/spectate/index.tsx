@@ -1,7 +1,6 @@
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import { Players, TeleportService, Workspace } from "@rbxts/services";
-import { store } from "client/store";
 import { px } from "client/ui/utils/usePx";
 import { COLORS } from "shared/configs/gui";
 import { LOBBY_PLACE_ID } from "shared/configs/places";
@@ -38,6 +37,15 @@ function useSpectate() {
 
 export default function SpectateApp() {
 	const [spectateChange, player] = useSpectate();
+	const [lives, setLives] = useState(Players.LocalPlayer.GetAttribute("lives") as number | undefined);
+
+	useEffect(() => {
+		const connection = Players.LocalPlayer.GetAttributeChangedSignal("lives").Connect(() => {
+			setLives(Players.LocalPlayer.GetAttribute("lives") as number);
+		});
+
+		return () => connection.Disconnect();
+	}, []);
 
 	return (
 		<>
@@ -50,78 +58,73 @@ export default function SpectateApp() {
 			>
 				<uilistlayout FillDirection={"Horizontal"} />
 				<textbutton
-					BackgroundTransparency={1}
+					BackgroundTransparency={0.5}
+					BackgroundColor3={Color3.fromRGB(0, 0, 0)}
 					TextScaled
 					Text={"<"}
+					TextColor3={COLORS.White}
 					Size={new UDim2(0, px(100), 0, px(100))}
 					Event={{
 						MouseButton1Click: () => {
 							spectateChange(-1);
 						},
 					}}
-				/>
+				>
+					<uistroke Color={Color3.fromRGB(0, 0, 0)} Thickness={px(2)} />
+					<uicorner CornerRadius={new UDim(0, px(10))} />
+				</textbutton>
 				<textlabel
 					TextScaled
-					BackgroundTransparency={1}
+					BackgroundTransparency={0.5}
+					BackgroundColor3={Color3.fromRGB(0, 0, 0)}
 					Text={player?.Name ?? "N/A"}
+					TextColor3={COLORS.White}
 					Size={new UDim2(0, px(200), 0, px(100))}
-				/>
+				>
+					<uistroke Color={Color3.fromRGB(0, 0, 0)} Thickness={px(2)} />
+					<uicorner CornerRadius={new UDim(0, px(10))} />
+				</textlabel>
 				<textbutton
-					BackgroundTransparency={1}
+					BackgroundTransparency={0.5}
+					BackgroundColor3={Color3.fromRGB(0, 0, 0)}
 					TextScaled
 					Text={">"}
+					TextColor3={COLORS.White}
 					Size={new UDim2(0, px(100), 0, px(100))}
 					Event={{
 						MouseButton1Click: () => {
 							spectateChange(1);
 						},
 					}}
-				/>
+				>
+					<uistroke Color={Color3.fromRGB(0, 0, 0)} Thickness={px(2)} />
+					<uicorner CornerRadius={new UDim(0, px(10))} />
+				</textbutton>
 			</frame>
-			<textbutton
-				BackgroundColor3={COLORS.Primary}
-				TextColor3={COLORS.White}
-				Position={new UDim2(0.5, 0, 0.95, 0)}
-				AnchorPoint={new Vector2(0.5, 1)}
-				TextScaled
-				Text="Actions"
-				Size={new UDim2(0, px(200), 0, px(100))}
-				Event={{
-					MouseButton1Click: () => {
-						store.setGuiPage("Actions");
-					},
-				}}
-			>
-				<uipadding
-					PaddingBottom={new UDim(0, px(10))}
-					PaddingLeft={new UDim(0, px(10))}
-					PaddingRight={new UDim(0, px(10))}
-					PaddingTop={new UDim(0, px(10))}
-				/>
-				<uicorner CornerRadius={new UDim(0, px(10))} />
-			</textbutton>
-			<textbutton
-				BackgroundColor3={COLORS.Primary}
-				TextColor3={COLORS.White}
-				Position={new UDim2(0.5, 0, 0.85, 0)}
-				AnchorPoint={new Vector2(0.5, 1)}
-				TextScaled
-				Text="Return to Lobby"
-				Size={new UDim2(0, px(200), 0, px(100))}
-				Event={{
-					MouseButton1Click: () => {
-						TeleportService.Teleport(LOBBY_PLACE_ID);
-					},
-				}}
-			>
-				<uipadding
-					PaddingBottom={new UDim(0, px(10))}
-					PaddingLeft={new UDim(0, px(10))}
-					PaddingRight={new UDim(0, px(10))}
-					PaddingTop={new UDim(0, px(10))}
-				/>
-				<uicorner CornerRadius={new UDim(0, px(10))} />
-			</textbutton>
+			{lives !== undefined && lives <= 0 && (
+				<textbutton
+					BackgroundColor3={COLORS.Primary}
+					TextColor3={COLORS.White}
+					Position={new UDim2(0.5, 0, 0.95, 0)}
+					AnchorPoint={new Vector2(0.5, 1)}
+					TextScaled
+					Text="Back to Lobby"
+					Size={new UDim2(0, px(300), 0, px(100))}
+					Event={{
+						MouseButton1Click: () => {
+							TeleportService.Teleport(LOBBY_PLACE_ID);
+						},
+					}}
+				>
+					<uipadding
+						PaddingBottom={new UDim(0, px(10))}
+						PaddingLeft={new UDim(0, px(10))}
+						PaddingRight={new UDim(0, px(10))}
+						PaddingTop={new UDim(0, px(10))}
+					/>
+					<uicorner CornerRadius={new UDim(0, px(10))} />
+				</textbutton>
+			)}
 		</>
 	);
 }

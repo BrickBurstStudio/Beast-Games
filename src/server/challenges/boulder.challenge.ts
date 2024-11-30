@@ -45,20 +45,15 @@ export class BoulderChallenge extends BaseChallenge {
 		);
 
 		this.obliterator.Add(
-			// TODO: Add debounce to combat autoclicking basically they would have a max of like 10 cps or something like that
 			Events.challenges.boulderChallenge.pull.connect(async (player) => {
 				const team = player.GetAttribute("team") as number;
-				// If the team has reached their goal, do nothing
 				if (this.teamProgress[team] >= this.teamFinishGoals[team]) return;
 
-				// Team still playing so increment their progress
 				this.teamProgress[team] += 0.1;
 
-				// Check if the team has finally reached their goal
 				if (this.teamProgress[team] < this.teamFinishGoals[team]) return;
 				this.teamsCompleted++;
 
-				// Check if all teams have finished
 				if (this.teamsCompleted >= this.teamFinishGoals.size()) return;
 
 				Events.announcer.announce(
@@ -73,6 +68,32 @@ export class BoulderChallenge extends BaseChallenge {
 			// Update the boulder position for each team
 			this.UpdateAssetPositions();
 
+			// Count active teams (teams still pulling)
+			let activeTeams = 0;
+			for (let i = 0; i < 5; i++) {
+				if (this.teamProgress[i] < this.teamFinishGoals[i]) {
+					activeTeams++;
+				}
+			}
+
+			// If only one team is left, end the game and eliminate that team
+			if (activeTeams === 1) {
+				const lastTeam = this.teamProgress.findIndex((progress, i) => 
+					progress < this.teamFinishGoals[i]
+				);
+				
+				store.setChallenge(undefined);
+				await announce([`Team ${lastTeam + 1} was the last team pulling and has been eliminated!`], {
+					[lastTeam]: `<font color="#${TeamColors[lastTeam as keyof typeof TeamColors].ToHex()}">Team ${lastTeam + 1}</font>`,
+				});
+
+				this.playersInChallenge = this.playersInChallenge.filter(
+					(player) => player.GetAttribute("team") !== lastTeam,
+				);
+
+				break;
+			}
+
 			// Slowly decrease the progress for each team
 			for (let i = 0; i < 5; i++) {
 				if (this.teamProgress[i] > 0 && this.teamProgress[i] < this.teamFinishGoals[i]) {
@@ -85,16 +106,18 @@ export class BoulderChallenge extends BaseChallenge {
 
 		this.UpdateAssetPositions();
 
-		store.setChallenge(undefined);
-		const losingTeam = this.teamProgress.indexOf(math.min(...this.teamProgress));
+		if (this.playersInChallenge.size() > 0) {
+			store.setChallenge(undefined);
+			const losingTeam = this.teamProgress.indexOf(math.min(...this.teamProgress));
 
-		await announce([`The team to finish pulling their boulder last is: ${losingTeam}`], {
-			[losingTeam]: `<font color="#${TeamColors[losingTeam as keyof typeof TeamColors].ToHex()}">Team ${losingTeam + 1}</font>`,
-		});
+			await announce([`The team to finish pulling their boulder last is: ${losingTeam}`], {
+				[losingTeam]: `<font color="#${TeamColors[losingTeam as keyof typeof TeamColors].ToHex()}">Team ${losingTeam + 1}</font>`,
+			});
 
-		this.playersInChallenge = this.playersInChallenge.filter(
-			(player) => player.GetAttribute("team") !== losingTeam,
-		);
+			this.playersInChallenge = this.playersInChallenge.filter(
+				(player) => player.GetAttribute("team") !== losingTeam,
+			);
+		}
 
 		this.CleanUp();
 	}

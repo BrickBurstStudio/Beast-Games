@@ -1,6 +1,6 @@
 import { Janitor } from "@rbxts/janitor";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { AnalyticsService, CollectionService, Lighting, Players, ServerStorage, Workspace } from "@rbxts/services";
+import { AnalyticsService, CollectionService, Players, Workspace } from "@rbxts/services";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { store } from "server/store";
@@ -76,7 +76,11 @@ export abstract class BaseChallenge {
 	}
 
 	private assignPlayers() {
-		this.playersInChallenge = Players.GetPlayers().filter((player) => !player.GetAttribute("eliminated"));
+		this.playersInChallenge = Players.GetPlayers().filter((player) => {
+			const lives = player.GetAttribute("lives") as number;
+			if (lives === undefined) player.SetAttribute("lives", 3);
+			return lives > 0;
+		});
 	}
 
 	private async spawnPlayers() {
@@ -94,8 +98,10 @@ export abstract class BaseChallenge {
 
 	private setupPlayerEvents(player: Player) {
 		const playerOut = () => {
-			this.playersInChallenge.remove(this.playersInChallenge.findIndex((p) => p === player));
-			this.contestantDiedOrLeft.Fire(player);
+			if (this.handlePlayerElimination(player)) {
+				this.playersInChallenge.remove(this.playersInChallenge.findIndex((p) => p === player));
+				this.contestantDiedOrLeft.Fire(player);
+			}
 		};
 
 		player.CharacterAdded.Connect(async () => {
@@ -140,9 +146,8 @@ export abstract class BaseChallenge {
 				`challenge-${BaseChallenge.round}`,
 				{
 					[Enum.AnalyticsCustomFieldKeys.CustomField01.Name]: this.challengeName,
-					[Enum.AnalyticsCustomFieldKeys.CustomField02.Name]: player.GetAttribute("eliminated")
-						? true
-						: false,
+					[Enum.AnalyticsCustomFieldKeys.CustomField02.Name]:
+						player.GetAttribute("lives") === 0 ? true : false,
 				},
 			);
 			AnalyticsService.LogOnboardingFunnelStepEvent(
@@ -151,9 +156,8 @@ export abstract class BaseChallenge {
 				`challenge-${this.challengeName}`,
 				{
 					[Enum.AnalyticsCustomFieldKeys.CustomField01.Name]: this.challengeName,
-					[Enum.AnalyticsCustomFieldKeys.CustomField02.Name]: player.GetAttribute("eliminated")
-						? true
-						: false,
+					[Enum.AnalyticsCustomFieldKeys.CustomField02.Name]:
+						player.GetAttribute("lives") === 0 ? true : false,
 				},
 			);
 		});
@@ -202,4 +206,14 @@ export abstract class BaseChallenge {
 	}
 
 	/* -------------------------------- Utilities ------------------------------- */
+
+	protected handlePlayerElimination(player: Player) {
+		const lives = player.GetAttribute("lives") as number;
+		if (lives > 1) {
+			player.SetAttribute("lives", lives - 1);
+			return false; // Player still has lives left
+		} else {
+			return true; // Player is fully eliminated
+		}
+	}
 }
