@@ -15,7 +15,11 @@ function useSpectate() {
 	}
 
 	useEffect(() => {
-		if (player) Workspace.CurrentCamera!.CameraSubject = (player.Character as CharacterRigR6)?.Head;
+		try {
+			if (player) Workspace.CurrentCamera!.CameraSubject = (player.Character as CharacterRigR6)?.Head;
+		} catch (e) {
+			warn(e);
+		}
 	}, [player]);
 
 	return [

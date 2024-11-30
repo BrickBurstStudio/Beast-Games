@@ -38,7 +38,7 @@ export class MainService implements OnStart {
 		await new BribeChallenge().start();
 
 		const availableChallenges = [
-			BriefcaseChallenge,
+			// BriefcaseChallenge,
 			BoulderChallenge,
 			FlagChallenge,
 			GoldRushChallenge,

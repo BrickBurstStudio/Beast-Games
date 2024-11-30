@@ -40,6 +40,21 @@ export class BribeChallenge extends BasePlatformChallenge {
 				playerCount: this.acceptedBribes.size(),
 				originalAmount: this.bribeAmount,
 			});
+
+			if (this.acceptedBribes.size() === this.playersInChallenge.size() + this.acceptedBribes.size()) {
+				Events.announcer.clearCountdown.broadcast();
+				store.setChallenge(undefined);
+				
+				this.acceptedBribes.forEach((player) => {
+					spawn(() => {
+						const data = new OrderedPlayerData(player);
+						data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
+						task.wait(2);
+						this.dropPlayer(player);
+					});
+				});
+				return;
+			}
 		});
 
 		await countdown({ seconds: this.BRIBE_TIME, showGo: false });
