@@ -10,9 +10,6 @@
 		"sync": "rbxts-build sync",
 		"pretty": "npx prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
 	"devDependencies": {
 		"@rbxts/compiler-types": "^3.0.0-types.0",
 		"@rbxts/types": "^1.0.805",

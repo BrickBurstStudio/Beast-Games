@@ -94,7 +94,7 @@ export default function AnnounceRules() {
 						Size={new UDim2(1, 0, 0, 50)}
 						TextScaled
 						initial={{ Transparency: 1, BackgroundTransparency: 0 }}
-						animate={{ Transparency: 0, BackgroundTransparency: 1 }}
+						animate={{ Transparency: hide ? 1 : 0, BackgroundTransparency: hide ? 0 : 1 }}
 						transition={{
 							duration: 1,
 							delay: i * 2 + 1,
