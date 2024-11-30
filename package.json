@@ -1,4 +1,5 @@
 {
+	"name": "beast-games",
 	"scripts": {
 		"build": "rbxts-build build",
 		"watch": "concurrently \"rbxts-build watch\" \"npx io-serve\"",
