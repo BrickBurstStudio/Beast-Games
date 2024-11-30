@@ -98,7 +98,6 @@ export class EquipService implements OnStart {
 		if (isHat(item)) {
 			// Remove the hat accessory
 			const existingHat = character.FindFirstChild(item.model.Name);
-			print(existingHat);
 			if (existingHat) {
 				existingHat.Destroy();
 			}

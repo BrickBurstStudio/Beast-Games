@@ -11,7 +11,6 @@ export default function AnimateEventsApp() {
 	useEffect(() => {
 		const connections = [
 			Events.animations.levelUp.connect((level: number) => {
-				print(`Level up to ${level}`);
 				levelRef.current = level;
 				setLevelUpActive(true);
 				task.wait(3);

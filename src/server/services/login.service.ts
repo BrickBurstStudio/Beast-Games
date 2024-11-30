@@ -31,7 +31,6 @@ export class LoginService implements OnStart {
 						playerData.balance.cash,
 						Enum.AnalyticsEconomyTransactionType.Onboarding.Name,
 					);
-					// print(`Player ${player.UserId} (${player.Name}) has logged in for the first time!`);
 				} else if (playerLoggedIn.last !== today) {
 					// player has logged in on a new day
 					// give daily rewards
@@ -46,10 +45,8 @@ export class LoginService implements OnStart {
 						playerData.balance.cash,
 						Enum.AnalyticsEconomyTransactionType.TimedReward.Name,
 					);
-					// print(`Player ${player.UserId} (${player.Name}) has logged in today!`);
 				} else {
 					// player has already logged in today. cringe. get a job
-					// print(`Player ${player.UserId} (${player.Name}) has already logged in today!`);
 					rewarded = false;
 				}
 
@@ -59,7 +56,6 @@ export class LoginService implements OnStart {
 					task.wait(60);
 					if (!Players.GetPlayers().find((p: Player) => p === player)) break;
 					orderedPlayerData.playTime.UpdateBy(1);
-					// print(`Player ${player.UserId} (${player.Name}) has played for 1 minute!`);
 					orderedPlayerData.xp.UpdateBy(1);
 				}
 			});

@@ -27,7 +27,6 @@ export class MovementController implements OnStart {
 	private tracks: Partial<Record<keyof typeof this.animations, AnimationTrack>> = {};
 	private diveDebounce = debounce(
 		() => {
-			print("here");
 			this.tracks.dive?.Play();
 		},
 		1,
@@ -111,7 +110,6 @@ export class MovementController implements OnStart {
 					this.lastCharacterReference.Humanoid.WalkSpeed = this.defaultWalkSpeed;
 					this.sprinting = false;
 				}
-				// print(this.stamina);
 			}
 		});
 	}

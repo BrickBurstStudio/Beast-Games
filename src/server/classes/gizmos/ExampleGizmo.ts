@@ -7,6 +7,5 @@ export class ExampleGizmo extends Gizmo {
 	tool = ServerStorage.Assets.Gizmos.ExampleGizmo;
 
 	activated() {
-		print("Example Gizmo activated");
 	}
 }
