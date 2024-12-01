@@ -8,6 +8,7 @@ import { spawnSound } from "shared/utils/functions/spawnSound";
 
 export class Pugil extends Gizmo {
 	/* -------------------------------- Abstract -------------------------------- */
+	animationEvents: Record<string, () => void> = {};
 	animations = {
 		idle: ReplicatedStorage.Assets.Animations.PugilIdle,
 		activated: ReplicatedStorage.Assets.Animations.PugilActivated,
