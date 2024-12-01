@@ -5,41 +5,18 @@ export type Action = {
 	cost: number;
 	callback: (args: { fromPlayer: Player; toPlayer: Player }) => void;
 };
-
-export const divine = [
+export const actions = [
 	{
-		name: "Revive",
-		cost: 1,
-		callback: ({ fromPlayer, toPlayer }) => {},
-	},
-] as const satisfies Action[];
-
-export const deviousLicks = [
-	{
-		name: "Ragdoll",
+		name: "Add 3 Lives",
 		cost: 1,
 		callback: ({ toPlayer }) => {
-			const character = toPlayer.Character;
-			if (!character) return;
-
-			const humanoid = character.FindFirstChild("Humanoid") as Humanoid;
-			if (!humanoid) return;
-
-			const animator = humanoid.FindFirstChild("Animator") as Animator;
-			if (!animator) return;
-
-			humanoid.PlatformStand = true;
-			humanoid.Sit = true;
-
-			task.wait(10);
-
-			humanoid.PlatformStand = false;
-			humanoid.Sit = false;
+			const lives = (toPlayer.GetAttribute("lives") as number) ?? 0;
+			toPlayer.SetAttribute("lives", lives + 3);
 		},
 	},
 	{
 		name: "Fling",
-		cost: 5,
+		cost: 1,
 		callback: async ({ fromPlayer, toPlayer }) => {
 			const character = await getCharacter(toPlayer);
 			const VELOCITY_MAGNITUDE = 100;
@@ -65,34 +42,13 @@ export const deviousLicks = [
 		},
 	},
 	{
-		name: "Freeze Ray",
+		name: "Kidnap",
 		cost: 1,
-		callback: async ({ toPlayer }) => {
-			const character = await getCharacter(toPlayer);
-			const humanoid = character.FindFirstChild("Humanoid") as Humanoid;
-			if (!humanoid) return;
-
-			const originalWalkSpeed = humanoid.WalkSpeed;
-			const originalJumpPower = humanoid.JumpPower;
-
-			humanoid.WalkSpeed = 0;
-			humanoid.JumpPower = 0;
-
-			// Create ice particle effect
-			const freezeEffect = new Instance("ParticleEmitter");
-			freezeEffect.Color = new ColorSequence(new Color3(0.8, 0.9, 1));
-			freezeEffect.Parent = character.HumanoidRootPart;
-
-			task.wait(10);
-
-			humanoid.WalkSpeed = originalWalkSpeed;
-			humanoid.JumpPower = originalJumpPower;
-			freezeEffect.Destroy();
-		},
+		callback: async ({ toPlayer }) => {},
 	},
 	{
 		name: "Giant Mode",
-		cost: 4,
+		cost: 1,
 		callback: async ({ toPlayer }) => {
 			const character = await getCharacter(toPlayer);
 			const originalSize = character.GetScale();
@@ -104,7 +60,7 @@ export const deviousLicks = [
 				task.wait(0.05);
 			}
 
-			task.wait(10);
+			task.wait(30);
 
 			// Smoothly scale down
 			for (let t = 0; t < 1; t += 0.1) {
@@ -114,8 +70,8 @@ export const deviousLicks = [
 		},
 	},
 	{
-		name: "Dance Virus",
-		cost: 3,
+		name: "Boogie Bomb",
+		cost: 1,
 		callback: async ({ toPlayer }) => {
 			const character = await getCharacter(toPlayer);
 			if (!character) return;
@@ -128,12 +84,25 @@ export const deviousLicks = [
 			const danceTrack = animator.LoadAnimation(danceAnim);
 
 			danceTrack.Play();
-			task.wait(10);
+			task.wait(15);
 			danceTrack.Stop();
+		},
+	},
+	{
+		name: "Glock 19 (Gun)",
+		cost: 1,
+		callback: async ({ toPlayer }) => {
+
+		},
+	},
+	{
+		name: "Nuke",
+		cost: 1,
+		callback: async ({ toPlayer }) => {
+			
 		},
 	},
 ] as const satisfies Action[];
 
-export const actions = [...divine, ...deviousLicks] as const satisfies Action[];
 
 export type ActionName = (typeof actions)[number]["name"];

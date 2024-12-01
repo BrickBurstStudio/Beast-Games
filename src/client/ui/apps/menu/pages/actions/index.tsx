@@ -4,7 +4,8 @@ import { Players } from "@rbxts/services";
 import MenuFrame from "client/ui/components/menu-frame";
 import { px } from "client/ui/utils/usePx";
 import { ActionName, actions } from "shared/configs/action";
-import { selectPlayerActionTokens } from "shared/store/selectors/players";
+
+import { selectPlayerBalance } from "shared/store/selectors/players";
 import { BUTTONS } from "../../buttons";
 import PlayerSelectModal from "./playerSelectModal";
 import TokenPackagesModal from "./tokenPackagesModal";
@@ -12,7 +13,7 @@ import TokenPackagesModal from "./tokenPackagesModal";
 const BUTTON = BUTTONS.find((b) => b.name === "Actions")!;
 
 export default function ActionsPage() {
-	const playerTokens = useSelector(selectPlayerActionTokens(tostring(Players.LocalPlayer.UserId))) ?? 1;
+	const playerTokens = useSelector(selectPlayerBalance(tostring(Players.LocalPlayer.UserId), "action_tokens")) ?? 1;
 	const [selectedActionName, setSelectedActionName] = useState<ActionName>();
 	const [showTokenPackages, setShowTokenPackages] = useState(false);
 

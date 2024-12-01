@@ -1,12 +1,11 @@
 import { combineProducers } from "@rbxts/reflex";
 import { balanceSlice } from "./balance";
-import { loggededInSlice } from "./loggedIn";
-import { itemsSlice } from "./items";
 import { equippedSlice } from "./equipped";
-import { xpSlice } from "./xp";
-import { winsSlice } from "./wins";
+import { itemsSlice } from "./items";
+import { loggededInSlice } from "./loggedIn";
 import { playTimeSlice } from "./playTime";
-import { actionTokensSlice } from "./actionTokens";
+import { winsSlice } from "./wins";
+import { xpSlice } from "./xp";
 
 export const playersSlice = combineProducers({
 	balance: balanceSlice,
@@ -16,5 +15,4 @@ export const playersSlice = combineProducers({
 	xp: xpSlice,
 	wins: winsSlice,
 	playTime: playTimeSlice,
-	actionTokens: actionTokensSlice,
 });

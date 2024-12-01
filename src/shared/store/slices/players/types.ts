@@ -10,7 +10,6 @@ export interface PlayerData {
 	xp: number;
 	wins: number;
 	playTime: number;
-	actionTokens: number;
 }
 
 export type PlayerEquipped = {

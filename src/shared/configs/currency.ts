@@ -1,2 +1,2 @@
-export const CURRENCIES = ["cash"] as const;
+export const CURRENCIES = ["cash", "action_tokens"] as const;
 export type Currency = (typeof CURRENCIES)[number];

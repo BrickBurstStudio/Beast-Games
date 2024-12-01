@@ -1,6 +1,7 @@
 import { OnStart, Service } from "@flamework/core";
-import { MarketplaceService, Players } from "@rbxts/services";
+import { AnalyticsService, MarketplaceService, Players } from "@rbxts/services";
 import { store } from "server/store";
+import { selectPlayerBalance } from "shared/store/selectors/players";
 
 @Service()
 export class ProductService implements OnStart {
@@ -16,19 +17,64 @@ export class ProductService implements OnStart {
 		(receiptInfo: ReceiptInfo, player: Player) => void
 	> = {
 		[ProductService.devProducts.Token1]: (receiptInfo, player) => {
-			store.addActionTokens(tostring(player.UserId), 1);
+			store.changeBalance(tostring(player.UserId), "action_tokens", 1);
+			const currentActionTokens = store.getState(selectPlayerBalance(tostring(player.UserId), "action_tokens"));
+			AnalyticsService.LogEconomyEvent(
+				player,
+				Enum.AnalyticsEconomyFlowType.Source,
+				"action_tokens",
+				1,
+				currentActionTokens ?? 1,
+				Enum.AnalyticsEconomyTransactionType.IAP.Name,
+			);
 		},
 		[ProductService.devProducts.Token3]: (receiptInfo, player) => {
-			store.addActionTokens(tostring(player.UserId), 3);
+			store.changeBalance(tostring(player.UserId), "action_tokens", 3);
+			const currentActionTokens = store.getState(selectPlayerBalance(tostring(player.UserId), "action_tokens"));
+			AnalyticsService.LogEconomyEvent(
+				player,
+				Enum.AnalyticsEconomyFlowType.Source,
+				"action_tokens",
+				3,
+				currentActionTokens ?? 3,
+				Enum.AnalyticsEconomyTransactionType.IAP.Name,
+			);
 		},
 		[ProductService.devProducts.Token5]: (receiptInfo, player) => {
-			store.addActionTokens(tostring(player.UserId), 5);
+			store.changeBalance(tostring(player.UserId), "action_tokens", 5);
+			const currentActionTokens = store.getState(selectPlayerBalance(tostring(player.UserId), "action_tokens"));
+			AnalyticsService.LogEconomyEvent(
+				player,
+				Enum.AnalyticsEconomyFlowType.Source,
+				"action_tokens",
+				5,
+				currentActionTokens ?? 5,
+				Enum.AnalyticsEconomyTransactionType.IAP.Name,
+			);
 		},
 		[ProductService.devProducts.Token10]: (receiptInfo, player) => {
-			store.addActionTokens(tostring(player.UserId), 10);
+			store.changeBalance(tostring(player.UserId), "action_tokens", 10);
+			const currentActionTokens = store.getState(selectPlayerBalance(tostring(player.UserId), "action_tokens"));
+			AnalyticsService.LogEconomyEvent(
+				player,
+				Enum.AnalyticsEconomyFlowType.Source,
+				"action_tokens",
+				10,
+				currentActionTokens ?? 10,
+				Enum.AnalyticsEconomyTransactionType.IAP.Name,
+			);
 		},
 		[ProductService.devProducts.Token25]: (receiptInfo, player) => {
-			store.addActionTokens(tostring(player.UserId), 25);
+			store.changeBalance(tostring(player.UserId), "action_tokens", 25);
+			const currentActionTokens = store.getState(selectPlayerBalance(tostring(player.UserId), "action_tokens"));
+			AnalyticsService.LogEconomyEvent(
+				player,
+				Enum.AnalyticsEconomyFlowType.Source,
+				"action_tokens",
+				25,
+				currentActionTokens ?? 25,
+				Enum.AnalyticsEconomyTransactionType.IAP.Name,
+			);
 		},
 	};
 
