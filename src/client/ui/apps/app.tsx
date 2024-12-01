@@ -33,7 +33,6 @@ export default function App() {
 		return <></>;
 	}
 
-	const toolTip = useSelector(selectToolTip);
 	const spectating = useSelector(selectSpectating);
 	const [blackScreenActive, setBlackScreenActive] = React.useState(game.PlaceId === MAIN_PLACE_ID);
 
@@ -56,7 +55,7 @@ export default function App() {
 			<AnimateEventsApp />
 			{spectating ? <SpectateApp /> : <ChallengesApp />}
 			{game.PlaceId === MAIN_PLACE_ID && <LivesDisplay />}
-			{toolTip && <ToolTip />}
+			<ToolTip />
 			<QueueApp />
 			<motion.frame
 				transition={{ duration: 0.25 }}
@@ -73,7 +72,6 @@ export default function App() {
 
 function ToolTip() {
 	const toolTip = useSelector(selectToolTip);
-	if (!toolTip) return <></>;
 
 	const [mousePos, setMousePos] = React.useState(UserInputService.GetMouseLocation());
 
@@ -86,6 +84,8 @@ function ToolTip() {
 
 		return () => connection.Disconnect();
 	}, []);
+	
+	if (!toolTip) return <></>;
 
 	return (
 		<textlabel
