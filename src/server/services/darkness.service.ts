@@ -1,7 +1,7 @@
 import { OnStart, Service } from "@flamework/core";
 import { CollectionService, Players } from "@rbxts/services";
-import { getCharacter } from "shared/utils/functions/getCharacter";
 import { Events } from "server/network";
+import { getCharacter } from "shared/utils/functions/getCharacter";
 
 @Service()
 export class DarknessService implements OnStart {
@@ -24,7 +24,7 @@ export class DarknessService implements OnStart {
 				this.touchCooldown.set(player, true);
 				Events.animations.setBlackFade(player, true);
 				task.wait(1);
-				if (character && !character.Destroying && character.Parent !== undefined) character.Humanoid.Health = 0;
+				if (character && character.Parent !== undefined) character.Humanoid.Health = 0;
 				this.touchCooldown.delete(player);
 			});
 		});
