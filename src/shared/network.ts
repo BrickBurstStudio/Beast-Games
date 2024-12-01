@@ -40,6 +40,10 @@ interface ServerEvents {
 	reset: () => void;
 	exitQueue: () => void;
 	inputActivated: (inputData: InputData) => void;
+
+	animationController: {
+		event: (event: string) => void;
+	};
 }
 
 interface ServerFunctions {

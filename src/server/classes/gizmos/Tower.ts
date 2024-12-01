@@ -5,6 +5,7 @@ import { GlobalFunctions, InputData } from "shared/network";
 import { isCharacterPart } from "shared/utils/functions/isCharacterPart";
 
 export class Tower extends Gizmo {
+	animationEvents: Record<string, () => void> = {};
 	animations = {};
 	name = "Tower";
 	tool = ServerStorage.Assets.Gizmos.Tower.Clone();

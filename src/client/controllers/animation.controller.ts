@@ -1,7 +1,7 @@
 import { Controller, OnStart } from "@flamework/core";
 import Log from "@rbxts/log";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { Players, ReplicatedStorage } from "@rbxts/services";
+import { KeyframeSequenceProvider, Players, ReplicatedStorage } from "@rbxts/services";
 import { Events } from "client/network";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
@@ -32,7 +32,35 @@ export class AnimationController implements OnStart {
 	private loadTracks(character: CharacterRigR6) {
 		const animations = ReplicatedStorage.Assets.Animations.GetChildren() as Animation[];
 		for (const animation of animations) {
-			this.tracks.set(animation, character.Humanoid.Animator.LoadAnimation(animation));
+			const track = character.Humanoid.Animator.LoadAnimation(animation);
+			const markers = this.getAllAnimationEventNames(animation.AnimationId);
+
+			markers.forEach((marker) => {
+				track.GetMarkerReachedSignal(marker.Name).Connect(() => {
+					Events.animationController.event(marker.Name);
+				});
+			});
+
+			this.tracks.set(animation, track);
 		}
+	}
+
+	private getAllAnimationEventNames(animId: string): KeyframeMarker[] {
+		const markers: KeyframeMarker[] = [];
+		const keyframeSequence = KeyframeSequenceProvider.GetKeyframeSequenceAsync(animId);
+
+		const recurse = (parent: Instance): void => {
+			for (const child of parent.GetChildren()) {
+				if (child.IsA("KeyframeMarker")) {
+					markers.push(child as KeyframeMarker);
+				}
+				if (child.GetChildren().size() > 0) {
+					recurse(child);
+				}
+			}
+		};
+
+		recurse(keyframeSequence);
+		return markers;
 	}
 }

@@ -8,9 +8,9 @@ interface ReplicatedStorage extends Instance {
 				randomNumbers: ModuleScript;
 				getColor3FromLevel: ModuleScript;
 				objectKeys: ModuleScript;
+				tweenUtil: ModuleScript;
 				getPlayerByName: ModuleScript;
 				spawnSound: ModuleScript;
-				tweenUtil: ModuleScript;
 				toTitleCase: ModuleScript;
 				calculateReward: ModuleScript;
 				getPlayerMultiplier: ModuleScript;
@@ -31,24 +31,28 @@ interface ReplicatedStorage extends Instance {
 			};
 			currency: ModuleScript;
 			action: ModuleScript;
+			challenges: Folder & {
+				["king-of-hill"]: ModuleScript;
+			};
 			announcer: ModuleScript;
 			queue: ModuleScript;
 			places: ModuleScript;
 			gui: ModuleScript;
 		};
+		components: Folder;
 		store: ModuleScript & {
 			slices: Folder & {
 				players: ModuleScript & {
 					utils: ModuleScript;
 					wins: ModuleScript;
-					actionTickets: ModuleScript;
+					xp: ModuleScript;
 					items: ModuleScript;
 					balance: ModuleScript;
 					playTime: ModuleScript;
-					xp: ModuleScript;
-					types: ModuleScript;
-					equipped: ModuleScript;
 					loggedIn: ModuleScript;
+					actionTokens: ModuleScript;
+					equipped: ModuleScript;
+					types: ModuleScript;
 				};
 				client: ModuleScript & {
 					gui: ModuleScript;
@@ -59,7 +63,6 @@ interface ReplicatedStorage extends Instance {
 				client: ModuleScript;
 			};
 		};
-		components: Folder;
 	};
 	Assets: Folder & {
 		Sounds: Folder & {
@@ -88,6 +91,7 @@ interface ReplicatedStorage extends Instance {
 			};
 		};
 		Animations: Folder & {
+			PushActivated: Animation;
 			PugilActivated: Animation;
 			PugilIdle: Animation;
 		};

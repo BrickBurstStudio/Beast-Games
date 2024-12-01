@@ -29,17 +29,18 @@ interface ServerStorage extends Instance {
 			Ball: Part;
 		};
 		Gizmos: Folder & {
-			Ball: Tool & {
-				Handle: Part;
-				bruh: Part;
-			};
 			ExampleGizmo: Tool & {
 				Base: Part;
 			};
+			Push: Tool;
 			Pugil: Tool & {
 				Side1: UnionOperation;
 				Base: UnionOperation;
 				Side2: UnionOperation;
+			};
+			Ball: Tool & {
+				Handle: Part;
+				bruh: Part;
 			};
 			Tower: Tool & {
 				Union: UnionOperation;
@@ -85,9 +86,8 @@ interface ServerStorage extends Instance {
 		};
 		KingOfTheHillChallenge: Folder & {
 			Hill: Model & {
-				Union: UnionOperation;
 				Top: Part;
-				Spawns: Folder;
+				MainSpawn: Part;
 			};
 		};
 		BoulderChallenge: Folder & {
