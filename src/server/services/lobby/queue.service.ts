@@ -34,6 +34,15 @@ export class QueueService implements OnStart {
 		this.setupQueueEvents(forcefield);
 		this.handlePlayerRemoving();
 
+		// TODO: This is a temporary solution to update the queue UI fix the root problem
+		// Add periodic queue state verification
+		task.spawn(() => {
+			while (true) {
+				this.broadcastQueueUpdate();
+				task.wait(5); // Verify every 5 seconds
+			}
+		});
+
 		// Add match start checker loop
 		task.spawn(() => {
 			while (true) {

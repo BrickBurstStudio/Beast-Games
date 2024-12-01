@@ -50,9 +50,8 @@ export class FlagChallenge extends BaseChallenge {
 			!this.IsSpaceAvailableForUndecidedPlayers()
 		) {
 			this.SpawnFlags();
-			await announce(["Once you enter the yellow area, you must claim a flag or be eliminated!"]);
 			this.map.ChallengeArea.StartArea.Barier.CanCollide = false;
-			countdown({ seconds: this.FIELD_TIME, description: "SECONDS LEFT!" });
+			countdown({ seconds: this.FIELD_TIME });
 			this.YieldGameRound();
 			Events.announcer.clearCountdown.broadcast();
 			await this.MovePlayersWithClaimedFlagToEndArea();

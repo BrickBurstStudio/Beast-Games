@@ -17,10 +17,8 @@ export default function QueueApp() {
 
 		// Listen for changes
 		const connections = [
-			player.AttributeChanged.Connect((attribute) => {
-				if (attribute === "inQueue") {
-					setInQueue(!!player.GetAttribute("inQueue"));
-				}
+			player.GetAttributeChangedSignal("inQueue").Connect(() => {
+				setInQueue(!!player.GetAttribute("inQueue"));
 			}),
 
 			// Listen for queue updates
