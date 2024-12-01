@@ -35,7 +35,7 @@ export default function App() {
 
 	const toolTip = useSelector(selectToolTip);
 	const spectating = useSelector(selectSpectating);
-	const [blackScreenActive, setBlackScreenActive] = React.useState(false);
+	const [blackScreenActive, setBlackScreenActive] = React.useState(game.PlaceId === MAIN_PLACE_ID);
 
 	useEffect(() => {
 		const connections = [Events.animations.setBlackFade.connect(setBlackScreenActive)];
@@ -63,7 +63,7 @@ export default function App() {
 				animate={{
 					BackgroundTransparency: blackScreenActive ? 0 : 1,
 				}}
-				initial={{ BackgroundTransparency: 1 }}
+				initial={{ BackgroundTransparency: 0 }}
 				Size={UDim2.fromScale(1, 1)}
 				BackgroundColor3={Color3.fromRGB(0, 0, 0)}
 			/>
