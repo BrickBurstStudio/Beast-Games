@@ -3,9 +3,10 @@ import { Players } from "@rbxts/services";
 import { px } from "../utils/usePx";
 
 export function LivesDisplay() {
-	const [lives, setLives] = useState<number>(3);
+	const [lives, setLives] = useState<number>();
 
 	useEffect(() => {
+		setLives(Players.LocalPlayer.GetAttribute("lives") as number);
 		const connection = Players.LocalPlayer.GetAttributeChangedSignal("lives").Connect(() => {
 			setLives(Players.LocalPlayer.GetAttribute("lives") as number);
 		});

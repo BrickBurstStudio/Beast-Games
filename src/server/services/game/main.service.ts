@@ -12,8 +12,7 @@ import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { SplitOrStealChallenge } from "server/challenges/split-or-steal.challenge";
 import { TowerChallenge } from "server/challenges/tower.challenge";
 import { Events } from "server/network";
-import { announce } from "server/util/announce";
-import { MAIN_PLACE_ID, LOBBY_PLACE_ID } from "shared/configs/places";
+import { LOBBY_PLACE_ID, MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 
@@ -37,7 +36,7 @@ export class GameMainService implements OnStart {
 		this.yieldPlayers();
 
 		Players.GetPlayers().forEach((player) => {
-			player.SetAttribute("lives", 3);
+			player.SetAttribute("lives", 2);
 		});
 
 		await new BribeChallenge().start();

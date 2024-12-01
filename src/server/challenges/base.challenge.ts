@@ -76,8 +76,9 @@ export abstract class BaseChallenge {
 
 	private assignPlayers() {
 		this.playersInChallenge = Players.GetPlayers().filter((player) => {
+			if (player.GetAttribute("lives") === undefined) player.SetAttribute("lives", 2);
+
 			const lives = player.GetAttribute("lives") as number;
-			if (lives === undefined) player.SetAttribute("lives", 3);
 			return lives > 0;
 		});
 	}
@@ -208,7 +209,7 @@ export abstract class BaseChallenge {
 
 	protected handlePlayerElimination(player: Player) {
 		const lives = player.GetAttribute("lives") as number;
-		if (lives > 1) {
+		if (lives > 0) {
 			player.SetAttribute("lives", lives - 1);
 			return false; // Player still has lives left
 		} else {
