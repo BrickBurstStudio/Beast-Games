@@ -5,6 +5,7 @@ import BoulderChallenge from "./boulder";
 import { BribeChallenge } from "./bribe";
 import { SplitOrStealChallenge } from "./split-or-steal";
 import { KingOfHillChallenge } from "./king-of-hill";
+import { FlagMemoryChallenge } from "./flag-memory";
 
 export default function ChallengesApp() {
 	const challenge = useSelector(selectChallenge);
@@ -14,6 +15,7 @@ export default function ChallengesApp() {
 		if (challenge === "Bribe") return <BribeChallenge />;
 		if (challenge === "Split or Steal") return <SplitOrStealChallenge />;
 		if (challenge === "King of the Hill") return <KingOfHillChallenge />;
+		if (challenge === "Flag Memory") return <FlagMemoryChallenge />;
 		return <></>;
 	}, [challenge]);
 

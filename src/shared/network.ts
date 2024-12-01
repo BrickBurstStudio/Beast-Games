@@ -35,6 +35,9 @@ interface ServerEvents {
 		splitOrStealChallenge: {
 			makeChoice: (choice: "split" | "steal") => void;
 		};
+		flagMemoryChallenge: {
+			placeFlag: (flagIndex: number, position: Vector3, rotation: number) => void;
+		};
 	};
 	useAction: (args: { actionName: ActionName; toPlayer: Player }) => void;
 	reset: () => void;
@@ -67,6 +70,10 @@ interface ClientEvents {
 		};
 		kingOfHillChallenge: {
 			updateScores: (scores: Map<string, number>) => void;
+		};
+		flagMemoryChallenge: {
+			startPlacement: () => void;
+			endPlacement: () => void;
 		};
 	};
 

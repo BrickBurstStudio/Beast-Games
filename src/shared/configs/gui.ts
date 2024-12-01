@@ -5,7 +5,7 @@ export const CHALLENGE_NAMES = [
 	"Platform",
 	"Pugil",
 	"Gold Rush",
-	"Flag Run",
+	"Flag Memory",
 	"Briefcase Memory",
 	"Tower",
 	"Split or Steal",
