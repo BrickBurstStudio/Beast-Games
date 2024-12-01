@@ -14,10 +14,11 @@ import { BaseChallenge } from "./base.challenge";
 export class FlagChallenge extends BaseChallenge {
 	protected readonly challengeName = "Flag Run" as const;
 	protected readonly rules = [
-		"You will be playing against 1 random player.",
-		"You must claim the flag and bring it back to your base to win!",
-		"By the end of the round the player with the least amount of flags will be eliminated!",
-		"If there is a tie, both players will be eliminated!",
+		"Enter the yellow area to participate in the round",
+		"Claim one of the limited flags to advance",
+		"There are not enough flags for everyone",
+		"Players without flags will be eliminated",
+		"Stay in the waiting area if you want to try the next round",
 	];
 	protected readonly map = ServerStorage.ChallengeMaps.FlagChallenge.Clone();
 	private readonly flagPoles: FlagPole[] = [];
@@ -111,31 +112,18 @@ export class FlagChallenge extends BaseChallenge {
 	}
 
 	private YieldGameRound() {
-		let running = true;
-		this.obliterator.Add(
-			task.spawn(() => {
-				const startTime = DateTime.now().UnixTimestamp;
-				while (
-					running &&
-					this.flagPoles.size() > 0 &&
-					DateTime.now().UnixTimestamp - startTime < this.FIELD_TIME
-				) {
-					for (const flag of this.flagPoles) {
-						const flagComponent = this.components.getComponent<FlagPoleComponent>(flag);
-						if (!flagComponent) continue;
-						if (flagComponent.attributes.owner) {
-							this.flagPoles.remove(this.flagPoles.indexOf(flag));
-							flag.Destroy();
-						}
-					}
-					task.wait();
+		const startTime = DateTime.now().UnixTimestamp;
+		while (this.flagPoles.size() > 0 && DateTime.now().UnixTimestamp - startTime < this.FIELD_TIME) {
+			for (const flag of this.flagPoles) {
+				const flagComponent = this.components.getComponent<FlagPoleComponent>(flag);
+				if (!flagComponent) continue;
+				if (flagComponent.attributes.owner) {
+					this.flagPoles.remove(this.flagPoles.indexOf(flag));
+					flag.Destroy();
 				}
-			}),
-		);
-
-		return () => {
-			running = false;
-		};
+			}
+			task.wait();
+		}
 	}
 
 	private SpawnFlags() {
@@ -167,7 +155,7 @@ export class FlagChallenge extends BaseChallenge {
 		}
 	}
 
-	protected spawnCharacter({ player, character, i }: { player: Player; character: CharacterRigR6; i: number }) {
+	protected spawnCharacter({ character }: { character: CharacterRigR6 }) {
 		// spawn player anywhere inside x and z bounds of `StartSide`
 		character.HumanoidRootPart.CFrame = this.map.ChallengeArea.StartArea.Platform.CFrame.add(
 			new Vector3(
