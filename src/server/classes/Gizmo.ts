@@ -1,5 +1,6 @@
 import { Janitor } from "@rbxts/janitor";
 import Make from "@rbxts/make";
+import Object from "@rbxts/object-utils";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { debounce, Debounced } from "@rbxts/set-timeout";
 import { Events } from "server/network";
@@ -17,6 +18,7 @@ export abstract class Gizmo {
 		idle: Animation;
 		activated: Animation;
 	}>;
+	abstract animationEvents: Record<string, () => void>;
 	abstract activated(inputData: InputData | undefined): void;
 	abstract activationType: "server" | "client";
 
@@ -52,7 +54,8 @@ export abstract class Gizmo {
 	}
 
 	private setupAttachments() {
-		const primary = this.tool.PrimaryPart!;
+		const primary = this.tool.PrimaryPart;
+		if (!primary) return (this.tool.Parent = this.owner.Character);
 		this.tool
 			.GetChildren()
 			.filter((c): c is BasePart => c.IsA("BasePart") && c !== primary)
@@ -91,6 +94,10 @@ export abstract class Gizmo {
 
 		this.tool.Unequipped.Connect(() => {
 			if (this.animations.idle) Events.animationController.stop(this.owner, this.animations.idle);
+		});
+
+		Object.entries(this.animationEvents).forEach(([event, func]) => {
+			
 		});
 	}
 

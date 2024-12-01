@@ -5,7 +5,7 @@ import { isCharacterPart } from "shared/utils/functions/isCharacterPart";
 
 export class Ball extends Gizmo {
 	private readonly BALL_FORCE = 80;
-
+	animationEvents: Record<string, () => void> = {};
 	animations = {};
 	name = "Ball";
 	tool = ServerStorage.Assets.Gizmos.Ball.Clone();

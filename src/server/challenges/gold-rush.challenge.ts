@@ -11,6 +11,8 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 import { countdown } from "server/util/countdown";
 import { GreenClaimComponent } from "server/components/claim-components/green-claim.component";
+import { Gizmo } from "server/classes/Gizmo";
+import { Push } from "server/classes/gizmos/Push";
 
 export class GoldRushChallenge extends BaseChallenge {
 	protected readonly challengeName = "Gold Rush" as const;
@@ -26,6 +28,10 @@ export class GoldRushChallenge extends BaseChallenge {
 	private greenClaims: GreenClaimComponent[] = [];
 	private safePlayers: Player[] = [];
 	protected async main() {
+		this.playersInChallenge.forEach((player) => {
+			Gizmo.give(player, Push);
+		});
+
 		this.contestantDiedOrLeft.Event.Connect((player: Player) => {
 			this.safePlayers = this.safePlayers.filter((p) => p !== player);
 		});
@@ -75,7 +81,7 @@ export class GoldRushChallenge extends BaseChallenge {
 				claim.claimedEvent.Event.Connect((player: Player) => {
 					this.safePlayers.push(player);
 				}),
-				"Disconnect"
+				"Disconnect",
 			);
 		});
 	}
