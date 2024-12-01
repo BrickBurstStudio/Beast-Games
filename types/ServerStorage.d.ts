@@ -29,6 +29,34 @@ interface ServerStorage extends Instance {
 			Ball: Part;
 		};
 		Gizmos: Folder & {
+			Glock: Tool & {
+				Flame: Part & {
+					Fire: Sound;
+				};
+				SightMark: Part;
+				Mag: UnionOperation;
+				FirePart: Part & {
+					["FlashFX3[Front]"]: ParticleEmitter;
+					["FlashFX[Flash]"]: ParticleEmitter;
+					["FlashFX3[Burst]"]: ParticleEmitter;
+					["FlashFX[Light]"]: PointLight;
+					Fire: Sound & {
+						CompressorSoundEffect: CompressorSoundEffect;
+					};
+				};
+				AimPart: Part;
+				Trigger: Part & {
+					Mesh: BlockMesh;
+				};
+				Bolt: UnionOperation & {
+					BoltBack: Sound;
+					BoltForward: Sound;
+				};
+				Chamber: Part & {
+					Mesh: BlockMesh;
+				};
+				Shell: UnionOperation;
+			};
 			ExampleGizmo: Tool & {
 				Base: Part;
 			};
@@ -112,10 +140,8 @@ interface ServerStorage extends Instance {
 				Boulder: Part;
 			};
 		};
-		_oldKingOfTheHillChallenge: Folder & {
-			Hill: Model & {
-				Base: Part;
-			};
+		MoneyPileChallenge: Folder & {
+			Platforms: Model;
 		};
 		GoldRushChallenge: Folder & {
 			Claims: Model & {
@@ -127,9 +153,6 @@ interface ServerStorage extends Instance {
 				Part: Part;
 			};
 		};
-		MoneyPileChallenge: Folder & {
-			Platforms: Model;
-		};
 		PugilChallenge: Folder & {
 			Lights: Model;
 			Spawns: Folder & {
@@ -139,7 +162,7 @@ interface ServerStorage extends Instance {
 				Red: Part;
 			};
 		};
-		FlagChallenge: Folder & {
+		FlagMemoryChallenge: Folder & {
 			ChallengeArea: Model & {
 				StartArea: Model & {
 					Barier: Part;
@@ -156,6 +179,12 @@ interface ServerStorage extends Instance {
 					RightBarier: Part;
 				};
 				PlayArea: Part;
+			};
+		};
+		_oldKingOfTheHillChallenge: Folder & {
+			Hill: Model & {
+				Base: Part;
+				Top: Part;
 			};
 		};
 	};

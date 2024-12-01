@@ -62,6 +62,10 @@ export class TowerChallenge extends BasePlatformChallenge {
 			}),
 		]);
 
+		this.playersToTowers.forEach((tower, player) => {
+			tower.Destroy();
+		});
+
 		this.finished = true;
 	}
 
