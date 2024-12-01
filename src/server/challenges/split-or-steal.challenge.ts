@@ -104,7 +104,9 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 
 		const data1 = new OrderedPlayerData(player1);
 		const data2 = new OrderedPlayerData(player2);
+		data1.wins.UpdateBy(1);
 		data1.cash.UpdateBy(splitAmount);
+		data2.wins.UpdateBy(1);
 		data2.cash.UpdateBy(splitAmount);
 	}
 
@@ -121,6 +123,7 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 		]);
 
 		const data = new OrderedPlayerData(stealer);
+		data.wins.UpdateBy(1);
 		data.cash.UpdateBy(this.PRIZE_MONEY);
 		this.dropPlayer(splitter);
 	}
@@ -141,6 +144,7 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 		]);
 
 		const data = new OrderedPlayerData(nonChoosingPlayer);
+		data.wins.UpdateBy(1);
 		data.cash.UpdateBy(this.PRIZE_MONEY);
 		this.dropPlayer(nonChoosingPlayer);
 	}
