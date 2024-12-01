@@ -21,7 +21,6 @@ export class Push extends Gizmo {
 
 		const params = new RaycastParams();
 		params.FilterType = Enum.RaycastFilterType.Include;
-		params.AddToFilter(Workspace.WaitForChild("Rig"));
 		await Promise.all(
 			Players.GetPlayers().map(async (player) => {
 				if (player === this.owner) return;
