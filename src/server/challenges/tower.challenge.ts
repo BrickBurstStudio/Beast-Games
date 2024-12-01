@@ -12,8 +12,9 @@ export class TowerChallenge extends BasePlatformChallenge {
 
 	protected readonly challengeName = "Tower";
 	protected readonly rules = [
-		"Place your tower on the platform",
-		"You will be given a red ball",
+		"Place your tower on the platform by clicking/tapping somewhere",
+		"If you touch your tower, it will fall over, and you will be out",
+		"You will be given a red ball afterwards",
 		"Throw the ball at other players to eliminate them",
 	];
 	private playersToTowers = new Map<Player, BlockTower>();
