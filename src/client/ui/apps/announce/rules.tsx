@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
 import { motion } from "@rbxts/react-motion/out/motion";
-import { px } from "client/ui/utils/usePx";
 import { Events } from "client/network";
-import { COLORS } from "shared/configs/gui";
+import { px } from "client/ui/utils/usePx";
+import React, { useEffect, useState } from "react";
 import { RULES_CONFIGS } from "shared/configs/announcer";
+import { COLORS } from "shared/configs/gui";
 
 const padding = 50;
 
@@ -18,7 +18,7 @@ export default function AnnounceRules() {
 			setRules(rules);
 			setChallengeName(challengeName.upper());
 			setHide(false);
-			task.wait(rules.size() * RULES_CONFIGS.timeBetweenRules + RULES_CONFIGS.timeAfterRules);
+			task.wait(rules.size() - 1 * RULES_CONFIGS.timeBetweenRules + RULES_CONFIGS.timeAfterRules);
 			setHide(true);
 		});
 
@@ -81,32 +81,33 @@ export default function AnnounceRules() {
 					PaddingTop={new UDim(0, px(padding))}
 					PaddingBottom={new UDim(0, px(padding))}
 				/>
-				{rules.map((rule, i) => (
-					<motion.textlabel
-						Text={`<b>- ${rule}</b>`}
-						TextColor3={COLORS.White}
-						Font={"Jura"}
-						BackgroundTransparency={1}
-						BackgroundColor3={COLORS.Primary}
-						TextWrapped={false}
-						RichText
-						ZIndex={100}
-						Size={new UDim2(1, 0, 0, 50)}
-						TextScaled
-						initial={{ Transparency: 1, BackgroundTransparency: 0 }}
-						animate={{ Transparency: hide ? 1 : 0, BackgroundTransparency: hide ? 0 : 1 }}
-						transition={{
-							duration: 1,
-							delay: i * 2 + 1,
-							easingStyle: Enum.EasingStyle.Cubic,
-							easingDirection: Enum.EasingDirection.Out,
-						}}
-						BorderColor3={Color3.fromRGB(255, 255, 255)}
-					>
-						<uistroke Thickness={px(0)} Transparency={1} />
-						<uicorner CornerRadius={new UDim(0.1, 0)} />
-					</motion.textlabel>
-				))}
+				{!hide &&
+					rules.map((rule, i) => (
+						<motion.textlabel
+							Text={`<b>- ${rule}</b>`}
+							TextColor3={COLORS.White}
+							Font={"Jura"}
+							BackgroundTransparency={1}
+							BackgroundColor3={COLORS.Primary}
+							TextWrapped={false}
+							RichText
+							ZIndex={100}
+							Size={new UDim2(1, 0, 0, 50)}
+							TextScaled
+							initial={{ Transparency: 1, BackgroundTransparency: 0 }}
+							animate={{ Transparency: 0, BackgroundTransparency: 1 }}
+							transition={{
+								duration: 1.5,
+								delay: i * RULES_CONFIGS.timeBetweenRules,
+								easingStyle: Enum.EasingStyle.Cubic,
+								easingDirection: Enum.EasingDirection.Out,
+							}}
+							BorderColor3={Color3.fromRGB(255, 255, 255)}
+						>
+							<uistroke Thickness={px(0)} Transparency={1} />
+							<uicorner CornerRadius={new UDim(0.1, 0)} />
+						</motion.textlabel>
+					))}
 			</frame>
 		</motion.frame>
 	);
