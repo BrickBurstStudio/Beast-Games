@@ -36,12 +36,6 @@ export class KingOfHillChallenge extends BaseChallenge {
 			this.playerScores.set(player, 0);
 			// Give each player a pugil
 			const pugil = Gizmo.give(player, Pugil);
-			// Set hit validator to allow hitting any other player
-			pugil.setHitValidator((character) => {
-				const hitPlayer = Players.GetPlayerFromCharacter(character);
-				if (!hitPlayer) return false;
-				return hitPlayer !== player && this.playersInChallenge.includes(hitPlayer);
-			});
 		});
 
 		// Set up hill detection
@@ -82,7 +76,7 @@ export class KingOfHillChallenge extends BaseChallenge {
 	}
 
 	private setupHillDetection() {
-		const hillPlatform = this.map.Hill.PrimaryPart!;
+		const hillPlatform = this.map.Hill.Top;
 
 		this.obliterator.Add(
 			hillPlatform.Touched.Connect((part) => {

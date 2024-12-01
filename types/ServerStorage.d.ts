@@ -83,6 +83,13 @@ interface ServerStorage extends Instance {
 			Briefcases: Model;
 			Baseplate: Part;
 		};
+		KingOfTheHillChallenge: Folder & {
+			Hill: Model & {
+				Union: UnionOperation;
+				Top: Part;
+				Spawns: Folder;
+			};
+		};
 		BoulderChallenge: Folder & {
 			["1"]: Folder & {
 				Rope: Part;
@@ -105,10 +112,9 @@ interface ServerStorage extends Instance {
 				Boulder: Part;
 			};
 		};
-		KingOfTheHillChallenge: Folder & {
+		_oldKingOfTheHillChallenge: Folder & {
 			Hill: Model & {
 				Base: Part;
-				Top: Part;
 			};
 		};
 		GoldRushChallenge: Folder & {
