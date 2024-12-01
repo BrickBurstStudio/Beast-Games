@@ -26,7 +26,9 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 		this.platformDistance = this.challengeName === "Tower" ? 50 : 12;
 		this.generatePlatforms();
 
-		this.contestantDiedOrLeft.Event.Connect((player) => this.changePlatformState(player, "eliminated"));
+		this.obliterator.Add(
+			this.contestantDiedOrLeft.Event.Connect((player) => this.changePlatformState(player, "eliminated")),
+		);
 	}
 
 	protected spawnCharacter({ player, character, i }: SpawnCharacterArgs): void {
