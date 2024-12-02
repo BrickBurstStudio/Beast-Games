@@ -30,7 +30,7 @@ export class LeaderboardService implements OnStart {
 					cash,
 				});
 			});
-			
+
 			return () => connection.Disconnect();
 		});
 
@@ -40,7 +40,7 @@ export class LeaderboardService implements OnStart {
 				const playTime = BaseOrderedDataStore.GetTop(100, "playTime");
 				const wins = BaseOrderedDataStore.GetTop(100, "wins");
 				const cash = BaseOrderedDataStore.GetTop(100, "cash");
-				
+
 				Events.updateLeaderboards.broadcast({
 					xp,
 					playTime,

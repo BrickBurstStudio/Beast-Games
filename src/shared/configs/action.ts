@@ -92,9 +92,7 @@ export const actions = [
 	{
 		name: "Glock 19 (Gun)",
 		cost: 1,
-		callback: async ({ toPlayer }) => {
-
-		},
+		callback: async ({ toPlayer }) => {},
 	},
 	{
 		name: "Nuke",
@@ -109,9 +107,9 @@ export const actions = [
 			nuke.Color = Color3.fromRGB(50, 50, 50);
 			nuke.Material = Enum.Material.Metal;
 			nuke.Shape = Enum.PartType.Cylinder;
-			nuke.CFrame = new CFrame(
-				character.HumanoidRootPart.Position.add(new Vector3(0, 200, 0))
-			).mul(CFrame.Angles(0, 0, math.rad(90)));
+			nuke.CFrame = new CFrame(character.HumanoidRootPart.Position.add(new Vector3(0, 200, 0))).mul(
+				CFrame.Angles(0, 0, math.rad(90)),
+			);
 			nuke.Parent = character;
 
 			// Add fins to nuke
@@ -123,7 +121,7 @@ export const actions = [
 				fin.CFrame = nuke.CFrame.mul(
 					CFrame.Angles(0, math.rad(90 * i), 0)
 						.mul(new CFrame(2, 0, 0))
-						.mul(CFrame.Angles(math.rad(90), 0, 0))
+						.mul(CFrame.Angles(math.rad(90), 0, 0)),
 				);
 				fin.Parent = nuke;
 				const weld = new Instance("WeldConstraint");
@@ -196,6 +194,5 @@ export const actions = [
 		},
 	},
 ] as const satisfies Action[];
-
 
 export type ActionName = (typeof actions)[number]["name"];

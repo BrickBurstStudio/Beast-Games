@@ -8,7 +8,7 @@ export = function (context: CommandContext, player: Player) {
 	orderedPlayerData.wins.UpdateBy(-orderedPlayerData.wins.Get());
 	orderedPlayerData.xp.UpdateBy(-orderedPlayerData.xp.Get());
 	orderedPlayerData.playTime.UpdateBy(-orderedPlayerData.playTime.Get());
-  
+
 	store.reset(tostring(player.UserId));
 
 	return `Reset ${player.Name}'s data.`;
