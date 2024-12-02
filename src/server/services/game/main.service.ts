@@ -5,7 +5,7 @@ import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BribeChallenge } from "server/challenges/bribe.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
-import { FlagChallenge } from "server/challenges/flag.challenge";
+import { FlagMemoryChallenge } from "server/challenges/flag-memory.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
 import { KingOfHillChallenge } from "server/challenges/king-of-hill.challenge";
 import { PugilChallenge } from "server/challenges/pugil.challenge";
@@ -46,7 +46,7 @@ export class GameMainService implements OnStart {
 			PugilChallenge,
 			BoulderChallenge,
 			TowerChallenge,
-			FlagChallenge,
+			// FlagMemoryChallenge,
 			BriefcaseChallenge,
 		];
 
