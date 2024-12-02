@@ -1,8 +1,9 @@
-import { Lighting, ReplicatedStorage, ServerStorage } from "@rbxts/services";
+import { Lighting, Players, ReplicatedStorage, ServerStorage } from "@rbxts/services";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 import Make from "@rbxts/make";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { spawnSound } from "shared/utils/functions/spawnSound";
+import { CharacterRigR6 } from "@rbxts/promise-character";
 
 type PlatformState = "safe" | "eliminated" | "neutral";
 
@@ -61,31 +62,37 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 		}
 	}
 
-	protected async dropPlayer(player: Player): Promise<void> {
-		const platform = this.playerToPlatform.get(player);
-		if (!platform) return;
+	protected async dropCharacter(character: CharacterRigR6) {
+		try {
+			const player = Players.GetPlayerFromCharacter(character);
+			if (!player) return;
 
-		this.playersInChallenge = this.playersInChallenge.filter((p) => p !== player);
-		this.changePlatformState(player, "eliminated");
+			const platform = this.playerToPlatform.get(player);
+			if (!platform) return;
 
-		const character = await getCharacter(player);
-		character.Humanoid.WalkSpeed = 0;
-		character.Humanoid.JumpPower = 0;
+			this.playersInChallenge = this.playersInChallenge.filter((p) => p !== player);
+			this.changePlatformState(player, "eliminated");
 
-		character.PivotTo(platform.PrimaryPart!.CFrame);
+			character.Humanoid.WalkSpeed = 0;
+			character.Humanoid.JumpPower = 0;
 
-		platform.Door1.Transparency = 1;
-		platform.Door1.CanCollide = false;
-		platform.Door2.Transparency = 1;
-		platform.Door2.CanCollide = false;
-		task.wait(2);
-		platform.Door1.Transparency = 0;
-		platform.Door1.CanCollide = true;
-		platform.Door2.Transparency = 0;
-		platform.Door2.CanCollide = true;
+			character.PivotTo(platform.PrimaryPart!.CFrame);
 
-		character.Humanoid.Health = 0;
-		task.wait(1);
+			platform.Door1.Transparency = 1;
+			platform.Door1.CanCollide = false;
+			platform.Door2.Transparency = 1;
+			platform.Door2.CanCollide = false;
+			task.wait(2);
+			platform.Door1.Transparency = 0;
+			platform.Door1.CanCollide = true;
+			platform.Door2.Transparency = 0;
+			platform.Door2.CanCollide = true;
+
+			character.Humanoid.Health = 0;
+			task.wait(1);
+		} catch {
+			warn(`Failed to drop character ${character.Name}`);
+		}
 	}
 
 	protected changePlatformState(player: Player, state: PlatformState) {

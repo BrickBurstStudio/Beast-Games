@@ -5,6 +5,7 @@ import { announce } from "server/util/announce";
 import { countdown } from "server/util/countdown";
 import { ChallengeName } from "shared/configs/gui";
 import { BasePlatformChallenge } from "./base-platform.challenge";
+import { CharacterRigR6 } from "@rbxts/promise-character";
 
 type PlayerChoice = "split" | "steal" | undefined;
 
@@ -36,9 +37,9 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 		});
 
 		// Start the countdown
-		const countdownPromise = countdown({ 
-			seconds: this.DECISION_TIME, 
-			description: "Make your choice!" 
+		const countdownPromise = countdown({
+			seconds: this.DECISION_TIME,
+			description: "Make your choice!",
 		});
 
 		// Wait for either countdown to finish or choices to be made
@@ -47,7 +48,7 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 			new Promise<void>((resolve) => {
 				// This will be called when processResults is triggered
 				this.resolveEarly = resolve;
-			})
+			}),
 		]);
 
 		// Only clear countdown if it wasn't already cleared
@@ -112,8 +113,8 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 
 	private async handleBothSteal(player1: Player, player2: Player) {
 		await announce(["Both players chose to STEAL!", "Neither player receives any money!"]);
-		this.dropPlayer(player1);
-		this.dropPlayer(player2);
+		this.dropCharacter(player1.Character as CharacterRigR6);
+		this.dropCharacter(player2.Character as CharacterRigR6);
 	}
 
 	private async handleOneStealOneSplit(stealer: Player, splitter: Player) {
@@ -125,7 +126,7 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 		const data = new OrderedPlayerData(stealer);
 		data.wins.UpdateBy(1);
 		data.cash.UpdateBy(this.PRIZE_MONEY);
-		this.dropPlayer(splitter);
+		this.dropCharacter(splitter.Character as CharacterRigR6);
 	}
 
 	private async handleNoChoices(player1: Player, player2: Player) {
@@ -133,8 +134,8 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 			"Time's up! Neither player made a choice!",
 			"Indecision has consequences - both players are eliminated!",
 		]);
-		this.dropPlayer(player1);
-		this.dropPlayer(player2);
+		this.dropCharacter(player1.Character as CharacterRigR6);
+		this.dropCharacter(player2.Character as CharacterRigR6);
 	}
 
 	private async handleOneNoChoiceOneChoice(nonChoosingPlayer: Player, choosingPlayer: Player) {
@@ -146,6 +147,6 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 		const data = new OrderedPlayerData(nonChoosingPlayer);
 		data.wins.UpdateBy(1);
 		data.cash.UpdateBy(this.PRIZE_MONEY);
-		this.dropPlayer(nonChoosingPlayer);
+		this.dropCharacter(nonChoosingPlayer.Character as CharacterRigR6);
 	}
 }

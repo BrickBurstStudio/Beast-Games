@@ -6,6 +6,7 @@ import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { store } from "server/store";
 import { Gizmo } from "server/classes/Gizmo";
 import { Tower } from "server/classes/gizmos/Tower";
+import { CharacterRigR6 } from "@rbxts/promise-character";
 
 export class BribeChallenge extends BasePlatformChallenge {
 	private readonly PLAYER_MULTIPLIER = 10_000;
@@ -50,7 +51,7 @@ export class BribeChallenge extends BasePlatformChallenge {
 						const data = new OrderedPlayerData(player);
 						data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
 						task.wait(2);
-						this.dropPlayer(player);
+						this.dropCharacter(player.Character as CharacterRigR6);
 					});
 				});
 				return;
@@ -59,14 +60,5 @@ export class BribeChallenge extends BasePlatformChallenge {
 
 		await countdown({ seconds: this.BRIBE_TIME, showGo: false });
 		store.setChallenge(undefined);
-
-		this.acceptedBribes.forEach((player) => {
-			spawn(() => {
-				const data = new OrderedPlayerData(player);
-				data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
-				task.wait(2);
-				this.dropPlayer(player);
-			});
-		});
 	}
 }

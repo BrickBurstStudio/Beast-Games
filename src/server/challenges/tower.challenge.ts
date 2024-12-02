@@ -5,6 +5,7 @@ import { Tower } from "server/classes/gizmos/Tower";
 import { Events } from "server/network";
 import { countdown } from "server/util/countdown";
 import { BasePlatformChallenge } from "./base-platform.challenge";
+import { CharacterRigR6 } from "@rbxts/promise-character";
 
 export class TowerChallenge extends BasePlatformChallenge {
 	private readonly TOWER_PLACE_TIME = 30;
@@ -85,7 +86,7 @@ export class TowerChallenge extends BasePlatformChallenge {
 				this.changePlatformState(owner, "eliminated");
 				this.playersToTowers.delete(owner);
 				task.wait(2);
-				this.dropPlayer(owner);
+				this.dropCharacter(owner.Character as CharacterRigR6);
 			});
 		});
 	}
@@ -93,7 +94,7 @@ export class TowerChallenge extends BasePlatformChallenge {
 	private async dropNonBuilders() {
 		await Promise.all(
 			this.playersInChallenge.map(async (player) => {
-				if (!this.playersToTowers.has(player)) await this.dropPlayer(player);
+				if (!this.playersToTowers.has(player)) await this.dropCharacter(player.Character as CharacterRigR6);
 			}),
 		);
 	}

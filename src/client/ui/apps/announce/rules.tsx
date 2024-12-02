@@ -18,7 +18,7 @@ export default function AnnounceRules() {
 			setRules(rules);
 			setChallengeName(challengeName.upper());
 			setHide(false);
-			task.wait(rules.size() - 1 * RULES_CONFIGS.timeBetweenRules + RULES_CONFIGS.timeAfterRules);
+			task.wait(rules.size() * RULES_CONFIGS.timeBetweenRules + RULES_CONFIGS.timeAfterRules);
 			setHide(true);
 		});
 
