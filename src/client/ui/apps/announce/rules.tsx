@@ -91,7 +91,6 @@ export default function AnnounceRules() {
 							BackgroundColor3={COLORS.Primary}
 							TextWrapped={false}
 							RichText
-							ZIndex={100}
 							Size={new UDim2(1, 0, 0, 50)}
 							TextScaled
 							initial={{ Transparency: 1, BackgroundTransparency: 0 }}

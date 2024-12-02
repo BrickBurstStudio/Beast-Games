@@ -29,10 +29,12 @@ export function MessageApp() {
 	return (
 		<motion.frame
 			key={message.title} // Force re-render on new messages
+            ZIndex={20}
 			Size={new UDim2(0, px(500), 0, px(150))}
 			Position={UDim2.fromScale(0.5, 0.1)}
 			AnchorPoint={new Vector2(0.5, 0)}
 			BackgroundColor3={COLORS[message.type]}
+			transition={{ duration: 0.5, easingStyle: "Cubic", easingDirection: "InOut" }}
 			initial={{ Position: UDim2.fromScale(0.5, -0.2) }}
 			animate={{ Position: UDim2.fromScale(0.5, 0.1) }}
 		>
@@ -48,6 +50,7 @@ export function MessageApp() {
 				Size={UDim2.fromScale(0.9, 0.3)}
 				BackgroundTransparency={1}
 				TextColor3={new Color3(1, 1, 1)}
+                ZIndex={21}
 				TextScaled={true}
 				FontFace={Font.fromName("GothamBold")}
 			/>
@@ -57,6 +60,7 @@ export function MessageApp() {
 				Size={UDim2.fromScale(0.9, 0.6)}
 				BackgroundTransparency={1}
 				TextColor3={new Color3(1, 1, 1)}
+				ZIndex={21}
 				TextScaled={true}
 				FontFace={Font.fromName("Gotham")}
 			/>

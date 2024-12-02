@@ -9,6 +9,8 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BriefcaseComponent } from "../components/claim-components/briefcase.component";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 import { Events } from "server/network";
+import { Gizmo } from "server/classes/Gizmo";
+import { Push } from "server/classes/gizmos/Push";
 
 export class BriefcaseChallenge extends BaseChallenge {
 	protected readonly challengeName = "Briefcase Memory" as const;
@@ -31,6 +33,10 @@ export class BriefcaseChallenge extends BaseChallenge {
 	revealing = false;
 
 	protected async main() {
+		this.playersInChallenge.forEach((p) => {
+			this.obliterator.Add(Gizmo.give(p, Push), "destroy");
+		});
+
 		this.cases = math.ceil(this.playersInChallenge.size() / 2) + this.badBriefcases;
 		const grid = generatePlayerGrid(this.cases, 10);
 		const largestY = this.GetLargestSubarray(grid)!;

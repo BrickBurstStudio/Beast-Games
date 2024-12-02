@@ -20,7 +20,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 export class GameMainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
-	private static EXPECTED_PLAYERS_DEFAULT = 2;
+	private static EXPECTED_PLAYERS_DEFAULT = 3;
 	private static JOIN_TIMEOUT = 20;
 
 	/* ---------------------------------- Class --------------------------------- */
@@ -30,7 +30,7 @@ export class GameMainService implements OnStart {
 
 	/* ------------------------------- Life Cycle ------------------------------- */
 	async onStart() {
-		if (game.PlaceId !== MAIN_PLACE_ID) return;
+		// if (game.PlaceId !== MAIN_PLACE_ID) return;
 		this.setupReset();
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
@@ -56,6 +56,10 @@ export class GameMainService implements OnStart {
 			.map(({ value }) => value);
 
 		for (const Challenge of shuffledChallenges) {
+			if (this.playersLeft() === 2) {
+				await new SplitOrStealChallenge().start();
+				return this.endGame();
+			}
 			await new Challenge().start();
 		}
 
@@ -63,9 +67,22 @@ export class GameMainService implements OnStart {
 		await new SplitOrStealChallenge().start();
 
 		// After all challenges are complete, teleport remaining players to lobby
+		this.endGame();
+	}
 
+	async endGame() {
 		Events.announcer.announce.broadcast(["Game Over! Returning to lobby..."]);
 		TeleportService.TeleportAsync(LOBBY_PLACE_ID, Players.GetPlayers());
+	}
+
+	playersLeft() {
+		let playersLeft = 0;
+		Players.GetPlayers().forEach((player) => {
+			if ((player.GetAttribute("lives") as number) > 0) {
+				playersLeft++;
+			}
+		});
+		return playersLeft;
 	}
 
 	yieldPlayers() {
