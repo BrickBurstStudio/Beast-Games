@@ -43,7 +43,7 @@ export class GameMainService implements OnStart {
 
 		const availableChallenges = [
 			GoldRushChallenge,
-			// PugilChallenge,
+			PugilChallenge,
 			BoulderChallenge,
 			TowerChallenge,
 			// FlagMemoryChallenge,

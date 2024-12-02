@@ -1,15 +1,18 @@
 import { Lighting } from "@rbxts/services";
 import { getCharacter } from "shared/utils/functions/getCharacter";
+import { ChallengeName } from "./gui";
 
 export type Action = {
 	name: string;
 	cost: number;
 	callback: (args: { fromPlayer: Player; toPlayer: Player }) => void;
+	blacklistedChallenges: ChallengeName[];
 };
 export const actions = [
 	{
 		name: "Add 3 Lives",
 		cost: 1,
+		blacklistedChallenges: ["King of the Hill", "Split or Steal"],
 		callback: ({ toPlayer }) => {
 			const lives = (toPlayer.GetAttribute("lives") as number) ?? 0;
 			toPlayer.SetAttribute("lives", lives + 3);
@@ -18,6 +21,7 @@ export const actions = [
 	{
 		name: "Fling",
 		cost: 1,
+		blacklistedChallenges: [],
 		callback: async ({ fromPlayer, toPlayer }) => {
 			const character = await getCharacter(toPlayer);
 			const VELOCITY_MAGNITUDE = 100;
@@ -45,11 +49,13 @@ export const actions = [
 	{
 		name: "Kidnap",
 		cost: 1,
+		blacklistedChallenges: [],
 		callback: async ({ toPlayer }) => {},
 	},
 	{
 		name: "Giant Mode",
 		cost: 1,
+		blacklistedChallenges: [],
 		callback: async ({ toPlayer }) => {
 			const character = await getCharacter(toPlayer);
 			const originalSize = character.GetScale();
@@ -73,6 +79,7 @@ export const actions = [
 	{
 		name: "Boogie Bomb",
 		cost: 1,
+		blacklistedChallenges: [],
 		callback: async ({ toPlayer }) => {
 			const character = await getCharacter(toPlayer);
 			if (!character) return;
@@ -92,11 +99,13 @@ export const actions = [
 	{
 		name: "Glock 19 (Gun)",
 		cost: 1,
+		blacklistedChallenges: [],
 		callback: async ({ toPlayer }) => {},
 	},
 	{
 		name: "Nuke",
 		cost: 1,
+		blacklistedChallenges: [],
 		callback: async ({ toPlayer }) => {
 			const character = await getCharacter(toPlayer);
 			if (!character) return;
