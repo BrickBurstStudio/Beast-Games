@@ -8,6 +8,5 @@ export class ExampleGizmo extends Gizmo {
 	tool = ServerStorage.Assets.Gizmos.ExampleGizmo;
 	activationType = "server" as const;
 
-	activated() {
-	}
+	activated() {}
 }

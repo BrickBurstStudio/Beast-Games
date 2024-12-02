@@ -84,7 +84,7 @@ function ToolTip() {
 
 		return () => connection.Disconnect();
 	}, []);
-	
+
 	if (!toolTip) return <></>;
 
 	return (

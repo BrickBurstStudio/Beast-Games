@@ -96,9 +96,7 @@ export abstract class Gizmo {
 			if (this.animations.idle) Events.animationController.stop(this.owner, this.animations.idle);
 		});
 
-		Object.entries(this.animationEvents).forEach(([event, func]) => {
-			
-		});
+		Object.entries(this.animationEvents).forEach(([event, func]) => {});
 	}
 
 	private setupTool() {

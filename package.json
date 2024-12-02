@@ -1,14 +1,10 @@
 {
 	"name": "beast-games",
 	"scripts": {
-		"build": "rbxts-build build",
-		"watch": "concurrently \"rbxts-build watch\" \"npx io-serve\"",
-		"compile": "rbxts-build compile",
-		"open": "rbxts-build open",
-		"start": "rbxts-build start",
-		"stop": "rbxts-build stop",
-		"sync": "rbxts-build sync",
-		"pretty": "npx prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
+		"dev": "concurrently \"rbxtsc -w --verbose\" \"rojo serve\" \"npx io-serve\"",
+		"build": "rbxtsc --verbose",
+		"lint": "prettier --check src/",
+		"lint:fix": "prettier --write src/"
 	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "^3.0.0-types.0",
@@ -23,7 +19,6 @@
 		"eslint-plugin-roblox-ts": "^0.0.36",
 		"io-serve": "^1.1.2",
 		"prettier": "^3.3.3",
-		"rbxts-build": "^2.4.0",
 		"rbxts-transformer-flamework": "^1.2.3",
 		"roblox-ts": "^3.0.0",
 		"typescript": "^5.5.3"

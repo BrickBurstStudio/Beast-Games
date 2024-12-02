@@ -24,7 +24,6 @@ export class BriefcaseComponent
 	private readonly selectedColor = Color3.fromRGB(255, 255, 255);
 
 	onStart() {
-		
 		this.onAttributeChanged("highlightMode", (mode) => {
 			if (mode === "disabled") {
 				this.instance.Part.BrickColor = new BrickColor("Dark stone grey");
