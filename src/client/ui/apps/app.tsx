@@ -19,6 +19,7 @@ import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
 import QueueApp from "./queue";
 import SpectateApp from "./spectate";
+import { MessageApp } from "./message";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);
@@ -56,6 +57,7 @@ export default function App() {
 			{spectating ? <SpectateApp /> : <ChallengesApp />}
 			{game.PlaceId === MAIN_PLACE_ID && <LivesDisplay />}
 			<ToolTip />
+			<MessageApp />
 			<QueueApp />
 			<motion.frame
 				transition={{ duration: 0.25 }}

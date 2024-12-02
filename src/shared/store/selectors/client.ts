@@ -15,3 +15,7 @@ export const selectToolTip = (state: SharedState) => {
 export const selectSpectating = (state: SharedState) => {
 	return state.client.gui.spectating;
 };
+
+export const selectMessage = (state: SharedState) => {
+	return state.client.gui.message;
+};
