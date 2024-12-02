@@ -36,7 +36,7 @@ export class GameMainService implements OnStart {
 		this.yieldPlayers();
 
 		Players.GetPlayers().forEach((player) => {
-			player.SetAttribute("lives", 2);
+			player.SetAttribute("lives", 3);
 		});
 
 		await new BribeChallenge().start();
