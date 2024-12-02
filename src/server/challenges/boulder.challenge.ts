@@ -109,21 +109,6 @@ export class BoulderChallenge extends BaseChallenge {
 
 		this.UpdateAssetPositions();
 
-		if (this.playersInChallenge.size() > 0) {
-			store.setChallenge(undefined);
-			const losingTeam = this.teamProgress.indexOf(math.min(...this.teamProgress));
-
-			await announce([`The team to finish pulling their boulder last is: ${losingTeam}`], {
-				[losingTeam]: `<font color="#${TeamColors[losingTeam as keyof typeof TeamColors].ToHex()}">Team ${losingTeam + 1}</font>`,
-			});
-
-			await this.killTeamPlayers(losingTeam);
-
-			this.playersInChallenge = this.playersInChallenge.filter(
-				(player) => player.GetAttribute("team") !== losingTeam,
-			);
-		}
-
 		this.CleanUp();
 	}
 
