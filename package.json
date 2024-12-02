@@ -1,7 +1,7 @@
 {
 	"name": "beast-games",
 	"scripts": {
-		"dev": "rbxtsc -w --verbose & rojo serve & npx io-serve",
+		"dev": "concurrently \"rbxtsc -w --verbose\" \"rojo serve\" \"npx io-serve\"",
 		"build": "rbxtsc --verbose",
 		"lint": "prettier --check src/",
 		"lint:fix": "prettier --write src/"
