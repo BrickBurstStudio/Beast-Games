@@ -84,6 +84,7 @@ interface ClientEvents {
 	announcer: {
 		announce: (announcements: string[], richTextReplace?: { [key: string]: string }) => void;
 		announceRules: (args: { challengeName: string; rules: string[] }) => void;
+		chatMessage: (message: string) => void;
 		countdown: (countdown: Countdown) => void;
 		clearCountdown: () => void;
 	};

@@ -28,9 +28,11 @@ export class ActionsService implements OnStart {
 				Enum.AnalyticsEconomyTransactionType.Gameplay.Name,
 				action.name,
 			);
-			Events.announcer.announce.broadcast([
-				`${fromPlayer.DisplayName} used ${action.name} on ${toPlayer.DisplayName}`,
-			]);
+
+			Events.announcer.chatMessage.broadcast(
+				`[ACTION] ${fromPlayer.DisplayName} used ${action.name} on ${toPlayer.DisplayName}!`,
+			);
+
 			action.callback({ fromPlayer, toPlayer });
 		});
 	}
