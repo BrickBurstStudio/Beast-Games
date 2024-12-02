@@ -20,7 +20,6 @@ export class LoginService implements OnStart {
 				if (!playerLoggedIn.last) {
 					// first time logging in
 					// give welcome rewards
-					orderedPlayerData.xp.UpdateBy(75);
 					orderedPlayerData.cash.UpdateBy(this.welcomeReward);
 					const playerData = store.getState(selectPlayerData(tostring(player.UserId)));
 					AnalyticsService.LogEconomyEvent(
