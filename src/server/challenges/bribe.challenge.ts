@@ -30,35 +30,37 @@ export class BribeChallenge extends BasePlatformChallenge {
 			originalAmount: this.bribeAmount,
 		});
 
-		Events.challenges.bribeChallenge.acceptBribe.connect((player) => {
-			if (this.acceptedBribes.has(player)) return;
-			this.acceptedBribes.add(player);
-			this.playersInChallenge = this.playersInChallenge.filter((p) => p !== player);
+		this.obliterator.Add(
+			Events.challenges.bribeChallenge.acceptBribe.connect((player) => {
+				if (this.acceptedBribes.has(player)) return;
+				this.acceptedBribes.add(player);
+				this.playersInChallenge = this.playersInChallenge.filter((p) => p !== player);
 
-			this.changePlatformState(player, "eliminated");
+				this.changePlatformState(player, "eliminated");
 
-			Events.challenges.bribeChallenge.updateBribe.broadcast({
-				playerCount: this.acceptedBribes.size(),
-				originalAmount: this.bribeAmount,
-			});
-
-			if (this.acceptedBribes.size() === this.playersInChallenge.size() + this.acceptedBribes.size()) {
-				Events.announcer.clearCountdown.broadcast();
-				store.setChallenge(undefined);
-
-				this.acceptedBribes.forEach((player) => {
-					spawn(() => {
-						const data = new OrderedPlayerData(player);
-						data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
-						task.wait(2);
-						this.dropCharacter(player.Character as CharacterRigR6);
-					});
+				Events.challenges.bribeChallenge.updateBribe.broadcast({
+					playerCount: this.acceptedBribes.size(),
+					originalAmount: this.bribeAmount,
 				});
-				return;
-			}
-		});
+
+				if (this.acceptedBribes.size() === this.playersInChallenge.size() + this.acceptedBribes.size()) {
+					Events.announcer.clearCountdown.broadcast();
+					store.setChallenge(undefined);
+
+					return;
+				}
+			}),
+		);
 
 		await countdown({ seconds: this.BRIBE_TIME, showGo: false });
 		store.setChallenge(undefined);
+
+		this.acceptedBribes.forEach((player) => {
+			const data = new OrderedPlayerData(player);
+			data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
+			task.wait(2);
+			this.dropCharacter(player.Character as CharacterRigR6);
+		});
+		task.wait(4);
 	}
 }
