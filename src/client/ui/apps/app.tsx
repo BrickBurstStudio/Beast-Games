@@ -17,9 +17,9 @@ import InventoryApp from "./menu/pages/inventory";
 import SettingsApp from "./menu/pages/settings";
 import ShopApp from "./menu/pages/shop";
 import TradingApp from "./menu/pages/trading";
+import { MessageApp } from "./message";
 import QueueApp from "./queue";
 import SpectateApp from "./spectate";
-import { MessageApp } from "./message";
 
 export default function App() {
 	const page = useSelector(selectGuiPage);

@@ -1,5 +1,5 @@
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { Players, ServerStorage } from "@rbxts/services";
+import { Players, RunService, ServerStorage } from "@rbxts/services";
 import { Gizmo } from "server/classes/Gizmo";
 import { Pugil } from "server/classes/gizmos/Pugil";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
@@ -9,7 +9,7 @@ export class PugilChallenge extends BaseChallenge {
 	protected challengeName = "Pugil" as const;
 	protected rules = ["Knockout opponents to win!"];
 	protected floor = false;
-	protected challengeDuration = 60 * 2;
+	protected challengeDuration = RunService.IsStudio() ? 30 : 60 * 2;
 	private finished = false;
 
 	// for more efficient hit validation
