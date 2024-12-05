@@ -28,6 +28,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 	readonly runTime = 30;
 	readonly playerSelections: { [key: Player["UserId"]]: BriefcaseComponent } = {};
 	cases = 0;
+	barrier: Part | undefined;
 
 	briefcases: BriefcaseComponent[] = [];
 	revealing = false;
@@ -37,6 +38,34 @@ export class BriefcaseChallenge extends BaseChallenge {
 			this.obliterator.Add(Gizmo.give(p, Push), "destroy");
 		});
 
+		this.RandomizeCases();
+
+		await countdown({ seconds: 10, description: "Showing cases...", showGo: false });
+		this.ToggleCases(true);
+		task.wait(1);
+		this.ToggleCases(false);
+		await countdown({ seconds: 10, description: "Race in..." });
+
+		this.barrier?.Destroy();
+
+		// todo: wait until time
+		const t = DateTime.now().UnixTimestamp;
+		countdown({ seconds: this.runTime, description: "Pick a case!", showGo: false });
+		while (
+			!this.playersInChallenge.every((p) => p.UserId in this.playerSelections) &&
+			DateTime.now().UnixTimestamp - t < this.runTime
+		)
+			task.wait();
+		Events.announcer.clearCountdown.broadcast();
+
+		task.wait(3);
+		this.ToggleCases(true);
+		task.wait(3);
+		this.EliminatePlayers();
+		task.wait(1); // to process death events, just to be safe
+	}
+
+	protected async setup() {
 		this.cases = math.ceil(this.playersInChallenge.size() / 2) + this.badBriefcases;
 		const grid = generatePlayerGrid(this.cases, 10);
 		const largestY = this.GetLargestSubarray(grid)!;
@@ -100,32 +129,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 			});
 		});
 
-		this.RandomizeCases();
-
-		await announce([
-			`Only ${this.cases - this.badBriefcases} cases here are safe. ${this.badBriefcases} cases are deadly.`,
-		]);
-		this.ToggleCases(true);
-		await countdown({ seconds: this.memorizeTime, description: "Memorize the safe cases!" });
-		this.ToggleCases(false);
-		barrier.Destroy();
-
-		// todo: wait until time
-		const t = DateTime.now().UnixTimestamp;
-		countdown({ seconds: this.runTime, description: "Pick a case!", showGo: false });
-		while (
-			!this.playersInChallenge.every((p) => p.UserId in this.playerSelections) &&
-			DateTime.now().UnixTimestamp - t < this.runTime
-		)
-			task.wait();
-		Events.announcer.clearCountdown.broadcast();
-
-		announce(["It's time to reveal who won, and who will die..."]);
-		task.wait(3);
-		this.ToggleCases(true);
-		task.wait(3);
-		this.EliminatePlayers();
-		task.wait(1); // to process death events, just to be safe
+		this.barrier = barrier;
 	}
 
 	private RandomizeCases() {
