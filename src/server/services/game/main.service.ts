@@ -5,12 +5,12 @@ import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BribeChallenge } from "server/challenges/bribe.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
-import { FlagMemoryChallenge } from "server/challenges/flag-memory.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
 import { KingOfHillChallenge } from "server/challenges/king-of-hill.challenge";
 import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { SplitOrStealChallenge } from "server/challenges/split-or-steal.challenge";
-import { TowerChallenge } from "server/challenges/tower.challenge";
+import { TowerBuildChallenge } from "server/challenges/tower-build.challenge";
+import { TowerDodgeballChallenge } from "server/challenges/tower-dodgeball.challenge";
 import { Events } from "server/network";
 import { LOBBY_PLACE_ID, MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
@@ -41,14 +41,12 @@ export class GameMainService implements OnStart {
 
 		await new BribeChallenge().start();
 
-		// await new BribeChallenge().start();
-
 		const availableChallenges = [
 			GoldRushChallenge,
 			PugilChallenge,
 			BoulderChallenge,
-			TowerChallenge,
-			// FlagMemoryChallenge,
+			TowerDodgeballChallenge,
+			TowerBuildChallenge,
 			BriefcaseChallenge,
 		];
 

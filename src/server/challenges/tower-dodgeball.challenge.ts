@@ -7,7 +7,7 @@ import { Events } from "server/network";
 import { countdown } from "server/util/countdown";
 import { BasePlatformChallenge } from "./base-platform.challenge";
 
-export class TowerChallenge extends BasePlatformChallenge {
+export class TowerDodgeballChallenge extends BasePlatformChallenge {
 	private readonly TOWER_PLACE_TIME = 30;
 	protected challengeDuration = 60;
 	protected readonly challengeName = "Tower Dodgeball";
