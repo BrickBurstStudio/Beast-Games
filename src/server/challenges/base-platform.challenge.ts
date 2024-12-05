@@ -24,7 +24,7 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 
 	protected async setup() {
 		BasePlatformChallenge.transformScene("void");
-		this.platformDistance = this.challengeName === "Tower" ? 50 : 12;
+		this.platformDistance = this.challengeName === "Tower Dodgeball" ? 50 : 12;
 		this.generatePlatforms();
 
 		this.obliterator.Add(

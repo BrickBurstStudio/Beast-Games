@@ -7,9 +7,10 @@ export const CHALLENGE_NAMES = [
 	"Gold Rush",
 	"Flag Memory",
 	"Briefcase Memory",
-	"Tower",
+	"Build a Tower",
 	"Split or Steal",
 	"King of the Hill",
+	"Tower Dodgeball",
 ] as const;
 export type ChallengeName = (typeof CHALLENGE_NAMES)[number];
 

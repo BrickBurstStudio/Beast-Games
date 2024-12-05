@@ -11,7 +11,7 @@ export class TowerChallenge extends BasePlatformChallenge {
 	private readonly TOWER_PLACE_TIME = 30;
 	private readonly CHALLENGE_DURATION = 60;
 
-	protected readonly challengeName = "Tower";
+	protected readonly challengeName = "Tower Dodgeball";
 	protected readonly rules = [
 		"Place your tower on the platform by clicking/tapping somewhere",
 		"If you touch your tower, it will fall over, and you will be out",
