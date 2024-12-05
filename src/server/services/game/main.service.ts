@@ -20,7 +20,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 export class GameMainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
-	private static EXPECTED_PLAYERS_DEFAULT = 1;
+	private static EXPECTED_PLAYERS_DEFAULT = 2;
 	private static JOIN_TIMEOUT = 20;
 
 	/* ---------------------------------- Class --------------------------------- */
