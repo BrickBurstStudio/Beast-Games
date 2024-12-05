@@ -18,7 +18,7 @@ export default function AnnounceRules() {
 			setRules(rules);
 			setChallengeName(challengeName.upper());
 			setHide(false);
-			task.wait(rules.size() * RULES_CONFIGS.timeBetweenRules + RULES_CONFIGS.timeAfterRules);
+			task.wait(rules.size() * RULES_CONFIGS.timePerRule + RULES_CONFIGS.timeAfterRules);
 			setHide(true);
 		});
 
@@ -97,7 +97,7 @@ export default function AnnounceRules() {
 							animate={{ Transparency: 0, BackgroundTransparency: 1 }}
 							transition={{
 								duration: 1.5,
-								delay: i * RULES_CONFIGS.timeBetweenRules,
+								delay: i * RULES_CONFIGS.timePerRule,
 								easingStyle: Enum.EasingStyle.Cubic,
 								easingDirection: Enum.EasingDirection.Out,
 							}}

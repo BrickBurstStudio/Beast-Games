@@ -10,7 +10,7 @@ export async function announceRules({ challengeName, rules }: { challengeName: s
 
 		task.spawn(() => {
 			task.wait(
-				RULES_CONFIGS.timeBetweenRules * rules.size() +
+				RULES_CONFIGS.timePerRule * rules.size() +
 					RULES_CONFIGS.timeAfterRules +
 					RULES_CONFIGS.animationTime * 2 +
 					0.5, // network time
