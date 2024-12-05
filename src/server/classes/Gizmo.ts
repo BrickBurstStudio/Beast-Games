@@ -26,7 +26,7 @@ export abstract class Gizmo {
 	protected owner: Player;
 	protected obliterator = new Janitor();
 	protected readonly activatedDebounce: Debounced<(inputData: InputData | undefined) => void>;
-	private destroyed = false;
+	public destroyed = false;
 
 	/* ------------------------------ Configurable ------------------------------ */
 	// Default values here
@@ -96,9 +96,7 @@ export abstract class Gizmo {
 			if (this.animations.idle) Events.animationController.stop(this.owner, this.animations.idle);
 		});
 
-		Object.entries(this.animationEvents).forEach(([event, func]) => {
-			
-		});
+		Object.entries(this.animationEvents).forEach(([event, func]) => {});
 	}
 
 	private setupTool() {
@@ -110,6 +108,12 @@ export abstract class Gizmo {
 			if (!child.IsA("BasePart")) return;
 			child.Massless = true;
 			child.CanCollide = false;
+		});
+
+		this.tool.Destroying.Connect(() => {
+			if (this.destroyed) return;
+			this.destroyed = true;
+			this.obliterator.Destroy();
 		});
 	}
 

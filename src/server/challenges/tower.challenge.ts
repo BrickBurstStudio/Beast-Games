@@ -45,7 +45,7 @@ export class TowerChallenge extends BasePlatformChallenge {
 		this.setupTowers();
 		destroyGizmos();
 		await this.dropNonBuilders();
-		this.giveBallGizmos();
+		const allBallGizmosDestroyed = this.giveBallGizmos();
 
 		await Promise.race([
 			countdown({ seconds: this.CHALLENGE_DURATION, description: "ENDING IN", showGo: false }),
@@ -57,6 +57,17 @@ export class TowerChallenge extends BasePlatformChallenge {
 							break;
 						}
 						task.wait(0.5);
+					}
+				});
+			}),
+			new Promise<void>((resolve) => {
+				task.spawn(() => {
+					while (true) {
+						if (allBallGizmosDestroyed()) {
+							resolve();
+							break;
+						}
+						task.wait(1);
 					}
 				});
 			}),
@@ -122,9 +133,15 @@ export class TowerChallenge extends BasePlatformChallenge {
 	}
 
 	private giveBallGizmos() {
+		const gizmos = new Array<Gizmo>();
 		this.playersToTowers.forEach((_, player) => {
-			Gizmo.give(player, Ball);
+			const gizmo = Gizmo.give(player, Ball);
+			gizmos.push(gizmo);
 		});
+
+		return () => {
+			return gizmos.every((gizmo) => gizmo.destroyed);
+		};
 	}
 
 	private allPlayersPlacedTowers(): boolean {
