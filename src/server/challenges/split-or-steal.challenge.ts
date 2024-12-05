@@ -1,3 +1,4 @@
+import { CharacterRigR6 } from "@rbxts/promise-character";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { store } from "server/store";
@@ -5,7 +6,6 @@ import { announce } from "server/util/announce";
 import { countdown } from "server/util/countdown";
 import { ChallengeName } from "shared/configs/gui";
 import { BasePlatformChallenge } from "./base-platform.challenge";
-import { CharacterRigR6 } from "@rbxts/promise-character";
 
 type PlayerChoice = "split" | "steal" | undefined;
 
@@ -27,7 +27,7 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 		Events.challenges.splitOrStealChallenge.makeChoice.connect((player, choice) => {
 			if (this.playerChoices.get(player) !== undefined) return;
 			this.playerChoices.set(player, choice);
-			this.changePlatformState(player, "safe");
+			this.changePlatformState(player, "warning");
 
 			// Check if all players have made their choices
 			if (this.playersInChallenge.every((p) => this.playerChoices.get(p) !== undefined)) {
