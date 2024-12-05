@@ -38,6 +38,9 @@ interface ServerEvents {
 		flagMemoryChallenge: {
 			placeFlag: (flagIndex: number, position: Vector3, rotation: number) => void;
 		};
+		towerBuildChallenge: {
+			click: () => void;
+		};
 	};
 	useAction: (args: { actionName: ActionName; toPlayer: Player }) => void;
 	reset: () => void;

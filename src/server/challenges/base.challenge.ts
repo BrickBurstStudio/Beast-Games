@@ -25,6 +25,7 @@ export abstract class BaseChallenge {
 	protected playersInChallenge: Player[] = [];
 	protected floor = true;
 	protected contestantDiedOrLeft = new Instance("BindableEvent");
+	protected challengeDuration = 0;
 	static round = 0;
 
 	/* ---------------------------- Lifecycle Methods ---------------------------- */
@@ -43,7 +44,20 @@ export abstract class BaseChallenge {
 		store.setChallenge(this.challengeName);
 
 		await this.enablePlayerMovement();
-		await this.main();
+
+		if (this.challengeDuration > 0) {
+			await Promise.race([
+				this.main(),
+				new Promise((resolve) => {
+					this.startChallengeTimer();
+					task.wait(this.challengeDuration);
+					resolve(undefined);
+				}),
+			]);
+		} else {
+			await this.main();
+		}
+
 		Events.announcer.clearCountdown.broadcast();
 		await this.rewardPlayers();
 		store.setChallenge(undefined);
@@ -54,7 +68,17 @@ export abstract class BaseChallenge {
 		this.obliterator.Cleanup();
 	}
 
-	protected abstract main(): Promise<void>;
+	private startChallengeTimer() {
+		countdown({ seconds: this.challengeDuration });
+	}
+
+	/**
+	 * Called when the challenge timer expires.
+	 * Override this method in child classes to handle timer expiration.
+	 */
+	protected async onTimerExpired(): Promise<void> {}
+
+	protected abstract main(): Promise<any>;
 
 	protected abstract spawnCharacter({ player, character, i }: SpawnCharacterArgs): void;
 	protected async setup() {}

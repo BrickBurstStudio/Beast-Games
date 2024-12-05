@@ -5,12 +5,12 @@ import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BribeChallenge } from "server/challenges/bribe.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
-import { FlagMemoryChallenge } from "server/challenges/flag-memory.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
 import { KingOfHillChallenge } from "server/challenges/king-of-hill.challenge";
 import { PugilChallenge } from "server/challenges/pugil.challenge";
 import { SplitOrStealChallenge } from "server/challenges/split-or-steal.challenge";
-import { TowerChallenge } from "server/challenges/tower.challenge";
+import { TowerBuildChallenge } from "server/challenges/tower-build.challenge";
+import { TowerDodgeballChallenge } from "server/challenges/tower-dodgeball.challenge";
 import { Events } from "server/network";
 import { LOBBY_PLACE_ID, MAIN_PLACE_ID } from "shared/configs/places";
 import { forEveryPlayer } from "shared/utils/functions/forEveryPlayer";
@@ -20,7 +20,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 export class GameMainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
-	private static EXPECTED_PLAYERS_DEFAULT = 3;
+	private static EXPECTED_PLAYERS_DEFAULT = 1;
 	private static JOIN_TIMEOUT = 20;
 
 	/* ---------------------------------- Class --------------------------------- */
@@ -30,7 +30,7 @@ export class GameMainService implements OnStart {
 
 	/* ------------------------------- Life Cycle ------------------------------- */
 	async onStart() {
-		// if (game.PlaceId !== MAIN_PLACE_ID) return;
+		if (game.PlaceId !== MAIN_PLACE_ID) return;
 		this.setupReset();
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
@@ -45,8 +45,8 @@ export class GameMainService implements OnStart {
 			GoldRushChallenge,
 			PugilChallenge,
 			BoulderChallenge,
-			TowerChallenge,
-			// FlagMemoryChallenge,
+			TowerDodgeballChallenge,
+			TowerBuildChallenge,
 			BriefcaseChallenge,
 		];
 

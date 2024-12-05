@@ -3,9 +3,7 @@ import { Players, ServerStorage } from "@rbxts/services";
 import { Gizmo } from "server/classes/Gizmo";
 import { Pugil } from "server/classes/gizmos/Pugil";
 import { Events } from "server/network";
-import { store } from "server/store";
 import { announce } from "server/util/announce";
-import { countdown } from "server/util/countdown";
 import { KING_OF_HILL_CONFIG } from "shared/configs/challenges/king-of-hill";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
@@ -20,41 +18,54 @@ export class KingOfHillChallenge extends BaseChallenge {
 		"Everyone else will be eliminated",
 	];
 
-	private readonly ROUND_TIME = KING_OF_HILL_CONFIG.ROUND_TIME;
+	protected challengeDuration = 60 * 2;
 	private readonly POINTS_PER_SECOND = KING_OF_HILL_CONFIG.POINTS_PER_SECOND;
 	private readonly TARGET_SCORE = KING_OF_HILL_CONFIG.TARGET_SCORE;
 	private readonly SCORE_UPDATE_INTERVAL = KING_OF_HILL_CONFIG.SCORE_UPDATE_INTERVAL;
 
 	private playerScores = new Map<Player, number>();
 	private hillOccupants = new Set<Player>();
-	private finished = false;
 	private advancedPlayers = new Set<Player>();
 
 	protected async main() {
 		// Initialize scores
 		this.playersInChallenge.forEach((player) => {
 			this.playerScores.set(player, 0);
-			// Give each player a pugil
-			const pugil = Gizmo.give(player, Pugil);
+			Gizmo.give(player, Pugil);
 		});
 
-		// Set up hill detection
 		this.setupHillDetection();
-
-		// Enable player movement
 		await this.enablePlayerMovement();
 
-		// Start the main game loop
-		const mainLoop = this.startGameLoop();
-		const timeLimit = this.startTimeLimit();
+		// Main game loop
+		while (true) {
+			this.hillOccupants.forEach((player) => {
+				const currentScore = this.playerScores.get(player) ?? 0;
+				const newScore = currentScore + this.POINTS_PER_SECOND * this.SCORE_UPDATE_INTERVAL;
+				this.playerScores.set(player, newScore);
 
-		// Wait for either win condition or time limit
-		await Promise.race([mainLoop, timeLimit]);
+				if (newScore >= this.TARGET_SCORE && !this.advancedPlayers.has(player)) {
+					this.handlePlayerAdvance(player);
+				}
+			});
 
-		// Handle players who didn't advance
+			this.broadcastScores();
+
+			if (this.advancedPlayers.size() >= 2) {
+				break;
+			}
+
+			task.wait(this.SCORE_UPDATE_INTERVAL);
+		}
+
 		await this.eliminateRemainingPlayers();
+	}
 
-		store.setChallenge(undefined);
+	protected async onTimerExpired() {
+		const sortedPlayers = this.getSortedPlayersByScore().filter((_, i) => i < 2);
+		for (const player of sortedPlayers) {
+			await this.handlePlayerAdvance(player);
+		}
 	}
 
 	protected spawnCharacter({ character }: SpawnCharacterArgs): void {
@@ -95,48 +106,6 @@ export class KingOfHillChallenge extends BaseChallenge {
 			}),
 			"Disconnect",
 		);
-	}
-
-	private async startGameLoop() {
-		while (!this.finished) {
-			// Award points to players on hill
-			this.hillOccupants.forEach((player) => {
-				const currentScore = this.playerScores.get(player) ?? 0;
-				const newScore = currentScore + this.POINTS_PER_SECOND * this.SCORE_UPDATE_INTERVAL;
-				this.playerScores.set(player, newScore);
-
-				// Check for winners
-				if (newScore >= this.TARGET_SCORE && !this.advancedPlayers.has(player)) {
-					this.handlePlayerAdvance(player);
-				}
-			});
-
-			// Update UI with current scores
-			this.broadcastScores();
-
-			// Check if we have our 2 winners
-			if (this.advancedPlayers.size() >= 2) {
-				this.finished = true;
-				break;
-			}
-
-			task.wait(this.SCORE_UPDATE_INTERVAL);
-		}
-	}
-
-	private async startTimeLimit() {
-		await countdown({
-			seconds: this.ROUND_TIME,
-		});
-
-		// If time runs out, advance top 2 scoring players
-		if (!this.finished) {
-			const sortedPlayers = this.getSortedPlayersByScore().filter((_, i) => i < 2);
-			for (const player of sortedPlayers) {
-				await this.handlePlayerAdvance(player);
-			}
-			this.finished = true;
-		}
 	}
 
 	private async handlePlayerAdvance(player: Player) {

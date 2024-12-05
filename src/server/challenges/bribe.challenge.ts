@@ -1,17 +1,15 @@
-import { Events } from "server/network";
-import { BasePlatformChallenge } from "./base-platform.challenge";
-import { announce } from "server/util/announce";
-import { countdown } from "server/util/countdown";
-import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
-import { store } from "server/store";
-import { Gizmo } from "server/classes/Gizmo";
-import { Tower } from "server/classes/gizmos/Tower";
 import { CharacterRigR6 } from "@rbxts/promise-character";
+import { RunService } from "@rbxts/services";
+import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
+import { Events } from "server/network";
+import { store } from "server/store";
+import { announce } from "server/util/announce";
+import { BasePlatformChallenge } from "./base-platform.challenge";
 
 export class BribeChallenge extends BasePlatformChallenge {
+	protected challengeDuration = RunService.IsStudio() ? 5 : 30;
 	private readonly PLAYER_MULTIPLIER = 10_000;
 	private readonly BRIBE_CAP = 500_000;
-	private readonly BRIBE_TIME = 10;
 
 	protected readonly challengeName = "Bribe" as const;
 	protected readonly rules = [
@@ -52,15 +50,19 @@ export class BribeChallenge extends BasePlatformChallenge {
 			}),
 		);
 
-		await countdown({ seconds: this.BRIBE_TIME, showGo: false });
-		store.setChallenge(undefined);
+		while (true) {
+			task.wait(0.1);
 
-		this.acceptedBribes.forEach((player) => {
-			const data = new OrderedPlayerData(player);
-			data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
-			task.wait(2);
-			this.dropCharacter(player.Character as CharacterRigR6);
-		});
-		task.wait(4);
+			if (this.playersInChallenge.size() !== 0) continue;
+
+			Events.announcer.clearCountdown.broadcast();
+			this.acceptedBribes.forEach((player) => {
+				const data = new OrderedPlayerData(player);
+				data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
+				this.dropCharacter(player.Character as CharacterRigR6);
+			});
+			await announce(["Everyone accepted the bribe"]);
+			break;
+		}
 	}
 }

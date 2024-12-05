@@ -5,12 +5,13 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 import { spawnSound } from "shared/utils/functions/spawnSound";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 
-type PlatformState = "safe" | "eliminated" | "neutral";
+type PlatformState = "safe" | "warning" | "eliminated" | "neutral";
 
 export abstract class BasePlatformChallenge extends BaseChallenge {
 	/* ------------------------------ Configurables ----------------------------- */
 	static PLATFORM_STATE_COLORS: Record<PlatformState, Color3> = {
 		safe: Color3.fromRGB(0, 255, 0),
+		warning: Color3.fromRGB(255, 255, 0),
 		eliminated: Color3.fromRGB(255, 0, 0),
 		neutral: Color3.fromRGB(255, 255, 255),
 	};
@@ -24,7 +25,7 @@ export abstract class BasePlatformChallenge extends BaseChallenge {
 
 	protected async setup() {
 		BasePlatformChallenge.transformScene("void");
-		this.platformDistance = this.challengeName === "Tower" ? 50 : 12;
+		this.platformDistance = this.challengeName === "Tower Dodgeball" ? 50 : 12;
 		this.generatePlatforms();
 
 		this.obliterator.Add(

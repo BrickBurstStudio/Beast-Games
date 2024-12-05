@@ -1,3 +1,5 @@
+import { RunService } from "@rbxts/services";
+
 export const ANNOUNCER_CONFIGS = {
 	animationTime: 0.5,
 	keystrokeTime: 0.02,
@@ -26,6 +28,6 @@ export const RICH_TEXT_REPLACE = {
 
 export const RULES_CONFIGS = {
 	animationTime: 1,
-	timeBetweenRules: 5,
-	timeAfterRules: 2.5,
+	timePerRule: RunService.IsStudio() ? 0 : 5,
+	timeAfterRules: RunService.IsStudio() ? 0 : 1,
 } as const;

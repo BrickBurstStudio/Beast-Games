@@ -1,3 +1,4 @@
+import { CharacterRigR6 } from "@rbxts/promise-character";
 import { CollectionService, Players } from "@rbxts/services";
 import { Gizmo } from "server/classes/Gizmo";
 import { Ball } from "server/classes/gizmos/Ball";
@@ -5,13 +6,11 @@ import { Tower } from "server/classes/gizmos/Tower";
 import { Events } from "server/network";
 import { countdown } from "server/util/countdown";
 import { BasePlatformChallenge } from "./base-platform.challenge";
-import { CharacterRigR6 } from "@rbxts/promise-character";
 
-export class TowerChallenge extends BasePlatformChallenge {
+export class TowerDodgeballChallenge extends BasePlatformChallenge {
 	private readonly TOWER_PLACE_TIME = 30;
-	private readonly CHALLENGE_DURATION = 60;
-
-	protected readonly challengeName = "Tower";
+	protected challengeDuration = 60;
+	protected readonly challengeName = "Tower Dodgeball";
 	protected readonly rules = [
 		"Place your tower on the platform by clicking/tapping somewhere",
 		"If you touch your tower, it will fall over, and you will be out",
@@ -19,7 +18,6 @@ export class TowerChallenge extends BasePlatformChallenge {
 		"Throw the ball at other players to eliminate them",
 	];
 	private playersToTowers = new Map<Player, BlockTower>();
-	private finished = false;
 
 	protected async main() {
 		const destroyGizmos = this.giveTowerGizmos();
@@ -48,26 +46,12 @@ export class TowerChallenge extends BasePlatformChallenge {
 		await this.dropNonBuilders();
 		this.giveBallGizmos();
 
-		await Promise.race([
-			countdown({ seconds: this.CHALLENGE_DURATION, description: "ENDING IN", showGo: false }),
-			new Promise<void>((resolve) => {
-				task.spawn(() => {
-					while (true) {
-						if (this.playersInChallenge.size() === 1) {
-							resolve();
-							break;
-						}
-						task.wait(0.5);
-					}
-				});
-			}),
-		]);
+		// Wait until either timer expires or only one player remains
+		while (this.playersInChallenge.size() > 1) task.wait(0.5);
 
-		this.playersToTowers.forEach((tower, player) => {
+		this.playersToTowers.forEach((tower) => {
 			tower.Destroy();
 		});
-
-		this.finished = true;
 	}
 
 	private setupTowers() {
@@ -83,6 +67,7 @@ export class TowerChallenge extends BasePlatformChallenge {
 
 			tower.GetAttributeChangedSignal("dropped").Connect(() => {
 				if (!tower.GetAttribute("dropped")) return;
+
 				this.changePlatformState(owner, "eliminated");
 				this.playersToTowers.delete(owner);
 				task.wait(2);
