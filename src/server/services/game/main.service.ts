@@ -41,6 +41,8 @@ export class GameMainService implements OnStart {
 
 		await new BribeChallenge().start();
 
+		// await new BribeChallenge().start();
+
 		const availableChallenges = [
 			GoldRushChallenge,
 			PugilChallenge,

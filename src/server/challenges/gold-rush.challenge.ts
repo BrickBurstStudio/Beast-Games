@@ -1,18 +1,13 @@
 import { Components } from "@flamework/components";
 import { Dependency } from "@flamework/core";
-import Object from "@rbxts/object-utils";
 import { CharacterRigR6 } from "@rbxts/promise-character";
-import { Players, ReplicatedStorage, ServerStorage } from "@rbxts/services";
-import { ClaimComponent } from "../components/claim-components/claim.component";
-import { FlagPoleComponent } from "../components/claim-components/flag-pole.component";
-import { Events } from "server/network";
-import { announce } from "server/util/announce";
-import { getCharacter } from "shared/utils/functions/getCharacter";
-import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
-import { countdown } from "server/util/countdown";
-import { GreenClaimComponent } from "server/components/claim-components/green-claim.component";
+import { ServerStorage } from "@rbxts/services";
 import { Gizmo } from "server/classes/Gizmo";
 import { Push } from "server/classes/gizmos/Push";
+import { GreenClaimComponent } from "server/components/claim-components/green-claim.component";
+import { announce } from "server/util/announce";
+import { countdown } from "server/util/countdown";
+import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 
 export class GoldRushChallenge extends BaseChallenge {
 	protected readonly challengeName = "Gold Rush" as const;
@@ -36,15 +31,25 @@ export class GoldRushChallenge extends BaseChallenge {
 			this.safePlayers = this.safePlayers.filter((p) => p !== player);
 		});
 
-		// Set up claim events
+		// Start 2 minute countdown
+		// const CHALLENGE_DURATION = 60 * 2;
+		const CHALLENGE_DURATION = 5;
+		countdown({ seconds: CHALLENGE_DURATION });
+		// Eliminate players who haven't claimed a platform
+		const startTime = tick();
+		while (!this.isFinished()) {
+			if (tick() - startTime >= CHALLENGE_DURATION) break;
+			task.wait(0.25);
+		}
 
-		while (!this.isFinished()) task.wait(0.25);
+		// Eliminate players who haven't claimed a platform
 		this.playersInChallenge.forEach((player) => {
 			if (!this.safePlayers.find((p) => p === player) && player.Character !== undefined) {
-				// todo : add feat for displaying why plr died (ex. OUT OF TIME, NO MORE PLATFORMS, etc.)
 				(player.Character as CharacterRigR6).Humanoid.Health = 0;
 			}
 		});
+
+		await announce(["Time's up! Players who haven't claimed a platform have been eliminated!"]);
 	}
 
 	protected async isSetupCompleted() {
