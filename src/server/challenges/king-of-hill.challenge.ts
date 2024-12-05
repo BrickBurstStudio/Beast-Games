@@ -88,23 +88,34 @@ export class KingOfHillChallenge extends BaseChallenge {
 
 	private setupHillDetection() {
 		const hillPlatform = this.map.Hill.Top;
+		const HILL_RADIUS = hillPlatform.Size.Z / 2; // Distance in studs
 
+		// Run the check periodically
 		this.obliterator.Add(
-			hillPlatform.Touched.Connect((part) => {
-				const player = Players.GetPlayerFromCharacter(part.Parent);
-				if (!player || !this.playersInChallenge.includes(player)) return;
-				this.hillOccupants.add(player);
-			}),
-			"Disconnect",
-		);
+			task.spawn(async () => {
+				while (true) {
+					for (const player of this.playersInChallenge) {
+						const character = await getCharacter(player);
+						if (!character) continue;
 
-		this.obliterator.Add(
-			hillPlatform.TouchEnded.Connect((part) => {
-				const player = Players.GetPlayerFromCharacter(part.Parent);
-				if (!player) return;
-				this.hillOccupants.delete(player);
+						const rootPart = character.HumanoidRootPart;
+						if (!rootPart) continue;
+
+						const distance = rootPart.Position.sub(hillPlatform.Position).Magnitude;
+
+						if (distance <= HILL_RADIUS) {
+							if (!this.hillOccupants.has(player)) {
+								this.hillOccupants.add(player);
+							}
+						} else {
+							if (this.hillOccupants.has(player)) {
+								this.hillOccupants.delete(player);
+							}
+						}
+					}
+					task.wait(1);
+				}
 			}),
-			"Disconnect",
 		);
 	}
 

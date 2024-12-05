@@ -44,7 +44,7 @@ export class TowerDodgeballChallenge extends BasePlatformChallenge {
 		this.setupTowers();
 		destroyGizmos();
 		await this.dropNonBuilders();
-		this.giveBallGizmos();
+		const allBallGizmosDestroyed = this.giveBallGizmos();
 
 		// Wait until either timer expires or only one player remains
 		while (this.playersInChallenge.size() > 1) task.wait(0.5);
@@ -112,9 +112,15 @@ export class TowerDodgeballChallenge extends BasePlatformChallenge {
 	}
 
 	private giveBallGizmos() {
+		const gizmos = new Array<Gizmo>();
 		this.playersToTowers.forEach((_, player) => {
-			Gizmo.give(player, Ball);
+			const gizmo = Gizmo.give(player, Ball);
+			gizmos.push(gizmo);
 		});
+
+		return () => {
+			return gizmos.every((gizmo) => gizmo.destroyed);
+		};
 	}
 
 	private allPlayersPlacedTowers(): boolean {

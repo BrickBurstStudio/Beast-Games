@@ -61,6 +61,7 @@ export abstract class BaseChallenge {
 		Events.announcer.clearCountdown.broadcast();
 		await this.rewardPlayers();
 		store.setChallenge(undefined);
+		task.wait(5);
 
 		Events.animations.setBlackFade.broadcast(true);
 

@@ -26,7 +26,7 @@ export abstract class Gizmo {
 	protected owner: Player;
 	protected obliterator = new Janitor();
 	protected readonly activatedDebounce: Debounced<(inputData: InputData | undefined) => void>;
-	private destroyed = false;
+	public destroyed = false;
 
 	/* ------------------------------ Configurable ------------------------------ */
 	// Default values here
@@ -79,7 +79,7 @@ export abstract class Gizmo {
 		});
 
 		primary.Anchored = false;
-		this.obliterator.Add(this.tool);
+		this.obliterator.Add(this.tool, "Destroy");
 		this.tool.Parent = this.owner.Character;
 	}
 
@@ -109,6 +109,12 @@ export abstract class Gizmo {
 			child.Massless = true;
 			child.CanCollide = false;
 		});
+
+		this.tool.Destroying.Connect(() => {
+			if (this.destroyed) return;
+			this.destroyed = true;
+			this.obliterator.Cleanup();
+		});
 	}
 
 	private setup() {
@@ -122,7 +128,7 @@ export abstract class Gizmo {
 
 	destroy() {
 		if (this.destroyed) return;
-		this.obliterator.Destroy();
+		this.obliterator.Cleanup();
 		this.destroyed = true;
 	}
 
