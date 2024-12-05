@@ -27,6 +27,7 @@ export class GoldRushChallenge extends BaseChallenge {
 	private allGreenClaims: GreenClaimComponent[] = [];
 	private greenClaims: GreenClaimComponent[] = [];
 	private safePlayers: Player[] = [];
+	private spawnOffset = 0;
 	protected async main() {
 		this.playersInChallenge.forEach((player) => {
 			Gizmo.give(player, Push);
@@ -102,6 +103,10 @@ export class GoldRushChallenge extends BaseChallenge {
 
 	protected spawnCharacter({ character, i }: SpawnCharacterArgs): void {
 		const children = this.map.Spawns.GetChildren() as BasePart[];
-		character.PivotTo(children[i % children.size()].CFrame);
+		character.PivotTo(children[i % children.size()].CFrame.ToWorldSpace(new CFrame(0, 0, this.spawnOffset)));
+
+		if (i % children.size() === 0) {
+			this.spawnOffset += 1.25;
+		}
 	}
 }
