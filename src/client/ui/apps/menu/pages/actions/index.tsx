@@ -5,6 +5,7 @@ import MenuFrame from "client/ui/components/menu-frame";
 import { px } from "client/ui/utils/usePx";
 import { ActionName, actions } from "shared/configs/action";
 
+import { selectChallenge } from "shared/store/selectors/client";
 import { selectPlayerBalance } from "shared/store/selectors/players";
 import { BUTTONS } from "../../buttons";
 import PlayerSelectModal from "./playerSelectModal";
@@ -16,6 +17,7 @@ export default function ActionsPage() {
 	const playerTokens = useSelector(selectPlayerBalance(tostring(Players.LocalPlayer.UserId), "action_tokens")) ?? 1;
 	const [selectedActionName, setSelectedActionName] = useState<ActionName>();
 	const [showTokenPackages, setShowTokenPackages] = useState(false);
+	const currentChallenge = useSelector(selectChallenge);
 
 	return (
 		<>
@@ -69,67 +71,85 @@ export default function ActionsPage() {
 						HorizontalAlignment={Enum.HorizontalAlignment.Center}
 						VerticalAlignment={Enum.VerticalAlignment.Center}
 					/>
-					{actions.map((action) => (
-						<frame
-							BackgroundColor3={new Color3(0.1, 0.1, 0.1)}
-							BorderSizePixel={0}
-							BackgroundTransparency={0.1}
-						>
-							<uicorner CornerRadius={new UDim(0, px(10))} />
-							<uipadding
-								PaddingTop={new UDim(0, px(15))}
-								PaddingBottom={new UDim(0, px(15))}
-								PaddingLeft={new UDim(0, px(30))}
-								PaddingRight={new UDim(0, px(30))}
-							/>
-							<uilistlayout
-								Padding={new UDim(0, px(15))}
-								FillDirection={Enum.FillDirection.Vertical}
-								HorizontalAlignment={Enum.HorizontalAlignment.Center}
-								VerticalAlignment={Enum.VerticalAlignment.Top}
-							/>
+					{actions.map((action) => {
+						const isBlacklisted =
+							currentChallenge && action.blacklistedChallenges.includes(currentChallenge as never);
+						const canAfford = playerTokens >= action.cost;
+						const isDisabled = isBlacklisted || !canAfford;
 
-							<textlabel
-								Text={action.name}
-								TextColor3={new Color3(1, 1, 1)}
-								FontFace={Font.fromName("GothamBold")}
-								Size={new UDim2(1, 0, 0, px(40))}
-								TextScaled
-								BackgroundTransparency={1}
-							/>
-
-							<textbutton
-								Text={`${action.cost} Token${action.cost === 1 ? "" : "s"}`}
-								TextSize={px(36)}
-								AutomaticSize={"XY"}
-								BackgroundColor3={
-									playerTokens >= action.cost ? new Color3(0.2, 0.6, 1) : new Color3(0.4, 0.4, 0.4)
-								}
-								TextColor3={new Color3(1, 1, 1)}
-								FontFace={Font.fromName("GothamBold")}
-								Event={{
-									MouseButton1Click: () => {
-										if (playerTokens >= action.cost) {
-											setSelectedActionName(action.name);
-										} else {
-											setShowTokenPackages(true);
-										}
-									},
-								}}
+						return (
+							<frame
+								BackgroundColor3={new Color3(0.1, 0.1, 0.1)}
+								BorderSizePixel={0}
+								BackgroundTransparency={isBlacklisted ? 0.5 : 0.1}
 							>
+								<uicorner CornerRadius={new UDim(0, px(10))} />
 								<uipadding
-									PaddingTop={new UDim(0, px(8))}
-									PaddingBottom={new UDim(0, px(8))}
-									PaddingLeft={new UDim(0, px(16))}
-									PaddingRight={new UDim(0, px(16))}
+									PaddingTop={new UDim(0, px(15))}
+									PaddingBottom={new UDim(0, px(15))}
+									PaddingLeft={new UDim(0, px(30))}
+									PaddingRight={new UDim(0, px(30))}
 								/>
-								<uicorner CornerRadius={new UDim(0, px(8))} />
-							</textbutton>
-						</frame>
-					))}
+								<uilistlayout
+									Padding={new UDim(0, px(15))}
+									FillDirection={Enum.FillDirection.Vertical}
+									HorizontalAlignment={Enum.HorizontalAlignment.Center}
+									VerticalAlignment={Enum.VerticalAlignment.Top}
+								/>
+
+								<textlabel
+									Text={action.name}
+									TextColor3={isBlacklisted ? new Color3(0.5, 0.5, 0.5) : new Color3(1, 1, 1)}
+									FontFace={Font.fromName("GothamBold")}
+									Size={new UDim2(1, 0, 0, px(40))}
+									TextScaled
+									BackgroundTransparency={1}
+								/>
+
+								{isBlacklisted ? (
+									<textlabel
+										Text="Not Available"
+										TextColor3={new Color3(1, 0.3, 0.3)}
+										FontFace={Font.fromName("GothamBold")}
+										Size={new UDim2(1, 0, 0, px(30))}
+										TextScaled
+										BackgroundTransparency={1}
+									/>
+								) : (
+									<textbutton
+										Text={`${action.cost} Token${action.cost === 1 ? "" : "s"}`}
+										TextSize={px(36)}
+										AutomaticSize={"XY"}
+										BackgroundColor3={
+											canAfford ? new Color3(0.2, 0.6, 1) : new Color3(0.4, 0.4, 0.4)
+										}
+										TextColor3={new Color3(1, 1, 1)}
+										FontFace={Font.fromName("GothamBold")}
+										Event={{
+											MouseButton1Click: () => {
+												if (!isDisabled) {
+													setSelectedActionName(action.name);
+												} else if (!canAfford) {
+													setShowTokenPackages(true);
+												}
+											},
+										}}
+									>
+										<uipadding
+											PaddingTop={new UDim(0, px(8))}
+											PaddingBottom={new UDim(0, px(8))}
+											PaddingLeft={new UDim(0, px(16))}
+											PaddingRight={new UDim(0, px(16))}
+										/>
+										<uicorner CornerRadius={new UDim(0, px(8))} />
+									</textbutton>
+								)}
+							</frame>
+						);
+					})}
 				</frame>
 			</MenuFrame>
-			{selectedActionName !== undefined && (
+			{selectedActionName && (
 				<PlayerSelectModal actionName={selectedActionName} onClose={() => setSelectedActionName(undefined)} />
 			)}
 			{showTokenPackages && <TokenPackagesModal onClose={() => setShowTokenPackages(false)} />}

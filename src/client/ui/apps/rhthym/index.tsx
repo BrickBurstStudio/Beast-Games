@@ -24,7 +24,7 @@ const notes: Array<{ delay: number; keyCode: Enum.KeyCode }> = [
 ];
 
 const AnimatedNote = React.memo(
-	({ n, aControlRef }: { n: typeof notes[number]; aControlRef: React.MutableRefObject<Frame | undefined> }) =>
+	({ n, aControlRef }: { n: (typeof notes)[number]; aControlRef: React.MutableRefObject<Frame | undefined> }) =>
 		aControlRef.current && (
 			<motion.frame
 				BackgroundTransparency={0}

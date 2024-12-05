@@ -6,6 +6,7 @@ import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { store } from "server/store";
 import { Gizmo } from "server/classes/Gizmo";
 import { Tower } from "server/classes/gizmos/Tower";
+import { CharacterRigR6 } from "@rbxts/promise-character";
 
 export class BribeChallenge extends BasePlatformChallenge {
 	private readonly PLAYER_MULTIPLIER = 10_000;
@@ -29,44 +30,37 @@ export class BribeChallenge extends BasePlatformChallenge {
 			originalAmount: this.bribeAmount,
 		});
 
-		Events.challenges.bribeChallenge.acceptBribe.connect((player) => {
-			if (this.acceptedBribes.has(player)) return;
-			this.acceptedBribes.add(player);
-			this.playersInChallenge = this.playersInChallenge.filter((p) => p !== player);
+		this.obliterator.Add(
+			Events.challenges.bribeChallenge.acceptBribe.connect((player) => {
+				if (this.acceptedBribes.has(player)) return;
+				this.acceptedBribes.add(player);
+				this.playersInChallenge = this.playersInChallenge.filter((p) => p !== player);
 
-			this.changePlatformState(player, "eliminated");
+				this.changePlatformState(player, "eliminated");
 
-			Events.challenges.bribeChallenge.updateBribe.broadcast({
-				playerCount: this.acceptedBribes.size(),
-				originalAmount: this.bribeAmount,
-			});
-
-			if (this.acceptedBribes.size() === this.playersInChallenge.size() + this.acceptedBribes.size()) {
-				Events.announcer.clearCountdown.broadcast();
-				store.setChallenge(undefined);
-
-				this.acceptedBribes.forEach((player) => {
-					spawn(() => {
-						const data = new OrderedPlayerData(player);
-						data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
-						task.wait(2);
-						this.dropPlayer(player);
-					});
+				Events.challenges.bribeChallenge.updateBribe.broadcast({
+					playerCount: this.acceptedBribes.size(),
+					originalAmount: this.bribeAmount,
 				});
-				return;
-			}
-		});
+
+				if (this.acceptedBribes.size() === this.playersInChallenge.size() + this.acceptedBribes.size()) {
+					Events.announcer.clearCountdown.broadcast();
+					store.setChallenge(undefined);
+
+					return;
+				}
+			}),
+		);
 
 		await countdown({ seconds: this.BRIBE_TIME, showGo: false });
 		store.setChallenge(undefined);
 
 		this.acceptedBribes.forEach((player) => {
-			spawn(() => {
-				const data = new OrderedPlayerData(player);
-				data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
-				task.wait(2);
-				this.dropPlayer(player);
-			});
+			const data = new OrderedPlayerData(player);
+			data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
+			task.wait(2);
+			this.dropCharacter(player.Character as CharacterRigR6);
 		});
+		task.wait(4);
 	}
 }

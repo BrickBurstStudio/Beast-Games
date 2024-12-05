@@ -6,6 +6,11 @@ export interface GuiState {
 	toolTip?: ToolTip;
 	challenge?: ChallengeName;
 	spectating?: boolean;
+	message?: {
+		title: string;
+		body: string;
+		type: "error" | "success" | "info";
+	};
 }
 
 export interface ToolTip {
@@ -31,5 +36,9 @@ export const guiSlice = createProducer(initalState, {
 	setSpectating: (state, spectating?: boolean) => ({
 		...state,
 		spectating: spectating,
+	}),
+	setMessage: (state, message?: GuiState["message"]) => ({
+		...state,
+		message,
 	}),
 });

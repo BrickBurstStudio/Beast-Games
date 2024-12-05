@@ -79,10 +79,10 @@ export class BoulderChallenge extends BaseChallenge {
 
 			// If only one team is left, end the game and eliminate that team
 			if (activeTeams === 1) {
-				const lastTeam = this.teamProgress.findIndex((progress, i) => 
-					this.activeTeams.has(i) && progress < this.teamFinishGoals[i]
+				const lastTeam = this.teamProgress.findIndex(
+					(progress, i) => this.activeTeams.has(i) && progress < this.teamFinishGoals[i],
 				);
-				
+
 				store.setChallenge(undefined);
 				await announce([`Team ${lastTeam + 1} was the last team pulling and has been eliminated!`], {
 					[lastTeam]: `<font color="#${TeamColors[lastTeam as keyof typeof TeamColors].ToHex()}">Team ${lastTeam + 1}</font>`,
@@ -108,22 +108,6 @@ export class BoulderChallenge extends BaseChallenge {
 		}
 
 		this.UpdateAssetPositions();
-
-		if (this.playersInChallenge.size() > 0) {
-			store.setChallenge(undefined);
-			const losingTeam = this.teamProgress.indexOf(math.min(...this.teamProgress));
-
-			await announce([`The team to finish pulling their boulder last is: ${losingTeam}`], {
-				[losingTeam]: `<font color="#${TeamColors[losingTeam as keyof typeof TeamColors].ToHex()}">Team ${losingTeam + 1}</font>`,
-			});
-
-			await this.killTeamPlayers(losingTeam);
-			
-			this.playersInChallenge = this.playersInChallenge.filter(
-				(player) => player.GetAttribute("team") !== losingTeam,
-			);
-
-		}
 
 		this.CleanUp();
 	}
@@ -197,7 +181,7 @@ export class BoulderChallenge extends BaseChallenge {
 						const character = await getCharacter(player);
 						character.Humanoid.Health = 0;
 					}
-				})
+				}),
 		);
 	}
 }

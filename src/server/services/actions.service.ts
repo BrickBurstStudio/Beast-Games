@@ -15,6 +15,10 @@ export class ActionsService implements OnStart {
 			const action = actions.find((a) => a.name === actionName);
 			if (!action) throw error("Action not found");
 
+			const challenge = store.getState().client.gui.challenge;
+			if (challenge && action.blacklistedChallenges.includes(challenge as never))
+				return warn("Action not allowed in current challenge");
+
 			if (actionTokens < action.cost) return warn("Not enough action tokens");
 
 			store.changeBalance(tostring(fromPlayer.UserId), "action_tokens", -action.cost);
@@ -28,9 +32,11 @@ export class ActionsService implements OnStart {
 				Enum.AnalyticsEconomyTransactionType.Gameplay.Name,
 				action.name,
 			);
-			Events.announcer.announce.broadcast([
-				`${fromPlayer.DisplayName} used ${action.name} on ${toPlayer.DisplayName}`,
-			]);
+
+			Events.announcer.chatMessage.broadcast(
+				`[ACTION] ${fromPlayer.DisplayName} used ${action.name} on ${toPlayer.DisplayName}!`,
+			);
+
 			action.callback({ fromPlayer, toPlayer });
 		});
 	}

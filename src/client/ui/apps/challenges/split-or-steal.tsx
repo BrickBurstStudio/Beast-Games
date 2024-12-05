@@ -10,10 +10,10 @@ export function SplitOrStealChallenge() {
 		const connections = [
 			Events.announcer.clearCountdown.connect(() => {
 				setShowButtons(false);
-			})
+			}),
 		];
 
-		return () => connections.forEach(conn => conn.Disconnect());
+		return () => connections.forEach((conn) => conn.Disconnect());
 	}, []);
 
 	const makeChoice = (selectedChoice: "split" | "steal") => {

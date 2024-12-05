@@ -80,7 +80,6 @@ export class BaseOrderedDataStore {
 			.GetSortedAsync(false, 100)
 			.GetCurrentPage()
 			.forEach((entry) => {
-
 				DataStoreService.GetOrderedDataStore(orderedDataStoreName).RemoveAsync(entry.key);
 			});
 	}

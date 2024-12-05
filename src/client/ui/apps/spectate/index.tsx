@@ -49,6 +49,32 @@ export default function SpectateApp() {
 
 	return (
 		<>
+			{lives !== undefined && (
+				<frame
+					BackgroundTransparency={0.5}
+					BackgroundColor3={lives > 0 ? COLORS.Primary : Color3.fromRGB(200, 0, 0)}
+					Position={new UDim2(0.5, 0, 0.05, 0)}
+					AnchorPoint={new Vector2(0.5, 0)}
+					Size={new UDim2(0, px(600), 0, px(80))}
+				>
+					<uicorner CornerRadius={new UDim(0, px(10))} />
+
+					<textlabel
+						Text={
+							lives > 0
+								? `You have ${lives} ${lives === 1 ? "life" : "lives"} remaining - You will respawn next round!`
+								: "You are eliminated - No lives remaining"
+						}
+						TextColor3={COLORS.White}
+						BackgroundTransparency={1}
+						Size={UDim2.fromScale(1, 1)}
+						TextScaled={true}
+						Font={Enum.Font.SourceSansBold}
+					>
+						<uipadding PaddingLeft={new UDim(0, px(20))} PaddingRight={new UDim(0, px(20))} />
+					</textlabel>
+				</frame>
+			)}
 			<frame
 				BackgroundTransparency={1}
 				BackgroundColor3={Color3.fromRGB(255, 255, 255)}

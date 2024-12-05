@@ -18,7 +18,7 @@ export default function AnnounceRules() {
 			setRules(rules);
 			setChallengeName(challengeName.upper());
 			setHide(false);
-			task.wait(rules.size() - 1 * RULES_CONFIGS.timeBetweenRules + RULES_CONFIGS.timeAfterRules);
+			task.wait(rules.size() * RULES_CONFIGS.timeBetweenRules + RULES_CONFIGS.timeAfterRules);
 			setHide(true);
 		});
 
@@ -91,7 +91,6 @@ export default function AnnounceRules() {
 							BackgroundColor3={COLORS.Primary}
 							TextWrapped={false}
 							RichText
-							ZIndex={100}
 							Size={new UDim2(1, 0, 0, 50)}
 							TextScaled
 							initial={{ Transparency: 1, BackgroundTransparency: 0 }}

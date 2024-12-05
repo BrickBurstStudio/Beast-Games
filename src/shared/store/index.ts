@@ -6,5 +6,5 @@ export type SharedState = CombineStates<typeof slices>;
 
 export const slices = {
 	players: playersSlice,
-	client: clientSlice
+	client: clientSlice,
 };

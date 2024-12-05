@@ -36,7 +36,6 @@ export abstract class BaseChallenge {
 
 		while (!(await this.isSetupCompleted())) task.wait(0.5);
 		await this.setup();
-
 		await this.spawnPlayers();
 
 		Events.animations.setBlackFade.broadcast(false);
@@ -49,9 +48,7 @@ export abstract class BaseChallenge {
 		await this.rewardPlayers();
 		store.setChallenge(undefined);
 
-		task.wait(3.5);
 		Events.animations.setBlackFade.broadcast(true);
-		task.wait(1);
 
 		this.freezePlayers();
 		this.obliterator.Cleanup();
@@ -98,10 +95,10 @@ export abstract class BaseChallenge {
 
 	private setupPlayerEvents(player: Player) {
 		const playerOut = () => {
-			if (this.handlePlayerElimination(player)) {
-				this.playersInChallenge.remove(this.playersInChallenge.findIndex((p) => p === player));
-				this.contestantDiedOrLeft.Fire(player);
-			}
+			const lives = player.GetAttribute("lives") as number;
+			player.SetAttribute("lives", lives - 1);
+			this.playersInChallenge.remove(this.playersInChallenge.findIndex((p) => p === player));
+			this.contestantDiedOrLeft.Fire(player);
 		};
 
 		player.CharacterAdded.Connect(async () => {
@@ -164,8 +161,6 @@ export abstract class BaseChallenge {
 	}
 
 	protected async doUISequence() {
-		if (Players.GetPlayers().size() === 1) return task.wait(3);
-
 		await announceRules({
 			challengeName: this.challengeName,
 			rules: this.rules,

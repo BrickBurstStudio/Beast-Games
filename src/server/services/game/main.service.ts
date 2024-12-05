@@ -5,7 +5,7 @@ import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
 import { BribeChallenge } from "server/challenges/bribe.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
-import { FlagChallenge } from "server/challenges/flag.challenge";
+import { FlagMemoryChallenge } from "server/challenges/flag-memory.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
 import { KingOfHillChallenge } from "server/challenges/king-of-hill.challenge";
 import { PugilChallenge } from "server/challenges/pugil.challenge";
@@ -20,7 +20,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 export class GameMainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
-	private static EXPECTED_PLAYERS_DEFAULT = 2;
+	private static EXPECTED_PLAYERS_DEFAULT = 3;
 	private static JOIN_TIMEOUT = 20;
 
 	/* ---------------------------------- Class --------------------------------- */
@@ -30,13 +30,13 @@ export class GameMainService implements OnStart {
 
 	/* ------------------------------- Life Cycle ------------------------------- */
 	async onStart() {
-		if (game.PlaceId !== MAIN_PLACE_ID) return;
+		// if (game.PlaceId !== MAIN_PLACE_ID) return;
 		this.setupReset();
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
 		Players.GetPlayers().forEach((player) => {
-			player.SetAttribute("lives", 2);
+			player.SetAttribute("lives", 3);
 		});
 
 		await new BribeChallenge().start();
@@ -46,7 +46,7 @@ export class GameMainService implements OnStart {
 			PugilChallenge,
 			BoulderChallenge,
 			TowerChallenge,
-			FlagChallenge,
+			// FlagMemoryChallenge,
 			BriefcaseChallenge,
 		];
 
@@ -56,6 +56,10 @@ export class GameMainService implements OnStart {
 			.map(({ value }) => value);
 
 		for (const Challenge of shuffledChallenges) {
+			if (this.playersLeft() === 2) {
+				await new SplitOrStealChallenge().start();
+				return this.endGame();
+			}
 			await new Challenge().start();
 		}
 
@@ -63,9 +67,22 @@ export class GameMainService implements OnStart {
 		await new SplitOrStealChallenge().start();
 
 		// After all challenges are complete, teleport remaining players to lobby
+		this.endGame();
+	}
 
+	async endGame() {
 		Events.announcer.announce.broadcast(["Game Over! Returning to lobby..."]);
 		TeleportService.TeleportAsync(LOBBY_PLACE_ID, Players.GetPlayers());
+	}
+
+	playersLeft() {
+		let playersLeft = 0;
+		Players.GetPlayers().forEach((player) => {
+			if ((player.GetAttribute("lives") as number) > 0) {
+				playersLeft++;
+			}
+		});
+		return playersLeft;
 	}
 
 	yieldPlayers() {

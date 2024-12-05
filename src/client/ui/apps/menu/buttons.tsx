@@ -27,7 +27,12 @@ export default function MenuButtonsApp() {
 	return (
 		<frame
 			Size={
-				new UDim2(0, px(BUTTON_SIZE), 0, px(BUTTON_SIZE) * visibleButtons.size() + px(PADDING_SIZE) * (visibleButtons.size() + 1))
+				new UDim2(
+					0,
+					px(BUTTON_SIZE),
+					0,
+					px(BUTTON_SIZE) * visibleButtons.size() + px(PADDING_SIZE) * (visibleButtons.size() + 1),
+				)
 			}
 			Position={new UDim2(0, px(PADDING_SIZE), 0.5, 0)}
 			AnchorPoint={new Vector2(0, 0.5)}
