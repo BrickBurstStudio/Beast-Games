@@ -1,14 +1,15 @@
-import { Gizmo } from "server/classes/Gizmo";
-import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
-import { Players, ServerStorage } from "@rbxts/services";
-import { Pugil } from "server/classes/gizmos/Pugil";
 import { CharacterRigR6 } from "@rbxts/promise-character";
+import { Players, ServerStorage } from "@rbxts/services";
+import { Gizmo } from "server/classes/Gizmo";
+import { Pugil } from "server/classes/gizmos/Pugil";
+import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 
 export class PugilChallenge extends BaseChallenge {
 	protected map = ServerStorage.ChallengeMaps.PugilChallenge.Clone();
 	protected challengeName = "Pugil" as const;
 	protected rules = ["Knockout opponents to win!"];
 	protected floor = false;
+	protected challengeDuration = 60 * 2;
 	private finished = false;
 
 	// for more efficient hit validation
@@ -33,6 +34,7 @@ export class PugilChallenge extends BaseChallenge {
 
 		while (!this.finished) task.wait();
 	}
+
 	protected spawnCharacter({ player, character, i }: SpawnCharacterArgs): void {
 		const team = this.teams[i % this.teams.size()];
 		team.players.push(player);
@@ -51,6 +53,22 @@ export class PugilChallenge extends BaseChallenge {
 			if (!hitPlayer) return false;
 			return this.playerToTeam.get(hitPlayer) !== team;
 		});
+	}
+
+	protected async onTimerExpired(): Promise<void> {
+		// kill all players on the team with the least amount of players (if there is a tie, kill both teams)
+		const teamsWithLeastPlayers = this.teams.filter(
+			(team) => team.players.size() === math.min(...this.teams.map((t) => t.players.size())),
+		);
+		await Promise.all(
+			teamsWithLeastPlayers.map(async (team) =>
+				team.players.map(async (player) => {
+					if (player.Character === undefined) return;
+
+					(player.Character as CharacterRigR6).Humanoid.Health = 0;
+				}),
+			),
+		);
 	}
 }
 

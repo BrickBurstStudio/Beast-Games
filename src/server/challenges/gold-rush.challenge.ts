@@ -6,7 +6,6 @@ import { Gizmo } from "server/classes/Gizmo";
 import { Push } from "server/classes/gizmos/Push";
 import { GreenClaimComponent } from "server/components/claim-components/green-claim.component";
 import { announce } from "server/util/announce";
-import { countdown } from "server/util/countdown";
 import { BaseChallenge, SpawnCharacterArgs } from "./base.challenge";
 
 export class GoldRushChallenge extends BaseChallenge {
@@ -22,6 +21,8 @@ export class GoldRushChallenge extends BaseChallenge {
 	private allGreenClaims: GreenClaimComponent[] = [];
 	private greenClaims: GreenClaimComponent[] = [];
 	private safePlayers: Player[] = [];
+	protected challengeDuration = 60 * 2;
+
 	protected async main() {
 		this.playersInChallenge.forEach((player) => {
 			Gizmo.give(player, Push);
@@ -30,26 +31,6 @@ export class GoldRushChallenge extends BaseChallenge {
 		this.contestantDiedOrLeft.Event.Connect((player: Player) => {
 			this.safePlayers = this.safePlayers.filter((p) => p !== player);
 		});
-
-		// Start 2 minute countdown
-		// const CHALLENGE_DURATION = 60 * 2;
-		const CHALLENGE_DURATION = 5;
-		countdown({ seconds: CHALLENGE_DURATION });
-		// Eliminate players who haven't claimed a platform
-		const startTime = tick();
-		while (!this.isFinished()) {
-			if (tick() - startTime >= CHALLENGE_DURATION) break;
-			task.wait(0.25);
-		}
-
-		// Eliminate players who haven't claimed a platform
-		this.playersInChallenge.forEach((player) => {
-			if (!this.safePlayers.find((p) => p === player) && player.Character !== undefined) {
-				(player.Character as CharacterRigR6).Humanoid.Health = 0;
-			}
-		});
-
-		await announce(["Time's up! Players who haven't claimed a platform have been eliminated!"]);
 	}
 
 	protected async isSetupCompleted() {
@@ -108,5 +89,16 @@ export class GoldRushChallenge extends BaseChallenge {
 	protected spawnCharacter({ character, i }: SpawnCharacterArgs): void {
 		const children = this.map.Spawns.GetChildren() as BasePart[];
 		character.PivotTo(children[i % children.size()].CFrame);
+	}
+
+	protected async onTimerExpired() {
+		// Eliminate players who haven't claimed a platform
+		this.playersInChallenge.forEach((player) => {
+			if (!this.safePlayers.find((p) => p === player) && player.Character !== undefined) {
+				(player.Character as CharacterRigR6).Humanoid.Health = 0;
+			}
+		});
+
+		await announce(["Time's up! Players who haven't claimed a platform have been eliminated!"]);
 	}
 }

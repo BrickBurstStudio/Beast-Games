@@ -1,17 +1,15 @@
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
-import { store } from "server/store";
 import { announce } from "server/util/announce";
-import { countdown } from "server/util/countdown";
 import { ChallengeName } from "shared/configs/gui";
 import { BasePlatformChallenge } from "./base-platform.challenge";
 
 type PlayerChoice = "split" | "steal" | undefined;
 
 export class SplitOrStealChallenge extends BasePlatformChallenge {
+	protected challengeDuration = 30;
 	private readonly PRIZE_MONEY = 5_000_000;
-	private readonly DECISION_TIME = 30;
 	protected readonly challengeName: ChallengeName = "Split or Steal";
 	protected readonly rules = [
 		"You both must each choose to SPLIT or STEAL the $5,000,000 prize.",
@@ -23,44 +21,27 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 	private playerChoices = new Map<Player, PlayerChoice>();
 
 	protected async main() {
-		// Create network events
 		Events.challenges.splitOrStealChallenge.makeChoice.connect((player, choice) => {
 			if (this.playerChoices.get(player) !== undefined) return;
 			this.playerChoices.set(player, choice);
 			this.changePlatformState(player, "warning");
 
-			// Check if all players have made their choices
 			if (this.playersInChallenge.every((p) => this.playerChoices.get(p) !== undefined)) {
 				Events.announcer.clearCountdown.broadcast();
 				this.processResults();
 			}
 		});
 
-		// Start the countdown
-		const countdownPromise = countdown({
-			seconds: this.DECISION_TIME,
-			description: "Make your choice!",
-		});
-
-		// Wait for either countdown to finish or choices to be made
-		await Promise.race([
-			countdownPromise,
-			new Promise<void>((resolve) => {
-				// This will be called when processResults is triggered
-				this.resolveEarly = resolve;
-			}),
-		]);
-
-		// Only clear countdown if it wasn't already cleared
-		if (!this.resolveEarly) {
-			Events.announcer.clearCountdown.broadcast();
-			await this.processResults();
+		while (!this.playersInChallenge.every((p) => this.playerChoices.get(p) !== undefined)) {
+			task.wait(0.1);
 		}
 
-		store.setChallenge(undefined);
+		await this.processResults();
 	}
 
-	private resolveEarly?: () => void;
+	protected async onTimerExpired() {
+		await this.processResults();
+	}
 
 	private async processResults() {
 		// Process results
@@ -92,10 +73,6 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 			const stealer = choices.find((c) => c.choice === "steal")!;
 			const splitter = choices.find((c) => c.choice === "split")!;
 			await this.handleOneStealOneSplit(stealer.player, splitter.player);
-		}
-
-		if (this.resolveEarly) {
-			this.resolveEarly();
 		}
 	}
 
