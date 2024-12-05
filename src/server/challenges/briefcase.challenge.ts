@@ -2,7 +2,6 @@ import { Components } from "@flamework/components";
 import { Dependency } from "@flamework/core";
 import Make from "@rbxts/make";
 import { ReplicatedStorage, ServerStorage } from "@rbxts/services";
-import { announce } from "server/util/announce";
 import { countdown } from "server/util/countdown";
 import { generatePlayerGrid } from "server/util/generatePlayerGrid";
 import { getCharacter } from "shared/utils/functions/getCharacter";

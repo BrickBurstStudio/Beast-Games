@@ -79,7 +79,7 @@ export abstract class Gizmo {
 		});
 
 		primary.Anchored = false;
-		this.obliterator.Add(this.tool);
+		this.obliterator.Add(this.tool, "Destroy");
 		this.tool.Parent = this.owner.Character;
 	}
 
@@ -113,7 +113,7 @@ export abstract class Gizmo {
 		this.tool.Destroying.Connect(() => {
 			if (this.destroyed) return;
 			this.destroyed = true;
-			this.obliterator.Destroy();
+			this.obliterator.Cleanup();
 		});
 	}
 
@@ -128,7 +128,7 @@ export abstract class Gizmo {
 
 	destroy() {
 		if (this.destroyed) return;
-		this.obliterator.Destroy();
+		this.obliterator.Cleanup();
 		this.destroyed = true;
 	}
 
