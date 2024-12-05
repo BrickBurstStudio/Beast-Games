@@ -38,18 +38,22 @@ function useCountdown() {
 				for (let i = math.floor(seconds); i >= 0; i--) {
 					if (initialSeconds.current === undefined) break;
 					setSeconds(i);
-					ReplicatedStorage.Assets.Sounds.Countdown2.Play();
-					ReplicatedStorage.Assets.Sounds.Countdown2.PlaybackSpeed = math.clamp(
-						i / initialSeconds.current,
-						0.1,
-						math.huge,
-					);
+					
+					if (i <= 5) {
+						ReplicatedStorage.Assets.Sounds.Countdown2.Play();
+						ReplicatedStorage.Assets.Sounds.Countdown2.PlaybackSpeed = math.clamp(
+							i / 5,
+							0.1,
+							math.huge,
+						);
+					}
 					task.wait(1);
 				}
 				if (showGo) {
 					setShowGo(true);
 					task.wait(0.25);
 					ReplicatedStorage.Assets.Sounds["GO!!!"].Play();
+					
 					task.wait(1);
 				}
 				setHide(true);
