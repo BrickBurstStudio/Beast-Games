@@ -4,7 +4,7 @@ export const ANNOUNCER_CONFIGS = {
 	animationTime: 0.5,
 	keystrokeTime: 0.02,
 	preMessageTime: 0.5,
-	postMessageTime: 5,
+	postMessageTime: 3,
 } as const;
 
 export const RICH_TEXT_COLORS = {
@@ -28,6 +28,6 @@ export const RICH_TEXT_REPLACE = {
 
 export const RULES_CONFIGS = {
 	animationTime: 1,
-	timePerRule: RunService.IsStudio() ? 0 : 5,
+	timePerRule: RunService.IsStudio() ? 0 : 4,
 	timeAfterRules: RunService.IsStudio() ? 0 : 1,
 } as const;

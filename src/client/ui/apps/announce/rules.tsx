@@ -93,8 +93,8 @@ export default function AnnounceRules() {
 							RichText
 							Size={new UDim2(1, 0, 0, 50)}
 							TextScaled
-							initial={{ Transparency: 1, BackgroundTransparency: 0 }}
-							animate={{ Transparency: 0, BackgroundTransparency: 1 }}
+							initial={{ Transparency: 1 }}
+							animate={{ Transparency: 0 }}
 							transition={{
 								duration: 1.5,
 								delay: i * RULES_CONFIGS.timePerRule,
