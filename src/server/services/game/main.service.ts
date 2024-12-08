@@ -3,7 +3,6 @@ import { CharacterRigR6 } from "@rbxts/promise-character";
 import { AnalyticsService, Players, TeleportService } from "@rbxts/services";
 import { setTimeout } from "@rbxts/set-timeout";
 import { BoulderChallenge } from "server/challenges/boulder.challenge";
-import { BribeChallenge } from "server/challenges/bribe.challenge";
 import { BriefcaseChallenge } from "server/challenges/briefcase.challenge";
 import { FlagMemoryChallenge } from "server/challenges/flag-memory.challenge";
 import { GoldRushChallenge } from "server/challenges/gold-rush.challenge";
@@ -36,15 +35,7 @@ export class GameMainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		await Promise.all(
-			Players.GetPlayers().map(
-				async (player) =>
-					new Promise<void>((resolve) => {
-						player.SetAttribute("lives", 3);
-						resolve();
-					}),
-			),
-		);
+		await Promise.all(Players.GetPlayers().map(async (player) => player.SetAttribute("lives", 3)));
 
 		await new PugilChallenge().start();
 		await new BoulderChallenge().start();
