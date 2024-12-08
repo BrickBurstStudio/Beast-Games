@@ -2,8 +2,9 @@ import { OnStart, Service } from "@flamework/core";
 import { AnalyticsService } from "@rbxts/services";
 import { Events } from "server/network";
 import { store } from "server/store";
-import { actions } from "shared/configs/actions";
+import { ActionName, actions } from "shared/configs/actions";
 import { selectPlayerBalance } from "shared/store/selectors/players";
+import { actionHandlers } from "./actions/handlers";
 
 @Service()
 export class ActionsService implements OnStart {
@@ -37,7 +38,8 @@ export class ActionsService implements OnStart {
 				`[ACTION] ${fromPlayer.DisplayName} used ${action.name} on ${toPlayer.DisplayName}!`,
 			);
 
-			action.callback({ fromPlayer, toPlayer });
+			const handler = actionHandlers[action.name as ActionName];
+			if (handler) handler({ fromPlayer, toPlayer });
 		});
 	}
 }
