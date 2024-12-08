@@ -82,7 +82,6 @@ export default function InventoryApp() {
 											}
 										}
 										if (itemIsEmote) {
-											print(item.animation);
 											Events.animationController.play.predict(item.animation);
 										}
 										return;

@@ -195,7 +195,6 @@ export class BoulderChallenge extends BaseChallenge {
 				unfinishedTeams.add(i);
 			}
 		}
-		print(unfinishedTeams);
 		// Eliminate all unfinished teams
 
 		announce(["Time has run out! All unfinished teams have been eliminated!"]);

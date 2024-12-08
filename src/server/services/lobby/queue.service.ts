@@ -155,10 +155,8 @@ export class QueueService implements OnStart {
 	}
 
 	private async startMatch() {
-		print("Starting match...");
 		try {
 			const playersInQueue = this.getPlayersInQueue();
-			print(`Players in queue: ${playersInQueue.size()}`);
 
 			if (playersInQueue.size() < this.MIN_PLAYERS) {
 				playersInQueue.forEach((player) => {
@@ -173,7 +171,7 @@ export class QueueService implements OnStart {
 
 			// Reset queue state before teleporting to prevent edge cases
 			this.queueState.countdownEndTime = undefined;
-			print("Teleporting players to main place...");
+
 			TeleportService.TeleportAsync(MAIN_PLACE_ID, playersInQueue);
 
 			playersInQueue.forEach((player) => {

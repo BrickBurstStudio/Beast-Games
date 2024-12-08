@@ -9,7 +9,6 @@ export async function countdown({
 }: Pick<Countdown, "description" | "showGo"> & { seconds: number; player?: Player }) {
 	return new Promise<void>((resolve) => {
 		for (let i = seconds; i >= 0; i--) {
-			print(`Countdown: ${i}`);
 			if (player) {
 				Events.announcer.countdown.fire(player, {
 					second: i,

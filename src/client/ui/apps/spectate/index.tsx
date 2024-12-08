@@ -45,7 +45,7 @@ function useSpectate() {
 		task.spawn(() => {
 			while (cntrl) {
 				task.wait(0.5);
-				print(player?.Character?.FindFirstChild("Head"));
+
 				if (player?.Character?.FindFirstChild("Head") === undefined) {
 					setIndex(index + 1);
 				}
