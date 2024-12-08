@@ -26,7 +26,10 @@ export class AnimationController implements OnStart {
 			if (!track) return;
 
 			// Check if this is an emote animation
-			if (animation.Parent?.Name === "Emotes") {
+			if (
+				animation.Parent?.Name === "Emotes" &&
+				animation.AnimationId !== ReplicatedStorage.Assets.Animations.Emotes.BoogieBomb.AnimationId
+			) {
 				this.handleEmotePlay(track);
 			} else {
 				track.Play();

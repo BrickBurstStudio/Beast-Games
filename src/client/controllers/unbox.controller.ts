@@ -70,7 +70,7 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 
 		await tweenScale(
 			unboxClone.GetScale(),
-			0.05,
+			0.01,
 			new TweenInfo(1, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out),
 			unboxClone,
 		);
