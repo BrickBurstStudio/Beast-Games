@@ -1,5 +1,5 @@
 import Make from "@rbxts/make";
-import { ServerStorage } from "@rbxts/services";
+import { RunService, ServerStorage } from "@rbxts/services";
 import { Events } from "server/network";
 import { store } from "server/store";
 import { announce } from "server/util/announce";
@@ -15,6 +15,7 @@ const TeamColors = {
 };
 
 export class BoulderChallenge extends BaseChallenge {
+	protected challengeDuration = RunService.IsStudio() ? 5 : 60;
 	protected readonly challengeName = "Boulder Pull" as const;
 	protected readonly rules = [
 		"You will be assigned a random team.",
@@ -78,7 +79,7 @@ export class BoulderChallenge extends BaseChallenge {
 			}
 
 			// If only one team is left, end the game and eliminate that team
-			if (activeTeams === 1) {
+			if (activeTeams === 1 && this.teamsCompleted === this.teamFinishGoals.size() - 1) {
 				const lastTeam = this.teamProgress.findIndex(
 					(progress, i) => this.activeTeams.has(i) && progress < this.teamFinishGoals[i],
 				);
@@ -183,5 +184,27 @@ export class BoulderChallenge extends BaseChallenge {
 					}
 				}),
 		);
+	}
+
+	protected async onTimerExpired() {
+		const unfinishedTeams = new Set<number>();
+
+		// Find all unfinished teams
+		for (let i = 0; i < 5; i++) {
+			if (this.teamProgress[i] < this.teamFinishGoals[i] && this.activeTeams.has(i)) {
+				unfinishedTeams.add(i);
+			}
+		}
+		print(unfinishedTeams);
+		// Eliminate all unfinished teams
+
+		announce(["Time has run out! All unfinished teams have been eliminated!"]);
+
+		unfinishedTeams.forEach(async (teamNumber) => {
+			await this.killTeamPlayers(teamNumber);
+			this.playersInChallenge = this.playersInChallenge.filter(
+				(player) => player.GetAttribute("team") !== teamNumber,
+			);
+		});
 	}
 }

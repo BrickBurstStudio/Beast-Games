@@ -40,7 +40,7 @@ export class GameMainService implements OnStart {
 			player.SetAttribute("lives", 3);
 		});
 
-		await new BriefcaseChallenge().start();
+		await new BoulderChallenge().start();
 		await new BribeChallenge().start();
 
 		const availableChallenges = [

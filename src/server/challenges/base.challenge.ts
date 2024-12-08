@@ -48,10 +48,11 @@ export abstract class BaseChallenge {
 		if (this.challengeDuration > 0) {
 			await Promise.race([
 				this.main(),
-				new Promise((resolve) => {
+				new Promise(async (resolve) => {
 					this.startChallengeTimer();
 					task.wait(this.challengeDuration);
 					resolve(undefined);
+					await this.onTimerExpired();
 				}),
 			]);
 		} else {
@@ -98,8 +99,6 @@ export abstract class BaseChallenge {
 
 	private assignPlayers() {
 		this.playersInChallenge = Players.GetPlayers().filter((player) => {
-			if (player.GetAttribute("lives") === undefined) player.SetAttribute("lives", 2);
-
 			const lives = player.GetAttribute("lives") as number;
 			return lives > 0;
 		});
