@@ -7,7 +7,7 @@ import Leaderboard from "./leaderboard";
 
 export interface LeaderboardProps {
 	name: string;
-	datastoreName: "xp" | "wins" | "playTime" | Exclude<Currency, "action_tokens">;
+	datastoreName: "xp" | "wins" | "playTime" | Exclude<Currency, "action_token">;
 	leaderboardModel: Leaderboard;
 	convertValue?: (value: number) => string | number;
 }

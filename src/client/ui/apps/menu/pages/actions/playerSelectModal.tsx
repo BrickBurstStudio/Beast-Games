@@ -3,7 +3,7 @@ import { Players } from "@rbxts/services";
 import { Events } from "client/network";
 import Modal from "client/ui/components/modal";
 import { px } from "client/ui/utils/usePx";
-import { ActionName } from "shared/configs/action";
+import { ActionName } from "shared/configs/actions";
 
 interface PlayerSelectModalProps {
 	actionName: ActionName;

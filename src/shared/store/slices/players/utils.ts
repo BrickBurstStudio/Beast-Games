@@ -10,7 +10,7 @@ export const defaultPlayerData: PlayerData = {
 	},
 	balance: {
 		cash: 0,
-		action_tokens: 0,
+		action_token: 0,
 	},
 	items: [],
 	xp: 0,

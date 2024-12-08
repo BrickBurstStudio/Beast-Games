@@ -3,7 +3,7 @@ import { useSelector } from "@rbxts/react-reflex";
 import { Players } from "@rbxts/services";
 import MenuFrame from "client/ui/components/menu-frame";
 import { px } from "client/ui/utils/usePx";
-import { ActionName, actions } from "shared/configs/action";
+import { ActionName, actions } from "shared/configs/actions";
 
 import { selectChallenge } from "shared/store/selectors/client";
 import { selectPlayerBalance } from "shared/store/selectors/players";
@@ -14,7 +14,7 @@ import TokenPackagesModal from "./tokenPackagesModal";
 const BUTTON = BUTTONS.find((b) => b.name === "Actions")!;
 
 export default function ActionsPage() {
-	const playerTokens = useSelector(selectPlayerBalance(tostring(Players.LocalPlayer.UserId), "action_tokens")) ?? 1;
+	const playerTokens = useSelector(selectPlayerBalance(tostring(Players.LocalPlayer.UserId), "action_token")) ?? 1;
 	const [selectedActionName, setSelectedActionName] = useState<ActionName>();
 	const [showTokenPackages, setShowTokenPackages] = useState(false);
 	const currentChallenge = useSelector(selectChallenge);

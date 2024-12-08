@@ -5,7 +5,7 @@ import { BroadcastAction } from "@rbxts/reflex";
 
 import { BribeChallengeData } from "../../types/BribeChallengeData";
 import { Dare } from "../../types/Dare";
-import { ActionName } from "./configs/action";
+import { ActionName } from "./configs/actions";
 import { Currency } from "./configs/currency";
 import { Item } from "./configs/items";
 import { Case, cases } from "./configs/items/cases";

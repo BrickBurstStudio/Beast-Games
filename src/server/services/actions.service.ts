@@ -2,14 +2,14 @@ import { OnStart, Service } from "@flamework/core";
 import { AnalyticsService } from "@rbxts/services";
 import { Events } from "server/network";
 import { store } from "server/store";
-import { actions } from "shared/configs/action";
+import { actions } from "shared/configs/actions";
 import { selectPlayerBalance } from "shared/store/selectors/players";
 
 @Service()
 export class ActionsService implements OnStart {
 	onStart() {
 		Events.useAction.connect((fromPlayer, { actionName, toPlayer }) => {
-			let actionTokens = store.getState(selectPlayerBalance(tostring(fromPlayer.UserId), "action_tokens"));
+			let actionTokens = store.getState(selectPlayerBalance(tostring(fromPlayer.UserId), "action_token"));
 			if (actionTokens === undefined) throw error("Player tokens not found");
 
 			const action = actions.find((a) => a.name === actionName);
@@ -21,12 +21,12 @@ export class ActionsService implements OnStart {
 
 			if (actionTokens < action.cost) return warn("Not enough action tokens");
 
-			store.changeBalance(tostring(fromPlayer.UserId), "action_tokens", -action.cost);
+			store.changeBalance(tostring(fromPlayer.UserId), "action_token", -action.cost);
 			actionTokens -= action.cost;
 			AnalyticsService.LogEconomyEvent(
 				fromPlayer,
 				Enum.AnalyticsEconomyFlowType.Sink,
-				"action_tokens",
+				"action_token",
 				action.cost,
 				actionTokens,
 				Enum.AnalyticsEconomyTransactionType.Gameplay.Name,
