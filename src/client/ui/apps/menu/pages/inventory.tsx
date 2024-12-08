@@ -64,15 +64,24 @@ export default function InventoryApp() {
 								key={itemMapObject.id}
 								image={"rbxassetid://6031094678"}
 								backgroundColor3={isEquipped ? COLORS.Buttons.On : undefined}
-								onClick={() => {
+								onClick={async () => {
 									store.setGuiPage(undefined);
-									if (isCase)
-										return Functions.inventory.openCase(
-											itemMapObject.id as (typeof cases)[number]["id"],
-										);
-
-									if (isEmote) {
-										// Events.animationController.play(itemMapObject.id);
+									if (isCase || isEmote) {
+										if (isCase) {
+											const result = await Functions.inventory.openCase(
+												itemMapObject.id as (typeof cases)[number]["id"],
+											);
+											if (typeIs(result, "string")) {
+												store.setMessage({
+													title: "Max Unboxings Reached",
+													body: result,
+													type: "error",
+												});
+											}
+										}
+										if (isEmote) {
+											// Events.animationController.play(itemMapObject.id);
+										}
 										return;
 									}
 

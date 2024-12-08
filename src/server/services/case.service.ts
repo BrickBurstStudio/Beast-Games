@@ -4,8 +4,8 @@ import { store } from "server/store";
 import { chooseRandomItem } from "server/util/getRandomItem";
 import { items } from "shared/configs/items";
 import { cases } from "shared/configs/items/cases";
-import { selectPlayerItems } from "shared/store/selectors/players";
 import { UNBOXING_CONFIG } from "shared/configs/unboxing";
+import { selectPlayerItems } from "shared/store/selectors/players";
 
 const MAX_CONCURRENT_UNBOXINGS = UNBOXING_CONFIG.MAX_CONCURRENT;
 
@@ -14,19 +14,19 @@ export class CaseService implements OnStart {
 	private activeUnboxings = new Map<Player, number>();
 
 	onStart() {
-		Functions.inventory.openCase.setCallback(async (player, caseId) => {
+		Functions.inventory.openCase.setCallback((player, caseId) => {
 			const currentUnboxings = this.activeUnboxings.get(player) ?? 0;
 
 			if (currentUnboxings >= MAX_CONCURRENT_UNBOXINGS) {
-				throw "You can only open 5 cases at once. Please wait for current unboxings to finish.";
+				return `You can only open ${MAX_CONCURRENT_UNBOXINGS} cases at once. Please wait for current unboxings to finish.`;
 			}
 
 			const playerInventory = store.getState(selectPlayerItems(tostring(player.UserId)));
-			if (!playerInventory) throw "Player inventory not found";
-			if (!playerInventory.includes(caseId)) throw "Player does not have this case";
+			if (!playerInventory) return "Player inventory not found";
+			if (!playerInventory.includes(caseId)) return "Player does not have this case";
 
 			const caseObject = cases.find((c) => c.id === caseId);
-			if (!caseObject) throw "Case not found";
+			if (!caseObject) return "Case not found";
 
 			// Increment active unboxings
 			this.activeUnboxings.set(player, currentUnboxings + 1);
@@ -36,7 +36,7 @@ export class CaseService implements OnStart {
 				const randomItemIdWonFromCase = chooseRandomItem(caseObject);
 				store.addItemToInventory(tostring(player.UserId), randomItemIdWonFromCase);
 				const randomItem = items.get(randomItemIdWonFromCase);
-				if (!randomItem) throw "Item not found. This is a bug. Please report it to the developers.";
+				if (!randomItem) return "Item not found. This is a bug. Please report it to the developers.";
 
 				Events.animateUnboxing.broadcast({
 					targetPlayer: player,

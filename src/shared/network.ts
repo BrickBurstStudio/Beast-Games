@@ -54,7 +54,7 @@ interface ServerEvents {
 
 interface ServerFunctions {
 	inventory: {
-		openCase: (caseId: (typeof cases)[number]["id"]) => Item;
+		openCase: (caseId: (typeof cases)[number]["id"]) => string | Item;
 		equip: (itemId: (typeof hats)[number]["id"]) => boolean;
 		unequip: (itemId: (typeof hats)[number]["id"]) => boolean;
 	};
