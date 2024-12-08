@@ -1,11 +1,11 @@
 import { Controller, OnStart } from "@flamework/core";
 import Make from "@rbxts/make";
+import Object from "@rbxts/object-utils";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { ContextActionService, Players, Workspace } from "@rbxts/services";
 import { debounce } from "@rbxts/set-timeout";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { SprintController } from "./sprint.controller";
-import Object from "@rbxts/object-utils";
 
 // todo : organize subsystem logic into sister controllers & use dependency injection here
 
@@ -38,18 +38,19 @@ export class MovementController implements OnStart {
 	constructor(private sprintController: SprintController) {}
 
 	onStart() {
-		// void this.SetupTracks();
-		// Players.LocalPlayer.CharacterAdded.Connect((character) => {
-		// 	void this.SetupTracks();
-		// 	this.lastCharacterReference = character as CharacterRigR6;
-		// });
-		// ContextActionService.BindAction(
-		// 	this.diveActionName,
-		// 	(...args) => this.PerformDive(...args),
-		// 	true,
-		// 	Enum.KeyCode.E,
-		// 	Enum.KeyCode.ButtonY,
-		// );
+		void this.SetupTracks();
+		Players.LocalPlayer.CharacterAdded.Connect((character) => {
+			void this.SetupTracks();
+			this.lastCharacterReference = character as CharacterRigR6;
+		});
+		ContextActionService.BindAction(
+			this.diveActionName,
+			(...args) => this.PerformDive(...args),
+			true,
+			Enum.KeyCode.E,
+			Enum.KeyCode.ButtonY,
+			Enum.UserInputType.Touch,
+		);
 		// ContextActionService.BindAction(
 		// 	this.sprintActionName,
 		// 	(...args) => this.ToggleSprint(...args),
