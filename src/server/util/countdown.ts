@@ -1,16 +1,29 @@
 import { Events } from "server/network";
 import { Countdown } from "shared/network";
 
-export async function countdown({ seconds, description, showGo }: Countdown) {
+export async function countdown({
+	seconds,
+	description,
+	showGo,
+	player,
+}: Pick<Countdown, "description" | "showGo"> & { seconds: number; player?: Player }) {
 	return new Promise<void>((resolve) => {
-		Events.announcer.countdown.broadcast({
-			seconds,
-			description,
-			showGo,
-		});
-		task.spawn(() => {
-			task.wait(seconds + 2);
-			resolve();
-		});
+		for (let i = seconds; i >= 0; i--) {
+			print(`Countdown: ${i}`);
+			if (player) {
+				Events.announcer.countdown.fire(player, {
+					second: i,
+					description,
+					showGo,
+				});
+			} else {
+				Events.announcer.countdown.broadcast({
+					second: i,
+					description,
+					showGo,
+				});
+			}
+			task.wait(1);
+		}
 	});
 }

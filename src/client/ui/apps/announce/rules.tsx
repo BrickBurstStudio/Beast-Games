@@ -8,21 +8,28 @@ import { COLORS } from "shared/configs/gui";
 const padding = 50;
 
 export default function AnnounceRules() {
+	const [index, setIndex] = useState(0);
 	const [rules, setRules] = useState<string[]>(["Default Rule 1", "Default Rule 2", "Default Rule 3"]);
 	const [challengeName, setChallengeName] = useState("Default Title");
 
 	const [hide, setHide] = useState(true);
 
 	useEffect(() => {
-		const conn = Events.announcer.announceRules.connect(({ challengeName, rules }) => {
+		const conn = Events.announcer.showRule.connect(({ challengeName, rules, index }) => {
 			setRules(rules);
 			setChallengeName(challengeName.upper());
+			setIndex(index);
 			setHide(false);
-			task.wait(rules.size() * RULES_CONFIGS.timePerRule + RULES_CONFIGS.timeAfterRules);
+		});
+
+		const conn2 = Events.announcer.hideRules.connect(() => {
 			setHide(true);
 		});
 
-		return () => conn.Disconnect();
+		return () => {
+			conn.Disconnect();
+			conn2.Disconnect();
+		};
 	}, []);
 
 	return (
@@ -94,10 +101,9 @@ export default function AnnounceRules() {
 							Size={new UDim2(1, 0, 0, 50)}
 							TextScaled
 							initial={{ Transparency: 1 }}
-							animate={{ Transparency: 0 }}
+							animate={{ Transparency: index >= i ? 0 : 1 }}
 							transition={{
 								duration: 1.5,
-								delay: i * RULES_CONFIGS.timePerRule,
 								easingStyle: Enum.EasingStyle.Cubic,
 								easingDirection: Enum.EasingDirection.Out,
 							}}

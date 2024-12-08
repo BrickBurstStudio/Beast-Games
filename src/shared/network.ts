@@ -86,7 +86,8 @@ interface ClientEvents {
 
 	announcer: {
 		announce: (announcements: string[], richTextReplace?: { [key: string]: string }) => void;
-		announceRules: (args: { challengeName: string; rules: string[] }) => void;
+		showRule: (args: { challengeName: string; rules: string[]; index: number }) => void;
+		hideRules: () => void;
 		chatMessage: (message: string) => void;
 		countdown: (countdown: Countdown) => void;
 		clearCountdown: () => void;
@@ -129,7 +130,7 @@ export const GlobalEvents = Networking.createEvent<ServerEvents, ClientEvents>()
 export const GlobalFunctions = Networking.createFunction<ServerFunctions, ClientFunctions>();
 
 export type Countdown = {
-	seconds: number;
+	second: number;
 	description?: string | undefined;
 	showGo?: boolean;
 };
