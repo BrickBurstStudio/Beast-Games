@@ -174,7 +174,7 @@ export abstract class BaseChallenge {
 			AnalyticsService.LogOnboardingFunnelStepEvent(
 				player,
 				BaseChallenge.round + 4,
-				`challenge-${this.challengeName}`,
+				`challenge-${BaseChallenge.round}`,
 				{
 					[Enum.AnalyticsCustomFieldKeys.CustomField01.Name]: this.challengeName,
 					[Enum.AnalyticsCustomFieldKeys.CustomField02.Name]:
