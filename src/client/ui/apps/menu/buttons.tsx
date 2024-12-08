@@ -1,4 +1,5 @@
 import React from "@rbxts/react";
+import { RunService } from "@rbxts/services";
 import { store } from "client/store";
 import ImageButton from "client/ui/components/image-button";
 import { px } from "client/ui/utils/usePx";
@@ -14,7 +15,7 @@ export type Button = {
 export const BUTTONS: Button[] = [
 	{ name: "Inventory", icon: "rbxassetid://6035056487", showInLobby: true },
 	{ name: "Shop", icon: "rbxassetid://6031265976", showInLobby: true },
-	{ name: "Actions", icon: "rbxassetid://6023565892", showInLobby: false },
+	{ name: "Actions", icon: "rbxassetid://6023565892", showInLobby: RunService.IsStudio() },
 ] as const;
 
 const BUTTON_SIZE = 80;

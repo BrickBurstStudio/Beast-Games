@@ -11,7 +11,7 @@ export class LobbyMainService implements OnStart {
 			AnalyticsService.LogOnboardingFunnelStepEvent(player, 1, "joined_lobby");
 			AnalyticsService.LogFunnelStepEvent(
 				player,
-				"core_loop",
+				"Core Loop",
 				`${player.UserId}-${game.JobId}`,
 				1,
 				"joined_lobby",

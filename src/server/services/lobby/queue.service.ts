@@ -85,7 +85,7 @@ export class QueueService implements OnStart {
 
 		AnalyticsService.LogOnboardingFunnelStepEvent(player, 2, "entered_queue");
 
-		AnalyticsService.LogFunnelStepEvent(player, "core_loop", `${player.UserId}-${game.JobId}`, 2, "entered_queue");
+		AnalyticsService.LogFunnelStepEvent(player, "Core Loop", `${player.UserId}-${game.JobId}`, 2, "entered_queue");
 
 		if (playersInQueue.size() === this.MIN_PLAYERS) {
 			// Start countdown when minimum players is reached
@@ -177,7 +177,7 @@ export class QueueService implements OnStart {
 				AnalyticsService.LogOnboardingFunnelStepEvent(player, 3, "teleported");
 				AnalyticsService.LogFunnelStepEvent(
 					player,
-					"core_loop",
+					"Core Loop",
 					`${player.UserId}-${game.JobId}`,
 					3,
 					"teleported",

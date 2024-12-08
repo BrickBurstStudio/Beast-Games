@@ -171,7 +171,7 @@ export abstract class BaseChallenge {
 		Players.GetPlayers().forEach((player) => {
 			AnalyticsService.LogFunnelStepEvent(
 				player,
-				"core_loop",
+				"Core Loop",
 				`${player.UserId}-${game.JobId}`,
 				BaseChallenge.round + 4,
 				`challenge-${BaseChallenge.round}`,
