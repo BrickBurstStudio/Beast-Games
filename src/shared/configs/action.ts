@@ -105,7 +105,7 @@ export const actions = [
 	{
 		name: "Nuke",
 		cost: 1,
-		blacklistedChallenges: [],
+		blacklistedChallenges: ["Split or Steal"],
 		callback: async ({ toPlayer }) => {
 			const character = await getCharacter(toPlayer);
 			if (!character) return;
