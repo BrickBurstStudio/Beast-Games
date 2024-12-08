@@ -18,11 +18,6 @@ export const actions = [
 		blacklistedChallenges: [],
 	},
 	{
-		name: "Kidnap",
-		cost: 1,
-		blacklistedChallenges: [],
-	},
-	{
 		name: "Giant Mode",
 		cost: 1,
 		blacklistedChallenges: [],

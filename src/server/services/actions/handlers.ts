@@ -14,10 +14,6 @@ export const actionHandlers: Record<ActionName, ActionHandler> = {
 		toPlayer.SetAttribute("lives", lives + 3);
 	},
 
-	Kidnap: ({ fromPlayer, toPlayer }) => {
-		// TODO: Implement kidnap action
-	},
-
 	"Glock 19": async ({ fromPlayer, toPlayer }) => {
 		// TODO: Implement glock 19 action
 	},

@@ -1,5 +1,4 @@
 import { Controller, OnStart } from "@flamework/core";
-import Log from "@rbxts/log";
 import { CharacterRigR6 } from "@rbxts/promise-character";
 import { KeyframeSequenceProvider, Players, ReplicatedStorage } from "@rbxts/services";
 import { Events } from "client/network";
@@ -8,6 +7,8 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 @Controller()
 export class AnimationController implements OnStart {
 	public tracks: Map<Animation, AnimationTrack> = new Map();
+	private currentEmoteTrack?: AnimationTrack;
+	private movementConnection?: RBXScriptConnection;
 
 	async onStart() {
 		if (Players.LocalPlayer.Character !== undefined) {
@@ -21,12 +22,52 @@ export class AnimationController implements OnStart {
 		});
 
 		Events.animationController.play.connect((animation) => {
-			this.tracks.get(animation)?.Play();
+			const track = this.tracks.get(animation);
+			if (!track) return;
+
+			// Check if this is an emote animation
+			if (animation.Parent?.Name === "Emotes") {
+				this.handleEmotePlay(track);
+			} else {
+				track.Play();
+			}
 		});
 
 		Events.animationController.stop.connect((animation) => {
 			this.tracks.get(animation)?.Stop();
+			if (this.currentEmoteTrack === this.tracks.get(animation)) {
+				this.cleanupEmoteTracking();
+			}
 		});
+	}
+
+	private async handleEmotePlay(track: AnimationTrack) {
+		// Stop any currently playing emote
+		if (this.currentEmoteTrack) {
+			this.currentEmoteTrack.Stop();
+			this.cleanupEmoteTracking();
+		}
+
+		// Start the new emote
+		track.Play();
+		this.currentEmoteTrack = track;
+
+		// Set up movement tracking
+		const character = await getCharacter(Players.LocalPlayer);
+
+		this.movementConnection = character.Humanoid.GetPropertyChangedSignal("MoveDirection").Connect(() => {
+			const moveDirection = character.Humanoid.MoveDirection;
+			if (moveDirection.Magnitude > 0) {
+				track.Stop();
+				this.cleanupEmoteTracking();
+			}
+		});
+	}
+
+	private cleanupEmoteTracking() {
+		this.currentEmoteTrack = undefined;
+		this.movementConnection?.Disconnect();
+		this.movementConnection = undefined;
 	}
 
 	private loadTracks(character: CharacterRigR6) {
@@ -47,7 +88,7 @@ export class AnimationController implements OnStart {
 
 	private getAllAnimations(parent: Instance): Animation[] {
 		const animations: Animation[] = [];
-		
+
 		const recurse = (instance: Instance) => {
 			for (const child of instance.GetChildren()) {
 				if (child.IsA("Animation")) {
