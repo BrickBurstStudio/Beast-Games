@@ -1,7 +1,6 @@
 import Object from "@rbxts/object-utils";
 import React, { useEffect, useRef, useState } from "@rbxts/react";
 import motion from "@rbxts/react-motion";
-import RegExp from "@rbxts/regexp";
 import { ReplicatedStorage } from "@rbxts/services";
 import { Events } from "client/network";
 import { px } from "client/ui/utils/usePx";
@@ -63,6 +62,7 @@ export default function AnnouncerApp() {
 
 	return (
 		<motion.frame
+			ZIndex={2}
 			animate={{ Position: hide ? UDim2.fromScale(0.5, 1.5) : UDim2.fromScale(0.5, 0.8) }}
 			BackgroundTransparency={0}
 			Size={UDim2.fromOffset(px(700), px(200))}
@@ -85,6 +85,7 @@ export default function AnnouncerApp() {
 				BackgroundTransparency={1}
 				TextWrapped
 				RichText={true}
+				ZIndex={3}
 			></textlabel>
 		</motion.frame>
 	);
