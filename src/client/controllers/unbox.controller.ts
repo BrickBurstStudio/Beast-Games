@@ -15,9 +15,17 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 	}
 
 	private async Unbox({ player, item }: { player: Player; item: Item }) {
+		print("Unbox", player, item);
 		// Guards
 		const unboxClone = ReplicatedStorage.Assets.Objects.Box.Clone();
 		const itemClone = item.model.Clone();
+		for (const part of unboxClone.GetChildren()) {
+			if (part.IsA("BasePart")) part.Anchored = true;
+		}
+		for (const part of itemClone.GetChildren()) {
+			if (part.IsA("BasePart")) part.Anchored = true;
+		}
+
 		if (unboxClone.PrimaryPart === undefined) error("unboxModel's clone must have a PrimaryPart");
 		if (itemClone.PrimaryPart === undefined) error("itemModel's clone must have a PrimaryPart");
 
@@ -47,9 +55,9 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 		// Animate
 		const unboxSpin = TweenService.Create(
 			unboxClone.PrimaryPart,
-			new TweenInfo(1.5, Enum.EasingStyle.Elastic, Enum.EasingDirection.InOut, 2),
+			new TweenInfo(1, Enum.EasingStyle.Cubic, Enum.EasingDirection.InOut, 1, true),
 			{
-				CFrame: unboxClone.PrimaryPart.CFrame.mul(CFrame.Angles(0, math.rad(180), 0)),
+				Orientation: unboxClone.PrimaryPart.Orientation.add(new Vector3(0, 180, 0)),
 			},
 		);
 		const itemFloatSpin = TweenService.Create(
@@ -66,10 +74,10 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 			new TweenInfo(1, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out),
 			unboxClone,
 		);
+
 		unboxSpin.Play();
 		task.spawn(() => {
-			for (let i = 0; i < 3; i++) {
-				task.wait(0.5);
+			for (let i = 0; i < 4; i++) {
 				shakeSound.Play();
 				task.wait(1);
 			}
@@ -88,7 +96,7 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 		sound.Parent = itemClone.PrimaryPart;
 		sound.Play();
 
-		tweenScale(
+		await tweenScale(
 			itemClone.GetScale(),
 			1,
 			new TweenInfo(1, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out),
@@ -109,13 +117,13 @@ export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnSta
 		billboardClone.Rarity.Text = item.rarity.sub(1, 1).upper() + item.rarity.sub(2);
 		billboardClone.Rarity.TextColor3 = ItemRarityConfig[item.rarity].color;
 
-		TweenService.Create(
-			itemClone.PrimaryPart,
-			new TweenInfo(10, Enum.EasingStyle.Linear, Enum.EasingDirection.In),
-			{
-				CFrame: itemClone.PrimaryPart.CFrame.mul(CFrame.Angles(0, math.rad(100), 0)),
-			},
-		).Play();
+		// TweenService.Create(
+		// 	itemClone.PrimaryPart,
+		// 	new TweenInfo(10, Enum.EasingStyle.Linear, Enum.EasingDirection.In),
+		// 	{
+		// 		CFrame: itemClone.PrimaryPart.CFrame.mul(CFrame.Angles(0, math.rad(100), 0)),
+		// 	},
+		// ).Play();
 
 		task.wait(4);
 
