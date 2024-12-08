@@ -6,11 +6,16 @@ import { COLORS } from "shared/configs/gui";
 import { LOBBY_PLACE_ID } from "shared/configs/places";
 
 function useSpectate() {
-	const index = useRef(0);
+	const [index, setIndex] = useState(0);
 	const [player, setPlayer] = useState<Player>();
 
 	if (player === undefined) {
-		const player = Players.GetPlayers().filter((p) => p.Character !== undefined && p !== Players.LocalPlayer)[0];
+		const player = Players.GetPlayers().filter(
+			(p) =>
+				p.Character !== undefined &&
+				p.Character.FindFirstChild("Head") !== undefined &&
+				p !== Players.LocalPlayer,
+		)[0];
 		if (player) setPlayer(player);
 	}
 
@@ -22,14 +27,38 @@ function useSpectate() {
 		}
 	}, [player]);
 
+	useEffect(() => {
+		return () => {
+			const spectatablePlayers = Players.GetPlayers().filter(
+				(p) =>
+					p.Character?.Parent !== undefined &&
+					p.Character.FindFirstChild("Head") &&
+					p !== Players.LocalPlayer,
+			);
+			const player = spectatablePlayers[index % spectatablePlayers.size()];
+			setPlayer(player);
+		};
+	}, [index]);
+
+	useEffect(() => {
+		let cntrl = true;
+		task.spawn(() => {
+			while (cntrl) {
+				task.wait(0.5);
+				print(player?.Character?.FindFirstChild("Head"));
+				if (player?.Character?.FindFirstChild("Head") === undefined) {
+					setIndex(index + 1);
+				}
+			}
+		});
+		return () => {
+			cntrl = false;
+		};
+	}, [player]);
+
 	return [
 		(direction: -1 | 1) => {
-			index.current += direction;
-			const spectatablePlayers = Players.GetPlayers().filter(
-				(p) => p.Character !== undefined && p !== Players.LocalPlayer,
-			);
-			const player = spectatablePlayers[index.current % spectatablePlayers.size()];
-			setPlayer(player);
+			setIndex(index + direction);
 		},
 		player,
 	] as const;
