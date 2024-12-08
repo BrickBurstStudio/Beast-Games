@@ -10,6 +10,7 @@ export class Ball extends Gizmo {
 	name = "Ball";
 	tool = ServerStorage.Assets.Gizmos.Ball.Clone();
 	activationType = "client" as const;
+	public readonly thrown = new Instance("BindableEvent");
 
 	activated(inputData: InputData | undefined) {
 		if (!inputData) return;
@@ -29,5 +30,6 @@ export class Ball extends Gizmo {
 		ball.AssemblyLinearVelocity = inputData.direction.mul(this.BALL_FORCE).add(new Vector3(0, 40, 0));
 
 		this.destroy();
+		this.thrown.Fire();
 	}
 }

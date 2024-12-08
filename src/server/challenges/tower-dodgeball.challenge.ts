@@ -18,6 +18,7 @@ export class TowerDodgeballChallenge extends BasePlatformChallenge {
 		"Throw the ball at other players to eliminate them",
 	];
 	private playersToTowers = new Map<Player, BlockTower>();
+	private thrownBalls = new Set<Player>();
 
 	protected async main() {
 		const destroyGizmos = this.giveTowerGizmos();
@@ -44,10 +45,26 @@ export class TowerDodgeballChallenge extends BasePlatformChallenge {
 		this.setupTowers();
 		destroyGizmos();
 		await this.dropNonBuilders();
-		const allBallGizmosDestroyed = this.giveBallGizmos();
+		this.giveBallGizmos();
 
-		// Wait until either timer expires or only one player remains
-		while (this.playersInChallenge.size() > 1) task.wait(0.5);
+		// Start dodgeball phase timer
+		const dodgeballTimer = countdown({
+			seconds: this.challengeDuration,
+			description: "Eliminate other players!",
+			showGo: false,
+		});
+
+		// Wait until either timer expires, only one player remains, or all balls are thrown
+		await Promise.race([
+			dodgeballTimer,
+			new Promise<void>((resolve) => {
+				task.spawn(() => {
+					while (this.playersInChallenge.size() > 1 && !this.allBallsThrown()) task.wait(0.5);
+					Events.announcer.clearCountdown.broadcast();
+					resolve();
+				});
+			}),
+		]);
 
 		this.playersToTowers.forEach((tower) => {
 			tower.Destroy();
@@ -116,14 +133,21 @@ export class TowerDodgeballChallenge extends BasePlatformChallenge {
 		this.playersToTowers.forEach((_, player) => {
 			const gizmo = Gizmo.give(player, Ball);
 			gizmos.push(gizmo);
-		});
 
-		return () => {
-			return gizmos.every((gizmo) => gizmo.destroyed);
-		};
+			// Track when ball is thrown
+			this.obliterator.Add(
+				gizmo.thrown.Event.Connect(() => {
+					this.thrownBalls.add(player);
+				}),
+			);
+		});
 	}
 
 	private allPlayersPlacedTowers(): boolean {
 		return this.playersInChallenge.every((player) => this.playersToTowers.has(player));
+	}
+
+	private allBallsThrown(): boolean {
+		return this.playersInChallenge.every((player) => this.thrownBalls.has(player));
 	}
 }
