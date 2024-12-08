@@ -204,7 +204,7 @@ export abstract class BaseChallenge {
 	private async rewardPlayers() {
 		await Promise.all(
 			this.playersInChallenge.map(async (player) => {
-				const cashReward = calculateReward(BaseChallenge.round, 10_000, 1.1);
+				const cashReward = calculateReward(BaseChallenge.round, 10_000, 1.5);
 				const xpReward = calculateReward(BaseChallenge.round, 10, 1.1);
 
 				const orderedPlayerData = new OrderedPlayerData(player);
