@@ -32,6 +32,8 @@ export class GoldRushChallenge extends BaseChallenge {
 		this.contestantDiedOrLeft.Event.Connect((player: Player) => {
 			this.safePlayers = this.safePlayers.filter((p) => p !== player);
 		});
+
+		while (!this.isFinished()) task.wait(1);
 	}
 
 	protected async isSetupCompleted() {
