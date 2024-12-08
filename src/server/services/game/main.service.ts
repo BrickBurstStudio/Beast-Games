@@ -21,7 +21,7 @@ import { getCharacter } from "shared/utils/functions/getCharacter";
 export class GameMainService implements OnStart {
 	/* ------------------------------ Configurables ----------------------------- */
 	public static DESTROY_CHARACTER_DELAY = 3;
-	private static EXPECTED_PLAYERS_DEFAULT = 2;
+	private static EXPECTED_PLAYERS_DEFAULT = 4;
 	private static JOIN_TIMEOUT = 20;
 
 	/* ---------------------------------- Class --------------------------------- */
@@ -40,6 +40,7 @@ export class GameMainService implements OnStart {
 			player.SetAttribute("lives", 3);
 		});
 
+		await new BriefcaseChallenge().start();
 		await new BribeChallenge().start();
 
 		const availableChallenges = [

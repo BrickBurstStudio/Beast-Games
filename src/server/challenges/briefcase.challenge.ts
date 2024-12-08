@@ -20,10 +20,10 @@ export class BriefcaseChallenge extends BaseChallenge {
 	];
 	protected readonly map = ServerStorage.ChallengeMaps.BriefcaseChallenge.Clone();
 	readonly components = Dependency<Components>();
-	readonly badBriefcases = 50;
+	readonly badBriefcases = 200;
 	readonly revealTime = 5;
 	readonly cellPadding = 10;
-	readonly memorizeTime = 8;
+	readonly memorizeTime = 10;
 	readonly runTime = 30;
 	readonly playerSelections: { [key: Player["UserId"]]: BriefcaseComponent } = {};
 	cases = 0;
@@ -41,7 +41,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 
 		await countdown({ seconds: 10, description: "Showing cases...", showGo: false });
 		this.ToggleCases(true);
-		task.wait(1);
+		await countdown({ seconds: this.revealTime, description: "Memorize...", showGo: false });
 		this.ToggleCases(false);
 		await countdown({ seconds: 10, description: "Race in..." });
 
@@ -143,9 +143,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 	}
 
 	protected async spawnCharacter({ character }: SpawnCharacterArgs) {
-		character.HumanoidRootPart.CFrame = this.map.Baseplate.CFrame.add(
-			new Vector3(-10, this.map.Baseplate.Size.Y / 2 + 5, 0),
-		);
+		character.HumanoidRootPart.CFrame = new CFrame(-11341.7354, -2128.54565, -3599.82886);
 	}
 
 	private EliminatePlayers() {

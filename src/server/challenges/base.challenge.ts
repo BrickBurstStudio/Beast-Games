@@ -190,7 +190,6 @@ export abstract class BaseChallenge {
 			challengeName: this.challengeName,
 			rules: this.rules,
 		});
-		await countdown({ seconds: 3, description: "Get Ready!" });
 	}
 
 	protected async enablePlayerMovement() {
