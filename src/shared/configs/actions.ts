@@ -29,7 +29,7 @@ export const actions = [
 
 			// Generate random direction
 			const randomAngle = math.random() * math.pi * 2;
-			const direction = new Vector3(math.cos(randomAngle), 1.5, math.sin(randomAngle)).Unit;
+			const direction = new Vector3(math.cos(randomAngle), 0.5, math.sin(randomAngle)).Unit;
 
 			// Create LinearVelocity instance
 			const velocity = new Instance("LinearVelocity");
@@ -88,7 +88,7 @@ export const actions = [
 
 			// Load a dance animation
 			const danceAnim = new Instance("Animation");
-			danceAnim.AnimationId = "rbxassetid://"; // TODO: Add realdance animation
+			danceAnim.AnimationId = "rbxassetid://10714388352"; // TODO: Add realdance animation
 			const danceTrack = animator.LoadAnimation(danceAnim);
 
 			danceTrack.Play();
@@ -193,11 +193,10 @@ export const actions = [
 					}
 
 					// Cleanup effects
-					task.delay(1, () => {
-						flash.Destroy();
-						atmosphere.Destroy();
-						character.Humanoid.Health = 0;
-					});
+
+					flash.Destroy();
+					atmosphere.Destroy();
+					character.Humanoid.Health = 0;
 				}
 			});
 		},
