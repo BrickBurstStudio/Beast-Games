@@ -1,6 +1,7 @@
 import { OnStart, Service } from "@flamework/core";
 import { AnalyticsService, CollectionService, Players, TeleportService } from "@rbxts/services";
 import { Events } from "server/network";
+import { countdown } from "server/util/countdown";
 import { LOBBY_PLACE_ID, MAIN_PLACE_ID } from "shared/configs/places";
 import { QUEUE_CONFIG } from "shared/configs/queue";
 import createForcefield from "shared/utils/functions/createForcefield";
@@ -94,18 +95,20 @@ export class QueueService implements OnStart {
 
 			// Start countdown for all players in queue
 			playersInQueue.forEach((queuedPlayer) => {
-				Events.announcer.countdown.fire(queuedPlayer, {
+				countdown({
 					seconds: this.MAX_QUEUE_WAIT_TIME,
 					description: "Match starting in...",
+					player: queuedPlayer,
 				});
 			});
 		} else if (this.queueState.countdownEndTime) {
 			// Show countdown to newly joined player if it's already running
 			const remainingTime = math.max(0, this.queueState.countdownEndTime - tick());
 			if (remainingTime > 0) {
-				Events.announcer.countdown.fire(player, {
+				countdown({
 					seconds: remainingTime,
 					description: "Match starting in...",
+					player,
 				});
 			}
 		}
