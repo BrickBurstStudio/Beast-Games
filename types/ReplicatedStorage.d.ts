@@ -8,9 +8,9 @@ interface ReplicatedStorage extends Instance {
 				randomNumbers: ModuleScript;
 				getColor3FromLevel: ModuleScript;
 				objectKeys: ModuleScript;
-				tweenUtil: ModuleScript;
 				getPlayerByName: ModuleScript;
 				spawnSound: ModuleScript;
+				tweenUtil: ModuleScript;
 				toTitleCase: ModuleScript;
 				calculateReward: ModuleScript;
 				getPlayerMultiplier: ModuleScript;
@@ -24,22 +24,22 @@ interface ReplicatedStorage extends Instance {
 		};
 		network: ModuleScript;
 		configs: Folder & {
+			challenges: Folder & {
+				["king-of-hill"]: ModuleScript;
+			};
+			action: ModuleScript;
+			queue: ModuleScript;
 			items: ModuleScript & {
 				hats: ModuleScript;
 				cases: ModuleScript;
 				emotes: ModuleScript;
 			};
 			currency: ModuleScript;
-			action: ModuleScript;
-			challenges: Folder & {
-				["king-of-hill"]: ModuleScript;
-			};
+			unboxing: ModuleScript;
 			announcer: ModuleScript;
-			queue: ModuleScript;
 			places: ModuleScript;
 			gui: ModuleScript;
 		};
-		components: Folder;
 		store: ModuleScript & {
 			slices: Folder & {
 				players: ModuleScript & {
@@ -49,10 +49,9 @@ interface ReplicatedStorage extends Instance {
 					items: ModuleScript;
 					balance: ModuleScript;
 					playTime: ModuleScript;
-					loggedIn: ModuleScript;
-					actionTokens: ModuleScript;
-					equipped: ModuleScript;
 					types: ModuleScript;
+					equipped: ModuleScript;
+					loggedIn: ModuleScript;
 				};
 				client: ModuleScript & {
 					gui: ModuleScript;
@@ -63,38 +62,9 @@ interface ReplicatedStorage extends Instance {
 				client: ModuleScript;
 			};
 		};
+		components: Folder;
 	};
 	Assets: Folder & {
-		Sounds: Folder & {
-			UnboxCommon: Sound;
-			Countdown2: Sound;
-			Buzz: Sound & {
-				PitchShiftSoundEffect: PitchShiftSoundEffect;
-			};
-			["GO!!!"]: Sound & {
-				PitchShiftSoundEffect: PitchShiftSoundEffect;
-			};
-			PugilHit: Sound;
-			Character: Sound;
-			Countdown1: Sound;
-			BabyBoy: Sound;
-			UnboxRare: Sound;
-			PugilSwing: Sound;
-			UnboxLegendary: Sound;
-			Boom: Sound;
-		};
-		Accessory: Accessory & {
-			Handle: Part & {
-				HatAttachment: Attachment;
-				Mesh: SpecialMesh;
-				TouchInterest: TouchTransmitter;
-			};
-		};
-		Animations: Folder & {
-			PushActivated: Animation;
-			PugilActivated: Animation;
-			PugilIdle: Animation;
-		};
 		Objects: Folder & {
 			MediumMoney: Model & {
 				Part: Part & {
@@ -142,6 +112,40 @@ interface ReplicatedStorage extends Instance {
 				WeldConstraint: WeldConstraint;
 				Pole: Part;
 			};
+		};
+		Accessory: Accessory & {
+			Handle: Part & {
+				HatAttachment: Attachment;
+				Mesh: SpecialMesh;
+				TouchInterest: TouchTransmitter;
+			};
+		};
+		Animations: Folder & {
+			PushActivated: Animation;
+			PugilActivated: Animation;
+			PugilIdle: Animation;
+		};
+		Sounds: Folder & {
+			UnboxCommon: Sound;
+			Countdown2: Sound;
+			Buzz: Sound & {
+				PitchShiftSoundEffect: PitchShiftSoundEffect;
+			};
+			Music: Folder & {
+				Lobby2: Sound;
+				Lobby1: Sound;
+			};
+			["GO!!!"]: Sound & {
+				PitchShiftSoundEffect: PitchShiftSoundEffect;
+			};
+			PugilHit: Sound;
+			Character: Sound;
+			Countdown1: Sound;
+			BabyBoy: Sound;
+			UnboxRare: Sound;
+			PugilSwing: Sound;
+			UnboxLegendary: Sound;
+			Boom: Sound;
 		};
 		Gui: Folder & {
 			MoneyBGUI: BillboardGui & {
