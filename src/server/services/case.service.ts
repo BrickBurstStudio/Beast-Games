@@ -44,6 +44,13 @@ export class CaseService implements OnStart {
 					item: randomItem,
 				});
 
+				// Check if legendary and announce
+				if (randomItem.rarity === "legendary") {
+					Events.announcer.chatMessage.broadcast(
+						`🌟 ${player.Name} just unboxed a LEGENDARY ${randomItem.name}! 🌟`,
+					);
+				}
+
 				// Wait for animation to complete before decrementing counter
 				task.delay(UNBOXING_CONFIG.ANIMATION_DURATION, () => {
 					const updatedCount = (this.activeUnboxings.get(player) ?? 1) - 1;

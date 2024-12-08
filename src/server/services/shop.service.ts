@@ -12,14 +12,14 @@ export class ShopService implements OnStart {
 	onStart() {
 		Functions.purchase.case.setCallback((player, caseId) => {
 			const caseObj = items.get(caseId) as (typeof cases)[number];
-			if (!caseObj) throw error(`Case not found. This is a bug. Please report it to the developers.`);
+			if (!caseObj) return `Case not found. This is a bug. Please report it to the developers.`;
 
 			const orderedPlayerData = new OrderedPlayerData(player);
 			const playerCash = orderedPlayerData.cash.Get();
 
-			if (!playerCash) throw error("Player not found. Try again in a few seconds.");
+			if (!playerCash) return "Player not found. Try again in a few seconds.";
 
-			if (playerCash < caseObj.price) throw error("You do not have enough cash to purchase this case.");
+			if (playerCash < caseObj.price) return "You do not have enough cash to purchase this case.";
 
 			orderedPlayerData.cash.UpdateBy(-caseObj.price);
 			const playerData = store.getState(selectPlayerData(tostring(player.UserId)));

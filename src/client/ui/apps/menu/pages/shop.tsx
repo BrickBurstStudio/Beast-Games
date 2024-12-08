@@ -33,7 +33,7 @@ export default function ShopApp() {
 					<ImageButton
 						image={"rbxassetid://6031094678"}
 						backgroundColor3={canAfford ? undefined : new Color3(0.3, 0.3, 0.3)}
-						onClick={() => {
+						onClick={async () => {
 							if (!canAfford) {
 								store.setMessage({
 									title: "Cannot Afford",
@@ -43,15 +43,15 @@ export default function ShopApp() {
 								return;
 							}
 
-							try {
-								Functions.purchase.case(caseObj.id);
-								store.setGuiPage(undefined);
-							} catch (e) {
+							const errorMessage = await Functions.purchase.case(caseObj.id);
+							if (errorMessage) {
 								store.setMessage({
-									title: "Error",
-									body: `Failed to purchase case: ${e}`,
+									title: "Failed to Purchase",
+									body: errorMessage,
 									type: "error",
 								});
+							} else {
+								store.setGuiPage(undefined);
 							}
 						}}
 						toolTip={{

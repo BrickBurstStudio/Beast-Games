@@ -60,7 +60,7 @@ interface ServerFunctions {
 	};
 
 	purchase: {
-		case: (caseId: (typeof cases)[number]["id"]) => void;
+		case: (caseId: (typeof cases)[number]["id"]) => string | void;
 		action: () => void;
 	};
 }
