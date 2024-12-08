@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { useSelector } from "@rbxts/react-reflex";
 import { Players } from "@rbxts/services";
-import { Functions } from "client/network";
+import { Events, Functions } from "client/network";
 import { store } from "client/store";
 import ImageButton from "client/ui/components/image-button";
 import MenuFrame from "client/ui/components/menu-frame";
@@ -9,6 +9,7 @@ import { px } from "client/ui/utils/usePx";
 import { BORDER_THICKNESS, COLORS } from "shared/configs/gui";
 import { ItemId, items } from "shared/configs/items";
 import { cases } from "shared/configs/items/cases";
+import { isEmote } from "shared/configs/items/emotes";
 import { hats } from "shared/configs/items/hats";
 import { selectPlayerEquipped, selectPlayerItems } from "shared/store/selectors/players";
 import { BUTTONS } from "../buttons";
@@ -57,8 +58,9 @@ export default function InventoryApp() {
 					/>
 					{itemMapObjects.map((itemMapObject) => {
 						const item = items.get(itemMapObject.id);
+						if (!item) return;
 						const isEquipped = equippedItems.hat === itemMapObject.id;
-						const isEmote = itemMapObject.id.split("_")[0] === "emote";
+						const itemIsEmote = isEmote(item);
 						return (
 							<ImageButton
 								key={itemMapObject.id}
@@ -66,7 +68,7 @@ export default function InventoryApp() {
 								backgroundColor3={isEquipped ? COLORS.Buttons.On : undefined}
 								onClick={async () => {
 									store.setGuiPage(undefined);
-									if (isCase || isEmote) {
+									if (isCase || itemIsEmote) {
 										if (isCase) {
 											const result = await Functions.inventory.openCase(
 												itemMapObject.id as (typeof cases)[number]["id"],
@@ -79,8 +81,9 @@ export default function InventoryApp() {
 												});
 											}
 										}
-										if (isEmote) {
-											// Events.animationController.play(itemMapObject.id);
+										if (itemIsEmote) {
+											print(item.animation);
+											Events.animationController.play.predict(item.animation);
 										}
 										return;
 									}
@@ -92,7 +95,7 @@ export default function InventoryApp() {
 								toolTip={{
 									header: item?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
 									body: `Rarity: ${item?.rarity || "Common"}\n\nClick To ${
-										isCase ? "Open" : isEmote ? "Use" : isEquipped ? "Unequip" : "Equip"
+										isCase ? "Open" : itemIsEmote ? "Use" : isEquipped ? "Unequip" : "Equip"
 									}`,
 								}}
 								size={UDim2.fromScale(1, 1)}

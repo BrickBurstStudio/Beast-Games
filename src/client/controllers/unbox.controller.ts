@@ -3,21 +3,21 @@ import { Controller, OnStart } from "@flamework/core";
 import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
 import { Events } from "client/network";
 import { Item, ItemRarityConfig } from "shared/configs/items";
+import { Case } from "shared/configs/items/cases";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { tweenNumber, tweenScale } from "shared/utils/functions/tweenUtil";
 
 @Controller()
 export class UnboxComponent extends BaseComponent<{}, BasePart> implements OnStart {
 	onStart() {
-		Events.animateUnboxing.connect(({ targetPlayer, item }) => {
-			this.Unbox({ player: targetPlayer, item });
+		Events.animateUnboxing.connect(({ targetPlayer, caseObject, item }) => {
+			this.Unbox({ player: targetPlayer, caseObject, item });
 		});
 	}
 
-	private async Unbox({ player, item }: { player: Player; item: Item }) {
-		print("Unbox", player, item);
+	private async Unbox({ player, caseObject, item }: { player: Player; caseObject: Case; item: Item }) {
 		// Guards
-		const unboxClone = ReplicatedStorage.Assets.Objects.Box.Clone();
+		const unboxClone = caseObject.model.Clone();
 		const itemClone = item.model.Clone();
 		for (const part of unboxClone.GetChildren()) {
 			if (part.IsA("BasePart")) part.Anchored = true;

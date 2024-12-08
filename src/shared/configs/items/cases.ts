@@ -11,18 +11,18 @@ export type Case = {
 export const cases = [
 	{
 		id: "case_1",
-		model: ReplicatedStorage.Assets.Objects.Box,
+		model: ReplicatedStorage.Assets.Objects.Cases.Emote,
 		price: 10_000,
-		rarity: "uncommon",
+		rarity: "common",
 		name: "Emote Case",
 		type: "emote",
-		items: ["emote_1", "emote_2", "emote_3"],
+		items: ["emote_1", "emote_2", "emote_3", "emote_4", "emote_5", "emote_6", "emote_7"],
 	},
 	{
 		id: "case_2",
-		model: ReplicatedStorage.Assets.Objects.Box,
+		model: ReplicatedStorage.Assets.Objects.Cases.Cosmetic,
 		price: 10_000,
-		rarity: "rare",
+		rarity: "common",
 		name: "Cosmetic Case",
 		type: "cosmetic",
 		items: ["hat_1", "hat_2", "hat_3", "hat_4"],

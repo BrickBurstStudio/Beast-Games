@@ -27,7 +27,6 @@ interface ReplicatedStorage extends Instance {
 			challenges: Folder & {
 				["king-of-hill"]: ModuleScript;
 			};
-			action: ModuleScript;
 			queue: ModuleScript;
 			items: ModuleScript & {
 				hats: ModuleScript;
@@ -37,6 +36,7 @@ interface ReplicatedStorage extends Instance {
 			currency: ModuleScript;
 			unboxing: ModuleScript;
 			announcer: ModuleScript;
+			actions: ModuleScript;
 			places: ModuleScript;
 			gui: ModuleScript;
 		};
@@ -65,6 +65,50 @@ interface ReplicatedStorage extends Instance {
 		components: Folder;
 	};
 	Assets: Folder & {
+		Sounds: Folder & {
+			UnboxCommon: Sound;
+			Countdown2: Sound;
+			Buzz: Sound & {
+				PitchShiftSoundEffect: PitchShiftSoundEffect;
+			};
+			["GO!!!"]: Sound & {
+				PitchShiftSoundEffect: PitchShiftSoundEffect;
+			};
+			Music: Folder & {
+				Lobby2: Sound;
+				Lobby1: Sound;
+			};
+			PugilHit: Sound;
+			Character: Sound;
+			Countdown1: Sound;
+			BabyBoy: Sound;
+			UnboxRare: Sound;
+			PugilSwing: Sound;
+			UnboxLegendary: Sound;
+			Boom: Sound;
+		};
+		Accessory: Accessory & {
+			Handle: Part & {
+				HatAttachment: Attachment;
+				Mesh: SpecialMesh;
+				TouchInterest: TouchTransmitter;
+			};
+		};
+		Animations: Folder & {
+			PushActivated: Animation;
+			Emotes: Folder & {
+				BoogieBomb: Animation;
+				["T-Pose"]: Animation;
+				["Loud Laugh"]: Animation;
+				["Take The L"]: Animation;
+				["Default Dance"]: Animation;
+				Floss: Animation;
+				Helicopter: Animation;
+				["Clean Groove"]: Animation;
+			};
+			PugilActivated: Animation;
+			PugilIdle: Animation;
+		};
 		Objects: Folder & {
 			MediumMoney: Model & {
 				Part: Part & {
@@ -87,6 +131,18 @@ interface ReplicatedStorage extends Instance {
 			LargeMoney: Model & {
 				Part: Part & {
 					Dollars: NumberValue;
+				};
+			};
+			Cases: Folder & {
+				Emote: Model & {
+					Cube: MeshPart & {
+						SurfaceAppearance: SurfaceAppearance;
+					};
+				};
+				Cosmetic: Model & {
+					Cube: MeshPart & {
+						SurfaceAppearance: SurfaceAppearance;
+					};
 				};
 			};
 			Box: Model & {
@@ -112,40 +168,6 @@ interface ReplicatedStorage extends Instance {
 				WeldConstraint: WeldConstraint;
 				Pole: Part;
 			};
-		};
-		Accessory: Accessory & {
-			Handle: Part & {
-				HatAttachment: Attachment;
-				Mesh: SpecialMesh;
-				TouchInterest: TouchTransmitter;
-			};
-		};
-		Animations: Folder & {
-			PushActivated: Animation;
-			PugilActivated: Animation;
-			PugilIdle: Animation;
-		};
-		Sounds: Folder & {
-			UnboxCommon: Sound;
-			Countdown2: Sound;
-			Buzz: Sound & {
-				PitchShiftSoundEffect: PitchShiftSoundEffect;
-			};
-			Music: Folder & {
-				Lobby2: Sound;
-				Lobby1: Sound;
-			};
-			["GO!!!"]: Sound & {
-				PitchShiftSoundEffect: PitchShiftSoundEffect;
-			};
-			PugilHit: Sound;
-			Character: Sound;
-			Countdown1: Sound;
-			BabyBoy: Sound;
-			UnboxRare: Sound;
-			PugilSwing: Sound;
-			UnboxLegendary: Sound;
-			Boom: Sound;
 		};
 		Gui: Folder & {
 			MoneyBGUI: BillboardGui & {
@@ -263,6 +285,16 @@ interface ReplicatedStorage extends Instance {
 					["Regexp.global"]: ModuleScript;
 				};
 				["react-roblox"]: ModuleScript;
+				["message-templates"]: Folder & {
+					out: ModuleScript & {
+						MessageTemplateRenderer: ModuleScript;
+						PlainTextMessageTemplateRenderer: ModuleScript;
+						RbxSerializer: ModuleScript;
+						MessageTemplate: ModuleScript;
+						MessageTemplateToken: ModuleScript;
+						MessageTemplateParser: ModuleScript;
+					};
+				};
 				roact: Folder & {
 					src: ModuleScript & {
 						createSpy: ModuleScript;
@@ -304,16 +336,6 @@ interface ReplicatedStorage extends Instance {
 						ElementUtils: ModuleScript;
 						SingleEventManager: ModuleScript;
 						None: ModuleScript;
-					};
-				};
-				["message-templates"]: Folder & {
-					out: ModuleScript & {
-						MessageTemplateRenderer: ModuleScript;
-						PlainTextMessageTemplateRenderer: ModuleScript;
-						RbxSerializer: ModuleScript;
-						MessageTemplate: ModuleScript;
-						MessageTemplateToken: ModuleScript;
-						MessageTemplateParser: ModuleScript;
 					};
 				};
 				log: Folder & {

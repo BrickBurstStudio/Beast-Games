@@ -30,7 +30,7 @@ export class AnimationController implements OnStart {
 	}
 
 	private loadTracks(character: CharacterRigR6) {
-		const animations = ReplicatedStorage.Assets.Animations.GetChildren() as Animation[];
+		const animations = this.getAllAnimations(ReplicatedStorage.Assets.Animations);
 		for (const animation of animations) {
 			const track = character.Humanoid.Animator.LoadAnimation(animation);
 			const markers = this.getAllAnimationEventNames(animation.AnimationId);
@@ -43,6 +43,24 @@ export class AnimationController implements OnStart {
 
 			this.tracks.set(animation, track);
 		}
+	}
+
+	private getAllAnimations(parent: Instance): Animation[] {
+		const animations: Animation[] = [];
+		
+		const recurse = (instance: Instance) => {
+			for (const child of instance.GetChildren()) {
+				if (child.IsA("Animation")) {
+					animations.push(child as Animation);
+				}
+				if (child.GetChildren().size() > 0) {
+					recurse(child);
+				}
+			}
+		};
+
+		recurse(parent);
+		return animations;
 	}
 
 	private getAllAnimationEventNames(animId: string): KeyframeMarker[] {
