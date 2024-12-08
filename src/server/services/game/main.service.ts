@@ -36,12 +36,18 @@ export class GameMainService implements OnStart {
 		this.setupDestroyCharacterOnDeath();
 		this.yieldPlayers();
 
-		Players.GetPlayers().forEach((player) => {
-			player.SetAttribute("lives", 3);
-		});
+		await Promise.all(
+			Players.GetPlayers().map(
+				async (player) =>
+					new Promise<void>((resolve) => {
+						player.SetAttribute("lives", 3);
+						resolve();
+					}),
+			),
+		);
 
+		await new PugilChallenge().start();
 		await new BoulderChallenge().start();
-		await new BribeChallenge().start();
 
 		const availableChallenges = [
 			GoldRushChallenge,
