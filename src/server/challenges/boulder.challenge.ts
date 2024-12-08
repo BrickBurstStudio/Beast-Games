@@ -79,7 +79,7 @@ export class BoulderChallenge extends BaseChallenge {
 			}
 
 			// If only one team is left, end the game and eliminate that team
-			if (activeTeams === 1 && this.teamsCompleted === this.teamFinishGoals.size() - 1) {
+			if (activeTeams === 1) {
 				const lastTeam = this.teamProgress.findIndex(
 					(progress, i) => this.activeTeams.has(i) && progress < this.teamFinishGoals[i],
 				);
@@ -150,10 +150,10 @@ export class BoulderChallenge extends BaseChallenge {
 		const teamAssets = this.map[tostring(team) as keyof typeof this.map] as (typeof this.map)["1"];
 
 		character.HumanoidRootPart.CFrame = teamAssets.Rope.CFrame.mul(
-			new CFrame(-teamAssets.Rope.Size.X / 2 - (i - team) * 1.5, 0, (i - team) % 2 === 0 ? -2.5 : 2.5),
+			new CFrame(-teamAssets.Rope.Size.X / 2 + (i + team) * 5, 1, (i - team) % 2 === 0 ? -2.5 : 2.5),
 		).mul(CFrame.Angles(0, math.pi / -2, 0));
-
-		const weld = Make("WeldConstraint", {
+		
+		Make("WeldConstraint", {
 			Parent: character.HumanoidRootPart,
 			Part0: character.HumanoidRootPart,
 			Part1: teamAssets.Rope,
