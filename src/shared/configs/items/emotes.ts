@@ -1,47 +1,60 @@
 import { ReplicatedStorage } from "@rbxts/services";
 import { Item } from ".";
 
-export type Emote = { animationId: string } & Item;
+export type Emote = { animation: Animation } & Item;
 
 export const emotes = [
 	{
 		id: "emote_1",
 		rarity: "common",
-		name: "Dance Monkey",
-		animationId: "http://www.roblox.com/asset/?id=125750702",
+		name: "Default Dance",
+		animation: ReplicatedStorage.Assets.Animations.Emotes["Default Dance"],
 		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
 	{
 		id: "emote_2",
 		rarity: "uncommon",
-		name: "L",
-		animationId: "http://www.roblox.com/asset/?id=125750702",
+		name: "Take The L",
+		animation: ReplicatedStorage.Assets.Animations.Emotes["Take The L"],
 		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
 	{
 		id: "emote_3",
 		rarity: "rare",
-		name: "Nae Nae",
-		animationId: "http://www.roblox.com/asset/?id=125750702",
+		name: "Loud Laugh",
+		animation: ReplicatedStorage.Assets.Animations.Emotes["Loud Laugh"],
 		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
 	{
 		id: "emote_4",
 		rarity: "epic",
-		name: "Harlem Shake",
-		animationId: "http://www.roblox.com/asset/?id=125750702",
+		name: "Helicopter",
+		animation: ReplicatedStorage.Assets.Animations.Emotes["Helicopter"],
 		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
 	{
 		id: "emote_5",
 		rarity: "legendary",
-		name: "Schmurda On My Mind",
-		animationId: "http://www.roblox.com/asset/?id=125750702",
+		name: "T-Pose",
+		animation: ReplicatedStorage.Assets.Animations.Emotes["T-Pose"],
+		model: ReplicatedStorage.Assets.Objects.Kanye,
+	},
+	{
+		id: "emote_6",
+		rarity: "legendary",
+		name: "Clean Groove",
+		animation: ReplicatedStorage.Assets.Animations.Emotes["Clean Groove"],
+		model: ReplicatedStorage.Assets.Objects.Kanye,
+	},
+	{
+		id: "emote_7",
+		rarity: "legendary",
+		name: "Floss",
+		animation: ReplicatedStorage.Assets.Animations.Emotes["Floss"],
 		model: ReplicatedStorage.Assets.Objects.Kanye,
 	},
 ] as const satisfies Emote[];
 
 export function isEmote(item: Item): item is Emote {
-	emotes[0].animationId;
-	return "animationId" in item;
+	return "animation" in item;
 }

@@ -133,6 +133,18 @@ interface ReplicatedStorage extends Instance {
 					Dollars: NumberValue;
 				};
 			};
+			Cases: Folder & {
+				Emote: Model & {
+					Cube: MeshPart & {
+						SurfaceAppearance: SurfaceAppearance;
+					};
+				};
+				Cosmetic: Model & {
+					Cube: MeshPart & {
+						SurfaceAppearance: SurfaceAppearance;
+					};
+				};
+			};
 			Box: Model & {
 				Cardboard: MeshPart;
 			};
