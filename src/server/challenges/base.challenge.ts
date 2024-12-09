@@ -31,6 +31,7 @@ export abstract class BaseChallenge {
 	/* ---------------------------- Lifecycle Methods ---------------------------- */
 
 	public async start() {
+		store.setChallenge(this.challengeName);
 		await this.initializeRound();
 		await this.setupMap();
 		this.assignPlayers();
@@ -41,7 +42,6 @@ export abstract class BaseChallenge {
 
 		Events.animations.setBlackFade.broadcast(false);
 		await this.doUISequence();
-		store.setChallenge(this.challengeName);
 
 		await this.enablePlayerMovement();
 
