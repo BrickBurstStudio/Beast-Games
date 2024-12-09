@@ -59,6 +59,6 @@ export class BribeChallenge extends BasePlatformChallenge {
 			data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());
 			this.dropCharacter(player.Character as CharacterRigR6);
 		});
-		await announce(["Time's up! Money has been distributed"]);
+		await announce(["Time's up!"]);
 	}
 }
