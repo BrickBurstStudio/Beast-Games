@@ -12,7 +12,7 @@ export const cases = [
 	{
 		id: "case_1",
 		model: ReplicatedStorage.Assets.Objects.Cases.Emote,
-		price: 10_000,
+		price: 500_000,
 		rarity: "common",
 		name: "Emote Case",
 		type: "emote",
@@ -21,7 +21,7 @@ export const cases = [
 	{
 		id: "case_2",
 		model: ReplicatedStorage.Assets.Objects.Cases.Cosmetic,
-		price: 10_000,
+		price: 250_000,
 		rarity: "common",
 		name: "Cosmetic Case",
 		type: "cosmetic",
