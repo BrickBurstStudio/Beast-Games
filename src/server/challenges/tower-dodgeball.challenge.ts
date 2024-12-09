@@ -4,7 +4,7 @@ import { Gizmo } from "server/classes/Gizmo";
 import { Ball } from "server/classes/gizmos/Ball";
 import { Tower } from "server/classes/gizmos/Tower";
 import { Events } from "server/network";
-import { countdown } from "server/util/countdown";
+import { cancelCountdown, countdown } from "server/util/countdown";
 import { BasePlatformChallenge } from "./base-platform.challenge";
 
 export class TowerDodgeballChallenge extends BasePlatformChallenge {
@@ -35,7 +35,7 @@ export class TowerDodgeballChallenge extends BasePlatformChallenge {
 			new Promise<void>((resolve) => {
 				const checkInterval = task.spawn(() => {
 					while (!this.allPlayersPlacedTowers()) task.wait(0.1);
-					Events.announcer.clearCountdown.broadcast();
+					cancelCountdown();
 					resolve();
 				});
 				this.obliterator.Add(checkInterval);
@@ -60,7 +60,7 @@ export class TowerDodgeballChallenge extends BasePlatformChallenge {
 			new Promise<void>((resolve) => {
 				task.spawn(() => {
 					while (this.playersInChallenge.size() > 1 && !this.allBallsThrown()) task.wait(0.5);
-					Events.announcer.clearCountdown.broadcast();
+					cancelCountdown();
 					resolve();
 				});
 			}),
@@ -115,7 +115,7 @@ export class TowerDodgeballChallenge extends BasePlatformChallenge {
 					if (ownerId === player.UserId) {
 						this.playersToTowers.set(player, tower as BlockTower);
 						if (this.allPlayersPlacedTowers()) {
-							Events.announcer.clearCountdown.broadcast();
+							cancelCountdown();
 						}
 					}
 				}),

@@ -1,7 +1,7 @@
 import { OnStart, Service } from "@flamework/core";
 import { AnalyticsService, CollectionService, Players, TeleportService } from "@rbxts/services";
 import { Events } from "server/network";
-import { countdown } from "server/util/countdown";
+import { cancelCountdown, countdown } from "server/util/countdown";
 import { LOBBY_PLACE_ID, MAIN_PLACE_ID } from "shared/configs/places";
 import { QUEUE_CONFIG } from "shared/configs/queue";
 import createForcefield from "shared/utils/functions/createForcefield";
@@ -126,11 +126,11 @@ export class QueueService implements OnStart {
 
 		// Check if we need to cancel countdown due to insufficient players
 		if (this.queueState.countdownEndTime && this.getPlayersInQueue().size() < this.MIN_PLAYERS) {
-			Events.announcer.clearCountdown.broadcast();
+			cancelCountdown();
 			this.queueState.countdownEndTime = undefined;
 		}
 
-		Events.announcer.clearCountdown.fire(player);
+		cancelCountdown();
 		this.broadcastQueueUpdate();
 	}
 
@@ -164,7 +164,7 @@ export class QueueService implements OnStart {
 						"Not enough players to start match. Waiting for more players...",
 					]);
 				});
-				Events.announcer.clearCountdown.broadcast();
+				cancelCountdown();
 				this.queueState.countdownEndTime = undefined;
 				return;
 			}
@@ -186,7 +186,7 @@ export class QueueService implements OnStart {
 			});
 		} catch (error) {
 			const playersInQueue = this.getPlayersInQueue();
-			playersInQueue.forEach((player) => Events.announcer.clearCountdown.fire(player));
+			playersInQueue.forEach((player) => cancelCountdown(player));
 			this.queueState.countdownEndTime = undefined;
 		} finally {
 			this.broadcastQueueUpdate();

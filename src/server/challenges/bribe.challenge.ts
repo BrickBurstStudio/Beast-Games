@@ -5,6 +5,7 @@ import { Events } from "server/network";
 import { store } from "server/store";
 import { announce } from "server/util/announce";
 import { BasePlatformChallenge } from "./base-platform.challenge";
+import { cancelCountdown } from "server/util/countdown";
 
 export class BribeChallenge extends BasePlatformChallenge {
 	protected challengeDuration = RunService.IsStudio() ? 5 : 30;
@@ -42,9 +43,8 @@ export class BribeChallenge extends BasePlatformChallenge {
 				});
 
 				if (this.acceptedBribes.size() === this.playersInChallenge.size() + this.acceptedBribes.size()) {
-					Events.announcer.clearCountdown.broadcast();
 					store.setChallenge(undefined);
-
+					cancelCountdown();
 					return;
 				}
 			}),
@@ -55,7 +55,7 @@ export class BribeChallenge extends BasePlatformChallenge {
 
 			if (this.playersInChallenge.size() !== 0) continue;
 
-			Events.announcer.clearCountdown.broadcast();
+			cancelCountdown();
 			this.acceptedBribes.forEach((player) => {
 				const data = new OrderedPlayerData(player);
 				data.cash.UpdateBy(this.bribeAmount / this.acceptedBribes.size());

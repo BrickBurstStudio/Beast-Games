@@ -5,7 +5,7 @@ import { OrderedPlayerData } from "server/classes/OrderedPlayerData";
 import { Events } from "server/network";
 import { store } from "server/store";
 import { announceRules } from "server/util/announceRules";
-import { countdown } from "server/util/countdown";
+import { cancelCountdown, countdown } from "server/util/countdown";
 import { ChallengeName } from "shared/configs/gui";
 import { selectPlayerData } from "shared/store/selectors/players";
 import { calculateReward } from "shared/utils/functions/calculateReward";
@@ -69,7 +69,7 @@ export abstract class BaseChallenge {
 			await this.main();
 		}
 
-		Events.announcer.clearCountdown.broadcast();
+		cancelCountdown();
 		await this.rewardPlayers();
 		store.setChallenge(undefined);
 		task.wait(5);

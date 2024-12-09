@@ -4,6 +4,7 @@ import { Events } from "server/network";
 import { announce } from "server/util/announce";
 import { ChallengeName } from "shared/configs/gui";
 import { BasePlatformChallenge } from "./base-platform.challenge";
+import { cancelCountdown } from "server/util/countdown";
 
 type PlayerChoice = "split" | "steal" | undefined;
 
@@ -27,7 +28,7 @@ export class SplitOrStealChallenge extends BasePlatformChallenge {
 			this.changePlatformState(player, "warning");
 
 			if (this.playersInChallenge.every((p) => this.playerChoices.get(p) !== undefined)) {
-				Events.announcer.clearCountdown.broadcast();
+				cancelCountdown();
 				this.processResults();
 			}
 		});

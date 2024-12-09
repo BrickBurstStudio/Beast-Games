@@ -2,7 +2,7 @@ import { Components } from "@flamework/components";
 import { Dependency } from "@flamework/core";
 import Make from "@rbxts/make";
 import { ReplicatedStorage, ServerStorage } from "@rbxts/services";
-import { countdown } from "server/util/countdown";
+import { cancelCountdown, countdown } from "server/util/countdown";
 import { generatePlayerGrid } from "server/util/generatePlayerGrid";
 import { getCharacter } from "shared/utils/functions/getCharacter";
 import { BriefcaseComponent } from "../components/claim-components/briefcase.component";
@@ -40,6 +40,7 @@ export class BriefcaseChallenge extends BaseChallenge {
 		this.RandomizeCases();
 
 		await countdown({ seconds: 10, description: "Showing cases...", showGo: false });
+		print("showing cases countdown passed");
 		this.ToggleCases(true);
 		await countdown({ seconds: this.revealTime, description: "Memorize...", showGo: false });
 		this.ToggleCases(false);
@@ -55,8 +56,8 @@ export class BriefcaseChallenge extends BaseChallenge {
 			DateTime.now().UnixTimestamp - t < this.runTime
 		)
 			task.wait();
-		Events.announcer.clearCountdown.broadcast();
 
+		cancelCountdown();
 		task.wait(3);
 		this.ToggleCases(true);
 		task.wait(3);
