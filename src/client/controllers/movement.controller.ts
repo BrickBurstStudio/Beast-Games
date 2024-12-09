@@ -49,7 +49,6 @@ export class MovementController implements OnStart {
 			true,
 			Enum.KeyCode.E,
 			Enum.KeyCode.ButtonY,
-			Enum.UserInputType.Touch,
 		);
 		// ContextActionService.BindAction(
 		// 	this.sprintActionName,
