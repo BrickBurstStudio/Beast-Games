@@ -5,7 +5,7 @@ import { ToolTip } from "shared/store/slices/client/gui";
 import { px } from "../utils/usePx";
 
 type ImageButtonProps = {
-	image: string;
+	image?: string;
 	onClick: (rbx: ImageButton) => void;
 	position?: UDim2;
 	size?: UDim2;

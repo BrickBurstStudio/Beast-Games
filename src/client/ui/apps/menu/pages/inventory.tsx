@@ -9,10 +9,11 @@ import { px } from "client/ui/utils/usePx";
 import { BORDER_THICKNESS, COLORS } from "shared/configs/gui";
 import { ItemId, items } from "shared/configs/items";
 import { cases } from "shared/configs/items/cases";
-import { isEmote } from "shared/configs/items/emotes";
+import { Emote, isEmote } from "shared/configs/items/emotes";
 import { hats } from "shared/configs/items/hats";
 import { selectPlayerEquipped, selectPlayerItems } from "shared/store/selectors/players";
 import { BUTTONS } from "../buttons";
+import EmotePreview from "client/ui/components/emote-preview";
 
 const inventoryButton = BUTTONS.find((button) => button.name === "Inventory")!;
 export default function InventoryApp() {
@@ -36,7 +37,6 @@ export default function InventoryApp() {
 		const isCase = itemType === "case";
 		groupedItemsComponents.push(
 			<frame key={itemType} BackgroundTransparency={1} Size={UDim2.fromScale(1, 0)} AutomaticSize={"Y"}>
-				<uipadding PaddingBottom={new UDim(0, px(15))} />
 				<uilistlayout FillDirection={Enum.FillDirection.Vertical} />
 				<textlabel
 					Text={itemType.sub(1, 1).upper() + itemType.sub(2) + "s"}
@@ -62,66 +62,74 @@ export default function InventoryApp() {
 						const isEquipped = equippedItems.hat === itemMapObject.id;
 						const itemIsEmote = isEmote(item);
 						return (
-							<ImageButton
-								key={itemMapObject.id}
-								image={"rbxassetid://6031094678"}
-								backgroundColor3={isEquipped ? COLORS.Buttons.On : undefined}
-								onClick={async () => {
-									store.setGuiPage(undefined);
-									if (isCase || itemIsEmote) {
-										if (isCase) {
-											const result = await Functions.inventory.openCase(
-												itemMapObject.id as (typeof cases)[number]["id"],
-											);
-											if (typeIs(result, "string")) {
-												store.setMessage({
-													title: "Max Unboxings Reached",
-													body: result,
-													type: "error",
-												});
+							<frame key={itemMapObject.id} Size={UDim2.fromScale(1, 1)} BackgroundTransparency={1}>
+								<ImageButton
+									backgroundColor3={isEquipped ? COLORS.Buttons.On : undefined}
+									onClick={async () => {
+										store.setGuiPage(undefined);
+										if (isCase || itemIsEmote) {
+											if (isCase) {
+												const result = await Functions.inventory.openCase(
+													itemMapObject.id as (typeof cases)[number]["id"],
+												);
+												if (typeIs(result, "string")) {
+													store.setMessage({
+														title: "Max Unboxings Reached",
+														body: result,
+														type: "error",
+													});
+												}
 											}
+											if (itemIsEmote) {
+												Events.animationController.play.predict(item.animation);
+											}
+											return;
 										}
-										if (itemIsEmote) {
-											Events.animationController.play.predict(item.animation);
-										}
-										return;
-									}
 
-									if (isEquipped)
-										Functions.inventory.unequip(itemMapObject.id as (typeof hats)[number]["id"]);
-									else Functions.inventory.equip(itemMapObject.id as (typeof hats)[number]["id"]);
-								}}
-								toolTip={{
-									header: item?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
-									body: `Rarity: ${item?.rarity || "Common"}\n\nClick To ${
-										isCase ? "Open" : itemIsEmote ? "Use" : isEquipped ? "Unequip" : "Equip"
-									}`,
-								}}
-								size={UDim2.fromScale(1, 1)}
-							>
-								<frame
-									Size={UDim2.fromScale(1, 0.1)}
-									Position={UDim2.fromScale(0, 0)}
-									BackgroundColor3={getRarityColor(item?.rarity)}
-									BackgroundTransparency={0.5}
+										if (isEquipped)
+											Functions.inventory.unequip(itemMapObject.id as (typeof hats)[number]["id"]);
+										else Functions.inventory.equip(itemMapObject.id as (typeof hats)[number]["id"]);
+									}}
+									toolTip={{
+										header: item?.name || "THIS SHOULDNT HAPPEN. PLEASE REPORT BUG TO DEVS",
+										body: `Rarity: ${item?.rarity || "Common"}\n\nClick To ${
+											isCase ? "Open" : itemIsEmote ? "Use" : isEquipped ? "Unequip" : "Equip"
+										}`,
+									}}
+									size={UDim2.fromScale(1, 1)}
 								>
-									<uicorner CornerRadius={new UDim(0, px(5))} />
-								</frame>
-								{itemMapObject.quantity > 1 && (
-									<textlabel
-										Text={tostring(itemMapObject.quantity)}
-										BackgroundTransparency={1}
-										Position={new UDim2(0, px(7.5), 0, px(7.5))}
-										AutomaticSize={"XY"}
-										TextXAlignment={Enum.TextXAlignment.Right}
-										TextYAlignment={Enum.TextYAlignment.Top}
-										TextColor3={COLORS.White}
-										TextSize={px(18)}
+									<frame
+										Size={UDim2.fromScale(1, 0.1)}
+										Position={UDim2.fromScale(0, 0)}
+										BackgroundColor3={getRarityColor(item?.rarity)}
+										BackgroundTransparency={0.5}
 									>
-										<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS * 0.75)} />
-									</textlabel>
-								)}
-							</ImageButton>
+										<uicorner CornerRadius={new UDim(0, px(5))} />
+									</frame>
+									{itemMapObject.quantity > 1 && (
+										<textlabel
+											Text={tostring(itemMapObject.quantity)}
+											BackgroundTransparency={1}
+											Position={new UDim2(0, px(7.5), 0, px(7.5))}
+											AutomaticSize={"XY"}
+											TextXAlignment={Enum.TextXAlignment.Right}
+											TextYAlignment={Enum.TextYAlignment.Top}
+											TextColor3={COLORS.White}
+											TextSize={px(18)}
+										>
+											<uistroke Color={COLORS.Border} Thickness={px(BORDER_THICKNESS * 0.75)} />
+										</textlabel>
+									)}
+									{itemIsEmote && (
+										<EmotePreview 
+											emote={item as Emote}
+											size={UDim2.fromScale(0.8, 0.8)}
+											position={UDim2.fromScale(0.5, 0.5)}
+											anchorPoint={new Vector2(0.5, 0.5)}
+										/>
+									)}
+								</ImageButton>
+							</frame>
 						);
 					})}
 				</frame>
