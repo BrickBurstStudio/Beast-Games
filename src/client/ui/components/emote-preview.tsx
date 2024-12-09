@@ -15,31 +15,29 @@ export default function EmotePreview({ emote, size, position, anchorPoint }: Emo
 	const characterRef = useRef<Model>();
 
 	useEffect(() => {
-		if (!viewportRef.current) return;
 		(async () => {
 			if (!viewportRef.current) return;
 			// Clone the player's character for preview
-			const model = StarterPlayer.StarterCharacter.Clone();
-			characterRef.current = model;
-			model.Parent = viewportRef.current;
+			const playerCharacter = StarterPlayer.StarterCharacter.Clone();
+			characterRef.current = playerCharacter;
+			const worldModel = new Instance("WorldModel");
+			worldModel.Parent = viewportRef.current;
+			playerCharacter.Parent = worldModel;
 
 			// Set up animator and play animation
-			const animator = model.Humanoid.Animator;
+			const animator = playerCharacter.Humanoid.Animator;
 
 			const track = animator.LoadAnimation(emote.animation);
+			track.Looped = true;
 			track.Play();
 
 			// Set up camera
 			const camera = new Instance("Camera");
-			camera.FieldOfView = 90;
+			camera.FieldOfView = 50;
 
-			const humanoidRootPart = model.FindFirstChild("HumanoidRootPart") as BasePart;
-			if (humanoidRootPart) {
-				camera.CFrame = new CFrame(
-					humanoidRootPart.Position.add(new Vector3(0, 0, -3)),
-					humanoidRootPart.Position,
-				);
-			}
+			const humanoidRootPart = playerCharacter.HumanoidRootPart;
+
+			camera.CFrame = new CFrame(humanoidRootPart.Position.add(new Vector3(0, 2, -6)), humanoidRootPart.Position);
 
 			viewportRef.current.CurrentCamera = camera;
 			camera.Parent = viewportRef.current;
