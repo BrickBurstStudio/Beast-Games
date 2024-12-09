@@ -46,21 +46,11 @@ export abstract class BaseChallenge {
 		await this.enablePlayerMovement();
 
 		if (this.challengeDuration > 0) {
-			let mainThread: thread | undefined;
-
 			await Promise.race([
-				new Promise((resolve) => {
-					mainThread = task.spawn(async () => {
-						await this.main();
-						resolve(undefined);
-					});
-				}),
+				this.main(),
 				new Promise(async (resolve) => {
 					this.startChallengeTimer();
 					task.wait(this.challengeDuration);
-					if (mainThread) {
-						task.cancel(mainThread);
-					}
 					await this.onTimerExpired();
 					resolve(undefined);
 				}),
