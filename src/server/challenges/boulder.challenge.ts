@@ -15,7 +15,7 @@ const TeamColors = {
 };
 
 export class BoulderChallenge extends BaseChallenge {
-	protected challengeDuration = RunService.IsStudio() ? 5 : 60;
+	protected challengeDuration = RunService.IsStudio() ? 30 : 60;
 	protected readonly challengeName = "Boulder Pull" as const;
 	protected readonly rules = [
 		"You will be assigned a random team.",
