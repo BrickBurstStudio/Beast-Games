@@ -135,9 +135,15 @@ export abstract class BaseChallenge {
 			this.contestantDiedOrLeft.Fire(player);
 		};
 
-		player.CharacterAdded.Connect(async () => {
+		const charConn = player.CharacterAdded.Connect(async () => {
 			const character = await getCharacter(player);
-			character.Humanoid.Died.Connect(playerOut);
+			const bruhConn = character.Humanoid.Died.Connect(() => {
+				bruhConn.Disconnect();
+				charConn.Disconnect();
+				playerOut();
+			});
+			this.obliterator.Add(bruhConn, "Disconnect");
+			this.obliterator.Add(charConn, "Disconnect");
 		});
 
 		const conn = Players.PlayerRemoving.Connect((player) => {
@@ -231,17 +237,5 @@ export abstract class BaseChallenge {
 				orderedPlayerData.xp.UpdateBy(xpReward);
 			}),
 		);
-	}
-
-	/* -------------------------------- Utilities ------------------------------- */
-
-	protected handlePlayerElimination(player: Player) {
-		const lives = player.GetAttribute("lives") as number;
-		if (lives > 0) {
-			player.SetAttribute("lives", lives - 1);
-			return false; // Player still has lives left
-		} else {
-			return true; // Player is fully eliminated
-		}
 	}
 }
