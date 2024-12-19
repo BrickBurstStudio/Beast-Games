@@ -15,12 +15,12 @@ export async function countdown({
 			for (let i = seconds; i >= 0; i--) {
 				if (globalCancellationRef) {
 					globalCancellationRef = false;
-					return reject();
+					return resolve();
 				}
 				if (player) {
 					if (cancellationRefs.get(player)) {
 						cancellationRefs.delete(player);
-						return reject();
+						return resolve();
 					}
 
 					Events.announcer.countdown.fire(player, {

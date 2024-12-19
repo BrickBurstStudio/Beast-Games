@@ -95,21 +95,29 @@ export class QueueService implements OnStart {
 
 			// Start countdown for all players in queue
 			playersInQueue.forEach((queuedPlayer) => {
-				countdown({
-					seconds: this.MAX_QUEUE_WAIT_TIME,
-					description: "Match starting in...",
-					player: queuedPlayer,
-				});
+				try {
+					countdown({
+						seconds: this.MAX_QUEUE_WAIT_TIME,
+						description: "Match starting in...",
+						player: queuedPlayer,
+					});
+				} catch (error) {
+					print(error);
+				}
 			});
 		} else if (this.queueState.countdownEndTime) {
 			// Show countdown to newly joined player if it's already running
 			const remainingTime = math.max(0, this.queueState.countdownEndTime - tick());
 			if (remainingTime > 0) {
-				countdown({
-					seconds: remainingTime,
-					description: "Match starting in...",
-					player,
-				});
+				try {
+					countdown({
+						seconds: remainingTime,
+						description: "Match starting in...",
+						player,
+					});
+				} catch (error) {
+					print(error);
+				}
 			}
 		}
 
@@ -126,11 +134,19 @@ export class QueueService implements OnStart {
 
 		// Check if we need to cancel countdown due to insufficient players
 		if (this.queueState.countdownEndTime && this.getPlayersInQueue().size() < this.MIN_PLAYERS) {
-			cancelCountdown();
+			try {
+				cancelCountdown(player);
+			} catch (error) {
+				print(error);
+			}
 			this.queueState.countdownEndTime = undefined;
 		}
 
-		cancelCountdown();
+		try {
+			cancelCountdown();
+		} catch (error) {
+			print(error);
+		}
 		this.broadcastQueueUpdate();
 	}
 
@@ -164,7 +180,11 @@ export class QueueService implements OnStart {
 						"Not enough players to start match. Waiting for more players...",
 					]);
 				});
-				cancelCountdown();
+				try {
+					cancelCountdown();
+				} catch (error) {
+					print(error);
+				}
 				this.queueState.countdownEndTime = undefined;
 				return;
 			}
@@ -186,8 +206,15 @@ export class QueueService implements OnStart {
 			});
 		} catch (error) {
 			const playersInQueue = this.getPlayersInQueue();
-			playersInQueue.forEach((player) => cancelCountdown(player));
+			playersInQueue.forEach((player) => {
+				try {
+					cancelCountdown(player);
+				} catch (error) {
+					print(error);
+				}
+			});
 			this.queueState.countdownEndTime = undefined;
+			print(error);
 		} finally {
 			this.broadcastQueueUpdate();
 		}

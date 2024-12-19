@@ -27,6 +27,7 @@ export class MoneyService implements OnStart {
 	async moneyIncreasedVFX(player: Player, amount: number) {
 		if (!player.Character) return;
 
+		task.wait(1);
 		const vfx = ServerStorage.Assets.VFX.MoneyVFX.Clone();
 		const sfx = ServerStorage.Assets.Sounds.MoneySFX.Clone();
 		const bgui = ReplicatedStorage.Assets.Gui.MoneyBGUI.Clone();
