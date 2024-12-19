@@ -38,11 +38,10 @@ export class GameMainService implements OnStart {
 
 		await Promise.all(Players.GetPlayers().map(async (player) => player.SetAttribute("lives", 3)));
 
-		await new BribeChallenge().start();
-
 		const availableChallenges = [
 			GoldRushChallenge,
 			PugilChallenge,
+			BribeChallenge,
 			BoulderChallenge,
 			TowerDodgeballChallenge,
 			FlagMemoryChallenge,
