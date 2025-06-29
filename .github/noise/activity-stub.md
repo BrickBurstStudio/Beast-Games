@@ -5,3 +5,5 @@
 - **2025-05-18** — game types index note
 
 - **2025-06-08** — eslint metadata alignment
+
+- **2025-06-29** — husky hook notes (no behavior change)
