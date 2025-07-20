@@ -7,3 +7,5 @@
 - **2025-06-08** — eslint metadata alignment
 
 - **2025-06-29** — husky hook notes (no behavior change)
+
+- **2025-07-20** — package scripts scratch
