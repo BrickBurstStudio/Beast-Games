@@ -9,3 +9,5 @@
 - **2025-06-29** — husky hook notes (no behavior change)
 
 - **2025-07-20** — package scripts scratch
+
+- **2025-08-10** — aftman toolchain note
