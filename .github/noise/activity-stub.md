@@ -13,3 +13,5 @@
 - **2025-08-10** — aftman toolchain note
 
 - **2025-08-31** — august maintenance marker
+
+- **2025-09-21** — types folder hygiene
