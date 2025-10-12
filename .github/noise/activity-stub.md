@@ -15,3 +15,5 @@
 - **2025-08-31** — august maintenance marker
 
 - **2025-09-21** — types folder hygiene
+
+- **2025-10-12** — ci workflow placeholder note
