@@ -17,3 +17,5 @@
 - **2025-09-21** — types folder hygiene
 
 - **2025-10-12** — ci workflow placeholder note
+
+- **2025-11-02** — november burst marker
