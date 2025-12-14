@@ -21,3 +21,5 @@
 - **2025-11-02** — november burst marker
 
 - **2025-11-23** — pre-holiday stub
+
+- **2025-12-14** — december alignment pass
