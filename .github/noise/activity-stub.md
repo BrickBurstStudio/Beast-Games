@@ -23,3 +23,5 @@
 - **2025-11-23** — pre-holiday stub
 
 - **2025-12-14** — december alignment pass
+
+- **2026-01-04** — new year types stub
