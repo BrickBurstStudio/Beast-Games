@@ -27,3 +27,5 @@
 - **2026-01-04** — new year types stub
 
 - **2026-01-25** — january game loop notes
+
+- **2026-02-15** — february tooling pass
