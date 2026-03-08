@@ -29,3 +29,5 @@
 - **2026-01-25** — january game loop notes
 
 - **2026-02-15** — february tooling pass
+
+- **2026-03-08** — march src index note
