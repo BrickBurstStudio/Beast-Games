@@ -31,3 +31,5 @@
 - **2026-02-15** — february tooling pass
 
 - **2026-03-08** — march src index note
+
+- **2026-03-29** — quarterly housekeeping
