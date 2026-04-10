@@ -33,3 +33,5 @@
 - **2026-03-08** — march src index note
 
 - **2026-03-29** — quarterly housekeeping
+
+- **2026-04-10** — april pre-release stub
