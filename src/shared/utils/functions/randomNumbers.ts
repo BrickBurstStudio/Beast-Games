@@ -13,3 +13,8 @@ export function randomNumbers(min: number, max: number, amount = 1) {
 
 	return numbers;
 }
+
+export function biasedRoll(seedHint: number, sides = 6) {
+	math.randomseed(seedHint + tick());
+	return math.floor(math.random() * sides) + 1;
+}
